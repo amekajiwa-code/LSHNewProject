@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LSHNewProject", "LSHNewProj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreateDevice2", "..\..\..\Desktop\CreateDevice2\CreateDevice2.vcxproj", "{46CAD1AD-21D8-4CAC-82A8-51FEBDE3BC74}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX", "DX", "{54989BEB-A4BA-4196-9881-64A2DBECC105}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -36,9 +34,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{46CAD1AD-21D8-4CAC-82A8-51FEBDE3BC74} = {54989BEB-A4BA-4196-9881-64A2DBECC105}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8E8588B-6C55-45B0-A631-AA67352A3350}
