@@ -48,10 +48,19 @@ void Object::SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProjection)
     {
         mMatProjection = *matProjection;
     }
-    
-    mMatData.matWorld = mMatWorld.Transpose();
-    mMatData.matView = mMatView.Transpose();
-    mMatData.matProjection = mMatProjection.Transpose();
+
+    //mMatData.matWorld = mMatWorld.Transpose();
+    //mMatData.matView = mMatView.Transpose();
+    //mMatData.matProjection = mMatProjection.Transpose();
+
+    //mMatData.matWorld = mMatWorld.Transpose;
+    //mMatData.matView = mMatView.Transpose();
+    //mMatData.matProjection = mMatProjection.Transpose();
+
+    Matrix m1, m2, m3;
+    mMatData.matWorld = m1;
+    mMatData.matView = m2;
+    mMatData.matProjection = m3;
     mImmediateContext->UpdateSubresource(mConstantBuffer, 0, nullptr, &mMatData, 0, 0);
 }
 
@@ -73,24 +82,20 @@ bool Object::CreateConstantBuffer()
 
 bool Object::CreateVertexBuffer()
 {
-    return true;
-
-    //ÁÂÇ¥°è ±âÁØÀ¸·Î ¿ÞÂÊÀ§¿¡ »ï°¢Çü Çü¼º
     verticles.resize(6);
-    // u, v
-    verticles[0].t.mX = 0.0f; verticles[0].t.mY = 0.0f;
+    verticles[0].t.mX= 0.0f; verticles[0].t.mY = 0.0f;
     verticles[1].t.mX = 1.0f; verticles[1].t.mY = 0.0f;
     verticles[2].t.mX = 0.0f; verticles[2].t.mY = 1.0f;
     verticles[3].t.mX = 0.0f; verticles[3].t.mY = 1.0f;
     verticles[4].t.mX = 1.0f; verticles[4].t.mY = 0.0f;
     verticles[5].t.mX = 1.0f; verticles[5].t.mY = 1.0f;
-    // x, y, z
-    verticles[0].p.mX = -1.0f; verticles[0].p.mY = 1.0f; verticles[0].p.mZ = 1.0f;
-    verticles[1].p.mX = 1.0f; verticles[1].p.mY = 1.0f; verticles[1].p.mZ = 1.0f;
-    verticles[2].p.mX = -1.0f; verticles[2].p.mY = -1.0f; verticles[2].p.mZ = 1.0f;
-    verticles[3].p.mX = -1.0f; verticles[3].p.mY = -1.0f; verticles[3].p.mZ = 1.0f;
-    verticles[4].p.mX = 1.0f; verticles[4].p.mY = 1.0f; verticles[4].p.mZ = 1.0f;
-    verticles[5].p.mX = 1.0f; verticles[5].p.mY = -1.0f; verticles[5].p.mZ = 1.0f;
+
+    verticles[0].p.mX = -1.0f; verticles[0].p.mY = 1.0f;  verticles[0].p.mZ = 0.0f;
+    verticles[1].p.mX = 1.0f; verticles[1].p.mY = 1.0f;  verticles[1].p.mZ = 0.0f;
+    verticles[2].p.mX = -1.0f; verticles[2].p.mY = -1.0f;  verticles[2].p.mZ = 0.0f;
+    verticles[3] = verticles[2];
+    verticles[4] = verticles[1];
+    verticles[5].p.mX = 1.0f; verticles[5].p.mY = -1.0f;  verticles[5].p.mZ = 0.0f;
 
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -148,7 +153,7 @@ bool Object::Frame()
 bool Object::Render()
 {
     //ID3D11ShaderResourceView* texSRV = nullptr;
-    mImmediateContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
+//    mImmediateContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
 
     if (mTexture)
     {

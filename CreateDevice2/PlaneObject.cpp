@@ -12,6 +12,8 @@ bool PlaneObject::CreateVertexBuffer()
     verticles[4].t.mX = 1.0f; verticles[4].t.mY = 0.0f;
     verticles[5].t.mX = 1.0f; verticles[5].t.mY = 1.0f;
     // x, y, z
+
+
     verticles[0].p.mX = -1.0f; verticles[0].p.mY = 1.0f; verticles[0].p.mZ = 1.0f;
     verticles[1].p.mX = 1.0f; verticles[1].p.mY = 1.0f; verticles[1].p.mZ = 1.0f;
     verticles[2].p.mX = -1.0f; verticles[2].p.mY = -1.0f; verticles[2].p.mZ = 1.0f;

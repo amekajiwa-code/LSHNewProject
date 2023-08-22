@@ -19,20 +19,21 @@ bool sample::Init()
     mShaMg.Set(mDevice, mImmediateContext);
 
     srand(time(NULL)); // 현재 시간으로 시드 설정
-    backObj = new PlaneObject;
+    backObj = new Object;
     backObj->Set(mDevice, mImmediateContext);
+    backObj->SetPos({ 1, 1, 1 });
     backObj->SetScale(Vector3(800.0f, 600.0f, 1.0f));
     backObj->Create(mTexMg, L"../../res/bg.jpg", mShaMg, L"Plane.hlsl");
 
-    for (int i = 0; i < 10; ++i)
-    {
-        Object* tempObj = new NPC; // 자식으로 캐스팅
-        tempObj->SetPos(Vector3((float)randstep(-800.0f, 800.0f), (float)randstep(-600.0f, 600.0f), 0));
-        tempObj->Set(mDevice, mImmediateContext);
-        tempObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
-        tempObj->Create(mTexMg, L"../../res/anajuyo_alpha.png", mShaMg, L"Plane.hlsl");
-        mNPCs.push_back(tempObj);
-    }
+    //for (int i = 0; i < 10; ++i)
+    //{
+    //    Object* tempObj = new NPC; // 자식으로 캐스팅
+    //    tempObj->SetPos(Vector3((float)randstep(-800.0f, 800.0f), (float)randstep(-600.0f, 600.0f), 0));
+    //    tempObj->Set(mDevice, mImmediateContext);
+    //    tempObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+    //    tempObj->Create(mTexMg, L"../../res/anajuyo_alpha.png", mShaMg, L"Plane.hlsl");
+    //    mNPCs.push_back(tempObj);
+    //}
 
     return true;
 }
@@ -68,11 +69,17 @@ bool sample::Frame()
 
     backObj->Frame();
 
-    for (auto o : mNPCs)
-    {
-        o->Move(mGameTimer.mSecondPerFrame);
-        o->Frame();
-    }
+    //for (auto o : mNPCs)
+    //{
+    //    o->Move(mGameTimer.mSecondPerFrame);
+    //    o->Frame();
+    //}
+
+    //mMatView._41 = -mCameraPos.mX;
+    //mMatView._42 = -mCameraPos.mY;
+    //mMatView._43 = -mCameraPos.mZ;
+    //mMatOrthonormalProjection._11 = 2.0f / ((float)mDwWindowWidth);
+    //mMatOrthonormalProjection._22 = 2.0f / ((float)mDwWindowHeight);
 
     return true;
 }
@@ -80,19 +87,15 @@ bool sample::Frame()
 bool sample::Render()
 {
     mImmediateContext->OMSetBlendState(mAlphaBlend, 0, -1);
-    mMatView._41 = -mCameraPos.mX;
-    mMatView._42 = -mCameraPos.mY;
-    mMatView._43 = -mCameraPos.mZ;
-    mMatOrthonormalProjection._11 = 2.0f / ((float)mDwWindowWidth);
-    mMatOrthonormalProjection._22 = 2.0f / ((float)mDwWindowHeight);
-    backObj->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
-    backObj->Render();
 
-    for (auto o : mNPCs)
-    {
-        o->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
-        o->Render();
-    }
+    //backObj->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
+    backObj->Render();
+    
+    //for (auto o : mNPCs)
+    //{
+    //    o->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
+    //    o->Render();
+    //}
 
     return true;
 }

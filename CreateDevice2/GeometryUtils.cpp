@@ -41,7 +41,7 @@ Vector2& Vector2::operator=(const Vector2& other) {
 }
 
 void Vector2::Normalize() {
-    double length = std::sqrt(mX * mX + mY * mY);
+    float length = std::sqrt(mX * mX + mY * mY);
     if (length != 0.0f) {
         mX /= length;
         mY /= length; 
@@ -90,7 +90,7 @@ Vector3& Vector3::operator=(const Vector3& other) {
 }
 
 void Vector3::Normalize() {
-    double length = std::sqrt(mX * mX + mY * mY + mZ * mZ);
+    float length = std::sqrt(mX * mX + mY * mY + mZ * mZ);
     if (length != 0.0f) {
         mX /= length;
         mY /= length;
@@ -137,7 +137,7 @@ Vector4& Vector4::operator=(const Vector4& other) {
 }
 
 void Vector4::Normalize() {
-    double length = std::sqrt(mX * mX + mY * mY + mZ * mZ + mW * mW);
+    float length = std::sqrt(mX * mX + mY * mY + mZ * mZ + mW * mW);
     if (length != 0.0f) {
         mX /= length;
         mY /= length;

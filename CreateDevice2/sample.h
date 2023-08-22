@@ -13,7 +13,7 @@ class sample : public Core
 
 	Matrix mMatView;
 	Matrix mMatOrthonormalProjection;
-	Vector3 mCameraPos;
+	Vector3 mCameraPos = {0,0,0};
 public:
 	bool Init();
 	bool Frame();

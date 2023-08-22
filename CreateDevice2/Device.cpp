@@ -73,7 +73,7 @@ bool Device::Frame() {
 
 bool  Device::PreRender()
 {
-    float color[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
+    float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
     mImmediateContext->ClearRenderTargetView(mRenderTargetView, color);
     return true;
 }
@@ -88,8 +88,8 @@ bool  Device::PostRender()
 }
 
 bool Device::Render() {
-    PreRender();
-    PostRender();
+    //PreRender();
+    //PostRender();
     return true;
 };
 
