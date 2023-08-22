@@ -55,6 +55,11 @@ public:
 	virtual bool Render();
 	virtual bool Release();
 
-	Object() {};
+	Object() 
+	{
+		mPos = Vector3(0, 0, 0);
+		mScale = Vector3(1, 1, 1);
+		mRotation = Vector3(0, 0, 0);
+	};
 	~Object() {};
 };

@@ -5,9 +5,8 @@ bool Texture::Release()
     if (mTexSRV) {
         mTexSRV->Release();
         mTexSRV = nullptr;
-        return true;
     }
-    return false;
+    return true;
 }
 
 bool Texture::Load(ID3D11Device* device, wstring fileName)

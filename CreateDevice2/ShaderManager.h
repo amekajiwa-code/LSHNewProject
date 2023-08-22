@@ -43,7 +43,8 @@ class ShaderManager
 private:
 	ID3D11Device* mDevice = nullptr;
 	ID3D11DeviceContext* mImmediateContext = nullptr;
-	unordered_map<wstring, Shader*> mShaList;
+	//unordered_map<wstring, Shader*> mShaList;
+	map<wstring, Shader*> mShaList;
 public:
 	void Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext);
 	const Shader* Load(wstring filePath);

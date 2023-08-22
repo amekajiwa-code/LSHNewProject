@@ -82,6 +82,15 @@ public:
         mZ = z;
         mW = w;
     }
+
+    bool operator==(const Vector4& other) const;
+    bool operator!=(const Vector4& other) const;
+    Vector4 operator+(const Vector4& other) const;
+    Vector4 operator-(const Vector4& other) const;
+    Vector4 operator*(float scalar) const;
+    Vector4 operator/(float scalar) const;
+    Vector4& operator=(const Vector4& other);
+    void Normalize();
 };
 
 class Matrix
@@ -135,11 +144,6 @@ public:
         ret.mY = v.mX * _12 + v.mY * _22 + v.mZ * _32 + (float)1.0f * _42;
         ret.mZ = v.mX * _13 + v.mY * _23 + v.mZ * _33 + (float)1.0f * _43;
         ret.mW = v.mX * _14 + v.mY * _24 + v.mZ * _34 + (float)1.0f * _44;
-
-        /* ret.x /= ret.w;
-         ret.y /= ret.w;
-         ret.z /= ret.w;
-         ret.w /= ret.w;*/
 
         return Vector3(ret.mX, ret.mY, ret.mZ);
     }

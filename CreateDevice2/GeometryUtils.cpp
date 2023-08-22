@@ -98,6 +98,54 @@ void Vector3::Normalize() {
     }
 }
 
+bool Vector4::operator==(const Vector4& other) const {
+    return (mX == other.mX) && (mY == other.mY) && (mZ == other.mZ) && (mW == other.mW);
+}
+
+bool Vector4::operator!=(const Vector4& other) const {
+    return !(*this == other);
+}
+
+Vector4 Vector4::operator+(const Vector4& other) const {
+    return Vector4(mX + other.mX, mY + other.mY, mZ + other.mZ, mW + other.mW);
+}
+
+Vector4 Vector4::operator-(const Vector4& other) const {
+    return Vector4(mX - other.mX, mY - other.mY, mZ - other.mZ, mW - other.mW);
+}
+
+Vector4 Vector4::operator*(float scalar) const {
+    return Vector4(mX * scalar, mY * scalar, mZ * scalar, mW * scalar);
+}
+
+Vector4 Vector4::operator/(float scalar) const {
+    if (scalar != 0.0) {
+        return Vector4(mX / scalar, mY / scalar, mZ / scalar, mW / scalar);
+    }
+
+    return *this;
+}
+
+Vector4& Vector4::operator=(const Vector4& other) {
+    if (this != &other) {
+        mX = other.mX;
+        mY = other.mY;
+        mZ = other.mZ;
+        mW = other.mW;
+    }
+    return *this;
+}
+
+void Vector4::Normalize() {
+    double length = std::sqrt(mX * mX + mY * mY + mZ * mZ + mW * mW);
+    if (length != 0.0f) {
+        mX /= length;
+        mY /= length;
+        mZ /= length;
+        mW /= length;
+    }
+}
+
 Box::Box(const Vector3& frontTopLeft,
     const Vector3& backBottomRight,
     float width, float height, float depth)

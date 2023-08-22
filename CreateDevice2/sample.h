@@ -8,7 +8,7 @@ class sample : public Core
 	ShaderManager mShaMg;
 	ID3D11BlendState* mAlphaBlend = nullptr;
 
-	Object* obj = nullptr;
+	Object* backObj = nullptr;
 	vector<Object*> mNPCs;
 
 	Matrix mMatView;

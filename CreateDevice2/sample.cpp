@@ -3,15 +3,15 @@
 //문제점: 똑같은 리소스를 계속 반복해서 불러오기 때문에 비효율적 -> 매니저를 만들어서 해소
 bool sample::Init()
 {
-    D3D11_BLEND_DESC blendDesc = {};
-    blendDesc.RenderTarget[0].BlendEnable = false;
-    
-    blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; //D3D11_BLEND_SRC_COLOR 
-    blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_COLOR;
+    D3D11_BLEND_DESC blendDesc;
+    ZeroMemory(&blendDesc, sizeof(blendDesc));
+    blendDesc.RenderTarget[0].BlendEnable = true;
+    blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
     blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
     blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE; //D3D11_BLEND_SRC_ALPHA
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO; //D3D11_BLEND_INV_SRC_ALPHA;
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
     blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
     mDevice->CreateBlendState(&blendDesc, &mAlphaBlend);
@@ -19,19 +19,19 @@ bool sample::Init()
     mShaMg.Set(mDevice, mImmediateContext);
 
     srand(time(NULL)); // 현재 시간으로 시드 설정
-    wstring texname = L"bg.jpg";
-    obj = new PlaneObject;
-    obj->Set(mDevice, mImmediateContext);
-    obj->SetScale(Vector3(800.0f, 600.0f, 1.0f));
-    obj->Create(mTexMg, texname, mShaMg, L"Plane.hlsl");
+    backObj = new PlaneObject;
+    backObj->Set(mDevice, mImmediateContext);
+    backObj->SetScale(Vector3(800.0f, 600.0f, 1.0f));
+    backObj->Create(mTexMg, L"../../res/bg.jpg", mShaMg, L"Plane.hlsl");
 
     for (int i = 0; i < 10; ++i)
     {
         Object* tempObj = new NPC; // 자식으로 캐스팅
-        tempObj->SetPos(Vector3((float)randstep(-800.0f, 800.0f), (float)randstep(-800.0f, 800.0f), 0));
+        tempObj->SetPos(Vector3((float)randstep(-800.0f, 800.0f), (float)randstep(-600.0f, 600.0f), 0));
         tempObj->Set(mDevice, mImmediateContext);
         tempObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
-        tempObj->Create(mTexMg, L"anajuyo_alpha.png", mShaMg, L"Plane.hlsl");
+        tempObj->Create(mTexMg, L"../../res/anajuyo_alpha.png", mShaMg, L"Plane.hlsl");
+        mNPCs.push_back(tempObj);
     }
 
     return true;
@@ -66,7 +66,7 @@ bool sample::Frame()
         mCameraPos.mY -= (float)500.0f * mGameTimer.mSecondPerFrame;
     }
 
-    obj->Frame();
+    backObj->Frame();
 
     for (auto o : mNPCs)
     {
@@ -85,8 +85,8 @@ bool sample::Render()
     mMatView._43 = -mCameraPos.mZ;
     mMatOrthonormalProjection._11 = 2.0f / ((float)mDwWindowWidth);
     mMatOrthonormalProjection._22 = 2.0f / ((float)mDwWindowHeight);
-    obj->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
-    obj->Render();
+    backObj->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
+    backObj->Render();
 
     for (auto o : mNPCs)
     {
@@ -99,8 +99,8 @@ bool sample::Render()
 //커맛
 bool sample::Release()
 {
-    obj->Release();
-    delete obj;
+    backObj->Release();
+    delete backObj;
 
     for (auto o : mNPCs)
     {

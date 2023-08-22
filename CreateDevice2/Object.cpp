@@ -8,13 +8,15 @@ void Object::Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext)
 
 bool Object::Create(TextureManager& texMg, wstring texFileName, ShaderManager& shaMg, wstring shaFileName)
 {
-    CreateVertexBuffer();
     CreateConstantBuffer();
-    mTexture = texMg.Load(texFileName);
+    CreateVertexBuffer();
     mShader = shaMg.Load(shaFileName);
+    InputLayout();
+    mTexture = texMg.Load(texFileName);
+    
     //LoadVertexShader();
     //LoadPixelShader();
-    InputLayout();
+    
     //LoadTextureFile(texFileName);
     
     return true;
@@ -35,19 +37,16 @@ void Object::SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProjection)
     if (matWorld != nullptr)
     {
         mMatWorld = *matWorld;
-        mMatData.matWorld = mMatWorld.Transpose();
     }
     
     if (matView != nullptr)
     {
         mMatView = *matView;
-        mMatData.matView = mMatView.Transpose();
     }
 
     if (matProjection != nullptr)
     {
         mMatProjection = *matProjection;
-        mMatData.matProjection = mMatProjection.Transpose();
     }
     
     mMatData.matWorld = mMatWorld.Transpose();
@@ -148,7 +147,8 @@ bool Object::Frame()
 
 bool Object::Render()
 {
-    ID3D11ShaderResourceView* texSRV = nullptr;
+    //ID3D11ShaderResourceView* texSRV = nullptr;
+    mImmediateContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
 
     if (mTexture)
     {
@@ -174,6 +174,7 @@ bool Object::Release()
 {
     if (mVertexBuffer) mVertexBuffer->Release();
     if (mVertexLayout) mVertexLayout->Release();
+    if (mConstantBuffer) mConstantBuffer->Release();
 
     return true;
 }

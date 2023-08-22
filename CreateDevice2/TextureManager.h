@@ -22,7 +22,8 @@ class TextureManager
 private:
     ID3D11Device* mDevice = nullptr;
     ID3D11DeviceContext* mImmediateContext = nullptr;
-	unordered_map<wstring, Texture*> mTexList;
+	//unordered_map<wstring, Texture*> mTexList;
+	map<wstring, Texture*> mTexList;
 public:
     void Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext);
 	const Texture* Load(wstring filePath);

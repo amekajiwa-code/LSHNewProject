@@ -16,6 +16,7 @@ bool Shader::LoadVertexShader(ID3D11Device* device, wstring fileName)
         &ErrorCode);
     if (FAILED(hResult))
     {
+        MessageBox(NULL, NULL, L"LoadVertexShader ERROR", MB_OK);
         return false;
     }
     hResult = device->CreateVertexShader(
@@ -45,6 +46,7 @@ bool Shader::LoadPixelShader(ID3D11Device* device, wstring fileName)
         &ErrorCode);
     if (FAILED(hResult))
     {
+        MessageBox(NULL, NULL, L"LoadPixelShader ERROR", MB_OK);
         return false;
     }
     hResult = device->CreatePixelShader(
