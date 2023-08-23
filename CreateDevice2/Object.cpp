@@ -45,59 +45,6 @@ void  Object::Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext)
 }
 bool  Object::CreateVertexBuffer()
 {
-    //m_VertexList.resize(6);
-    //m_VertexList[0].u = 0.0f; m_VertexList[0].v = 0.0f;
-    //m_VertexList[1].u = 1.0f; m_VertexList[1].v = 0.0f;
-    //m_VertexList[2].u = 0.0f; m_VertexList[2].v = 1.0f;
-    //m_VertexList[3].u = 0.0f; m_VertexList[3].v = 1.0f;
-    //m_VertexList[4].u = 1.0f; m_VertexList[4].v = 0.0f;
-    //m_VertexList[5].u = 1.0f; m_VertexList[5].v = 1.0f; 
-
-    //float x = randstep(-1.0f, +1.0f);
-    //float y = randstep(-1.0f, +1.0f);
-
-    //m_VertexList[0].x = x; m_VertexList[0].y = y;  m_VertexList[0].z = 0.5f;
-    //m_VertexList[1].x = x+0.3f; m_VertexList[1].y = y;  m_VertexList[1].z = 0.5f;
-    //m_VertexList[2].x = x; m_VertexList[2].y = y-0.3f;  m_VertexList[2].z = 0.5f;
-    //m_VertexList[3]  = m_VertexList[2];
-    //m_VertexList[4] = m_VertexList[1];
-    //m_VertexList[5].x = x+0.3f; m_VertexList[5].y = y - 0.3f;  m_VertexList[5].z = 0.5f;
-
-    ///*m_VertexList[0].x = -1.0f; m_VertexList[0].y = 1.0f; m_VertexList[0].z = 0.5f;
-    //m_VertexList[0].u = 0.0f; m_VertexList[0].v = 0.0f;
-    //m_VertexList[1].x = 1.0f; m_VertexList[1].y = 1.0f; m_VertexList[1].z = 0.5f;
-    //m_VertexList[1].u = 1.0f; m_VertexList[1].v = 0.0f;
-    //m_VertexList[2].x = -1.0f; m_VertexList[2].y = -1.0f; m_VertexList[2].z = 0.5f;
-    //m_VertexList[2].u = 0.0f; m_VertexList[2].v = 1.0f;
-
-    //m_VertexList[3].x = -1.0f; m_VertexList[3].y = -1.0f; m_VertexList[3].z = 0.5f;
-    //m_VertexList[3].u = 0.0f; m_VertexList[3].v = 1.0f;
-
-    //m_VertexList[4].x = 1.0f; m_VertexList[4].y = 1.0f; m_VertexList[4].z = 0.5f;
-    //m_VertexList[4].u = 1.0f; m_VertexList[4].v = 0.0f;
-    //m_VertexList[5].x = 1.0f; m_VertexList[5].y = -1.0f; m_VertexList[5].z = 0.5f;
-    //m_VertexList[5].u = 1.0f; m_VertexList[5].v = 1.0f;*/
-
-    //D3D11_BUFFER_DESC Desc;
-    //ZeroMemory(&Desc, sizeof(Desc));
-    //Desc.ByteWidth = sizeof(PT_Vertex) * m_VertexList.size();
-    //Desc.Usage = D3D11_USAGE_DEFAULT;
-    //Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    //D3D11_SUBRESOURCE_DATA InitialData;
-    //ZeroMemory(&InitialData, sizeof(InitialData));
-    //InitialData.pSysMem = &m_VertexList.at(0);
-
-    //HRESULT hr = m_pDevice->CreateBuffer(
-    //    &Desc,
-    //    &InitialData,
-    //    &m_pVertexBuffer);
-    //if (FAILED(hr))
-    //{
-    //    return false;
-    //}
-
-
     return true;
 }
 bool  Object::CreateConstantBuffer()

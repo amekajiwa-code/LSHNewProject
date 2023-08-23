@@ -11,16 +11,16 @@ public:
 	{
 		pImmediateContext->PSSetShaderResources(iSlot, 1, &m_pTexSRV);
 	}
-	bool  Load(ID3D11Device* pDevice, std::wstring filename);
+	bool  Load(ID3D11Device* pDevice, wstring filename);
 	bool  Release();
 };
 class TextureManager
 {
+private:
 	ID3D11Device* m_pDevice = nullptr;
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
-	using tList = std::map<std::wstring, Texture*>;
 public:
-	tList   m_list;
+	unordered_map<wstring, Texture*> m_list = unordered_map<wstring, Texture*>();
 public:
 	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
 

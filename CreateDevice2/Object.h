@@ -1,5 +1,5 @@
 #pragma once
-#include "Window.h"
+#include "Std.h"
 #include "TextureManager.h"
 #include "ShaderManager.h"
 
@@ -18,16 +18,16 @@ struct CB_Data
 class Object
 {
 public:
-    Matrix       m_matWorld;
-    Matrix       m_matView;
-    Matrix       m_matProj;
-    CB_Data       m_cbData;
+    Matrix m_matWorld;
+    Matrix m_matView;
+    Matrix m_matProj;
+    CB_Data m_cbData;
     ID3D11Device* m_pDevice = nullptr;
     ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-    Vector3      m_vPos;
-    Vector3      m_vScale;
-    Vector3      m_vRotation;
+    Vector3 m_vPos;
+    Vector3 m_vScale;
+    Vector3 m_vRotation;
     void          SetPos(Vector3 p);
     void          SetScale(Vector3 s);
 public:

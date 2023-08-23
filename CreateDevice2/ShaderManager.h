@@ -31,18 +31,17 @@ public:
 		pContext->CSSetShader(m_pCS, NULL, 0);
 		pContext->GSSetShader(m_pGS, NULL, 0);
 	}
-	bool  LoadVertexShader(ID3D11Device* pDevice, std::wstring filename);
-	bool  LoadPixelShader(ID3D11Device* pDevice, std::wstring filename);
-	bool  Load(ID3D11Device* pDevice, std::wstring filename);
+	bool  LoadVertexShader(ID3D11Device* pDevice, wstring filename);
+	bool  LoadPixelShader(ID3D11Device* pDevice, wstring filename);
+	bool  Load(ID3D11Device* pDevice, wstring filename);
 	bool  Release();
 };
 class ShaderManager
 {
 	ID3D11Device* m_pDevice = nullptr;
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
-	using tList = std::map<std::wstring, Shader*>;
 public:
-	tList   m_list;
+	unordered_map<wstring, Shader*> m_list = unordered_map<wstring, Shader*>();
 public:
 	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
 

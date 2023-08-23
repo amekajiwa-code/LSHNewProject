@@ -15,25 +15,25 @@ public:
 		Vector3 vVelocity = m_vDirection * 500.0f * fSecond;
 		m_vPos = m_vPos + vVelocity;
 
-		if (m_vPos.mX < -1000.0f)
+		if (m_vPos.mX < -400.0f)
 		{
 			m_vDirection.mX *= -1.0f;
-			m_vPos.mX = -1000.0f;
+			m_vPos.mX = -400.0f;
 		}
-		if (m_vPos.mY < -1000.0f)
+		if (m_vPos.mY < -300.0f)
 		{
 			m_vDirection.mY *= -1.0f;
-			m_vPos.mY = -1000.0f;
+			m_vPos.mY = -300.0f;
 		}
-		if (m_vPos.mX > 1000.0f)
+		if (m_vPos.mX > 400.0f)
 		{
 			m_vDirection.mX *= -1.0f;
-			m_vPos.mX = 1000.0f;
+			m_vPos.mX = 400.0f;
 		}
-		if (m_vPos.mY > 1000.0f)
+		if (m_vPos.mY > 300.0f)
 		{
 			m_vDirection.mY *= -1.0f;
-			m_vPos.mY = 1000.0f;
+			m_vPos.mY = 300.0f;
 		}
 
 	};

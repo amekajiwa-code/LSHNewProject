@@ -143,30 +143,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="MyCollision.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PlaneObject.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="sample.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="GeometryUtils.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="MyCollision.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PlaneObject.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="sample.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Std.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Plane.hlsl">

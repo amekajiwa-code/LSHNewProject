@@ -26,30 +26,41 @@ bool Window::SetRegisterClassWindow(HINSTANCE hInstance)
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.lpszClassName = L"윈도우";
     WORD ret = RegisterClassExW(&wcex);
+
     return true;
 }
-bool Window::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
-    DWORD       dwWindowWidth,
-    DWORD       dwWindowHeight)
+
+bool Window::SetWindow(const WCHAR* szTitle, DWORD dwWindowWidth, DWORD dwWindowHeight)
 {
     m_dwWindowWidth = dwWindowWidth;
     m_dwWindowHeight = dwWindowHeight;
+    m_dwWindowPosX = 1920 / 2 - dwWindowWidth / 2;
+    m_dwWindowPosY = 1080 / 2 - dwWindowHeight / 2;
+
 #ifndef _DEBUG
     dwExStyle = WS_EX_TOPMOST;
     dwStyle = WS_POPUPWINDOW;
 #else
     m_dwExStyle = WS_EX_APPWINDOW;
 #endif
-    m_hWnd = CreateWindowEx(m_dwExStyle, L"윈도우", szTitle,
-        //szTitle.c_str(), 
+    m_hWnd = CreateWindowEx(
+        m_dwExStyle,
+        L"윈도우",
+        szTitle,
         m_dwStyle,
         m_dwWindowPosX, m_dwWindowPosY,
         m_dwWindowWidth, m_dwWindowHeight,
-        nullptr, nullptr, m_hInstance, nullptr);
+        nullptr,
+        nullptr,
+        m_hInstance,
+        nullptr);
+
     if (!m_hWnd)
     {
         return FALSE;
     }
+
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
+
     return true;
 }

@@ -1,6 +1,4 @@
 #include "Timer.h"
-float	g_fGameTimer = 0.0f;
-float   g_fSecondPerFrame = 0.0f;
 
 bool	Timer::Init()
 {
@@ -14,8 +12,8 @@ bool	Timer::Frame()
 {
 	DWORD dwCurrentTime = timeGetTime();
 	DWORD dwElapseTime = dwCurrentTime - m_dwBeforeTime;
-	g_fSecondPerFrame = m_fSecondPerFrame = dwElapseTime / 1000.0f;
-	g_fGameTimer = m_fGameTimer += m_fSecondPerFrame;
+	m_fSecondPerFrame = dwElapseTime / 1000.0f;
+	m_fGameTimer += m_fSecondPerFrame;
 	m_dwBeforeTime = dwCurrentTime;
 
 	m_fFramePerSecond += m_fSecondPerFrame;
