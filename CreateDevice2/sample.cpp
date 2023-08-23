@@ -104,7 +104,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
     sample& mySample = sample::GetInstance();
     mySample.SetRegisterClassWindow(hInstance);
-    mySample.SetWindow(L"아무거나", 800, 600);
+    mySample.SetWindow(L"아무거나", 1280, 720);
     mySample.Run();
 
     return 0;

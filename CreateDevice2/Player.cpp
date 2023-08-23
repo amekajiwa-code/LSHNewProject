@@ -13,15 +13,15 @@ bool Player::Frame()
     {
         m_vPos.mX -= 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
     }
-    if (Input::GetInstance().mkeyState['D'] == 1)
+    if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX += 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
     }
-    if (Input::GetInstance().mkeyState['W'] == 1)
+    if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mY += 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
     }
-    if (Input::GetInstance().mkeyState['S'] == 1)
+    if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mY -= 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
     }
