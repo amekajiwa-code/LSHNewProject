@@ -3,63 +3,56 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 
-struct P3VERTEX {
-	Vector3 p; // xyz
-	Vector2 t; // uv
-};
-
-struct MatrixData
+struct PT_Vertex
 {
-	Matrix matWorld; // Scale
-	Matrix matView; // Rotation
-	Matrix matProjection; // Translate
+    Vector3 p;
+    Vector2 t;
+};
+struct CB_Data
+{
+    Matrix matWorld;
+    Matrix matView;
+    Matrix matProj;
 };
 
-class Object {
+class Object
+{
 public:
-	Matrix mMatWorld;
-	Matrix mMatView;
-	Matrix mMatProjection;
-	MatrixData mMatData;
-
-	Vector3 mPos;
-	Vector3 mScale;
-	Vector3 mRotation;
-
-	ID3D11Device* mDevice = nullptr;
-	ID3D11DeviceContext* mImmediateContext = nullptr;
+    Matrix       m_matWorld;
+    Matrix       m_matView;
+    Matrix       m_matProj;
+    CB_Data       m_cbData;
+    ID3D11Device* m_pDevice = nullptr;
+    ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-	ID3D11Buffer* mVertexBuffer = nullptr;
-	ID3D11Buffer* mConstantBuffer = nullptr;
-	ID3D11InputLayout* mVertexLayout = nullptr;
-	const Shader* mShader = nullptr;
-	const Texture* mTexture = nullptr;
+    Vector3      m_vPos;
+    Vector3      m_vScale;
+    Vector3      m_vRotation;
+    void          SetPos(Vector3 p);
+    void          SetScale(Vector3 s);
+public:
+    ID3D11Buffer* m_pVertexBuffer = nullptr;
+    ID3D11Buffer* m_pConstantBuffer = nullptr;
+    ID3D11InputLayout* m_pVertexLayout = nullptr;
 
-	vector<P3VERTEX> verticles;
-
-	void Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext);
-	bool Create(TextureManager& texMg, wstring texFileName, ShaderManager& shaMg, wstring shaFileName);
-
-	void SetPos(Vector3 pos);
-	void SetScale(Vector3 scale);
-	void SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProjection);
-
-	virtual void Move(float second) {};
-
-	virtual bool CreateVertexBuffer();
-	virtual bool CreateConstantBuffer();
-	virtual bool InputLayout();
-
-	virtual bool Init();
-	virtual bool Frame();
-	virtual bool Render();
-	virtual bool Release();
-
-	Object() 
-	{
-		mPos = Vector3(0, 0, 0);
-		mScale = Vector3(1, 1, 1);
-		mRotation = Vector3(0, 0, 0);
-	};
-	~Object() {};
+    const Shader* m_pShader = nullptr;
+    const Texture* m_pTex = nullptr;
+    std::vector< PT_Vertex> m_VertexList;
+public:
+    void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
+    virtual bool  CreateVertexBuffer();
+    virtual bool  CreateConstantBuffer();
+    virtual bool  CreateInputLayout();
+public:
+    virtual bool  Create(TextureManager& texMgr, std::wstring shaderFilename,
+        ShaderManager& shaderMgr, std::wstring texFilename);
+    virtual bool  Init();
+    virtual bool  Frame();
+    virtual bool  Render();
+    virtual bool  Release();
+    virtual void  SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProj);
+    virtual void  Move(float fSecond) {};
+public:
+    Object();
+    virtual ~Object() {}
 };

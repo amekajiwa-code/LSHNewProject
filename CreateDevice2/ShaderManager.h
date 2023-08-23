@@ -3,55 +3,53 @@
 
 class Shader
 {
-private:
-	ID3D11VertexShader* mVS = nullptr;
-	ID3D11PixelShader* mPS = nullptr;
+	ID3D11VertexShader* m_pVS = nullptr;
+	ID3D11PixelShader* m_pPS = nullptr;
 
-	/*ID3D11HullShader* m_pHS = nullptr;
+	ID3D11HullShader* m_pHS = nullptr;
 	ID3D11DomainShader* m_pDS = nullptr;
 	ID3D11ComputeShader* m_pCS = nullptr;
-	ID3D11GeometryShader* m_pGS = nullptr;*/
+	ID3D11GeometryShader* m_pGS = nullptr;
+	ID3DBlob* m_VertexShaderCode = nullptr;
+
 public:
-	ID3DBlob* mVertexShaderCode = nullptr;
-	wstring mName;
-	wstring mPath;
-
-	LPVOID GetBufferPointer(void) const
+	std::wstring   m_csName;
+	std::wstring   m_csPath;
+	LPVOID GetBufferPointer(void) const {
+		return m_VertexShaderCode->GetBufferPointer();
+	};
+	SIZE_T GetBufferSize(void) const {
+		return m_VertexShaderCode->GetBufferSize();
+	};
+	void Apply(ID3D11DeviceContext* pContext, int iSlot) const
 	{
-		return mVertexShaderCode->GetBufferPointer();
-	}
+		pContext->VSSetShader(m_pVS, NULL, 0);
+		pContext->PSSetShader(m_pPS, NULL, 0);
 
-	SIZE_T GetBufferSize(void) const
-	{
-		return mVertexShaderCode->GetBufferSize();
+		pContext->HSSetShader(m_pHS, NULL, 0);
+		pContext->DSSetShader(m_pDS, NULL, 0);
+		pContext->CSSetShader(m_pCS, NULL, 0);
+		pContext->GSSetShader(m_pGS, NULL, 0);
 	}
-
-	void Apply(ID3D11DeviceContext* context, int slot) const
-	{
-		context->VSSetShader(mVS, NULL, 0);
-		context->PSSetShader(mPS, NULL, 0);
-	}
-
-	bool LoadVertexShader(ID3D11Device* device, wstring fileName);
-	bool LoadPixelShader(ID3D11Device* device, wstring fileName);
-	bool Load(ID3D11Device* device, wstring fileName);
-	bool Release();
+	bool  LoadVertexShader(ID3D11Device* pDevice, std::wstring filename);
+	bool  LoadPixelShader(ID3D11Device* pDevice, std::wstring filename);
+	bool  Load(ID3D11Device* pDevice, std::wstring filename);
+	bool  Release();
 };
-
 class ShaderManager
 {
-private:
-	ID3D11Device* mDevice = nullptr;
-	ID3D11DeviceContext* mImmediateContext = nullptr;
-	//unordered_map<wstring, Shader*> mShaList;
-	map<wstring, Shader*> mShaList;
+	ID3D11Device* m_pDevice = nullptr;
+	ID3D11DeviceContext* m_pImmediateContext = nullptr;
+	using tList = std::map<std::wstring, Shader*>;
 public:
-	void Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext);
-	const Shader* Load(wstring filePath);
-	const Shader* GetPtr(wstring key);
-	bool Get(wstring key, Shader& ret);
+	tList   m_list;
+public:
+	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
 
+	const Shader* Load(std::wstring szFilepath);
+	const Shader* GetPtr(std::wstring key);
+	bool	  Get(std::wstring key, Shader& ret);
+public:
 	ShaderManager();
 	virtual ~ShaderManager();
 };
-

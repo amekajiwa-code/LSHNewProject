@@ -1,111 +1,111 @@
 #include "TextureManager.h"
 
-bool Texture::Release()
+bool  Texture::Release()
 {
-    if (mTexSRV) {
-        mTexSRV->Release();
-        mTexSRV = nullptr;
-    }
+    if (m_pTexSRV)m_pTexSRV->Release();
+    m_pTexSRV = nullptr;
     return true;
 }
-
-bool Texture::Load(ID3D11Device* device, wstring fileName)
+bool  Texture::Load(ID3D11Device* pDevice, std::wstring filename)
 {
     auto imageobj = std::make_unique<DirectX::ScratchImage>();
-        DirectX::TexMetadata mdata;
+    DirectX::TexMetadata mdata;
 
-        HRESULT hr = DirectX::GetMetadataFromDDSFile(fileName.c_str(), DirectX::DDS_FLAGS_NONE, mdata);
+    HRESULT hr = DirectX::GetMetadataFromDDSFile(filename.c_str(), DirectX::DDS_FLAGS_NONE, mdata);
+    if (SUCCEEDED(hr))
+    {
+        hr = DirectX::LoadFromDDSFile(filename.c_str(), DirectX::DDS_FLAGS_NONE, &mdata, *imageobj);
         if (SUCCEEDED(hr))
         {
-            hr = DirectX::LoadFromDDSFile(fileName.c_str(), DirectX::DDS_FLAGS_NONE, &mdata, *imageobj);
+            hr = DirectX::CreateShaderResourceView(pDevice, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &m_pTexSRV);
             if (SUCCEEDED(hr))
             {
-                hr = DirectX::CreateShaderResourceView(device, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &mTexSRV);
-                if (SUCCEEDED(hr))
-                {
-                    return true;
-                }
+                return true;
             }
         }
-        hr = DirectX::GetMetadataFromWICFile(fileName.c_str(), DirectX::WIC_FLAGS_NONE, mdata);
+    }
+    hr = DirectX::GetMetadataFromWICFile(filename.c_str(), DirectX::WIC_FLAGS_NONE, mdata);
+    if (SUCCEEDED(hr))
+    {
+        hr = DirectX::LoadFromWICFile(filename.c_str(), DirectX::WIC_FLAGS_NONE, &mdata, *imageobj);
         if (SUCCEEDED(hr))
         {
-            hr = DirectX::LoadFromWICFile(fileName.c_str(), DirectX::WIC_FLAGS_NONE, &mdata, *imageobj);
+            hr = DirectX::CreateShaderResourceView(pDevice, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &m_pTexSRV);
             if (SUCCEEDED(hr))
             {
-                hr = DirectX::CreateShaderResourceView(device, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &mTexSRV);
-                if (SUCCEEDED(hr))
-                {
-                    return true;
-                }
+                return true;
             }
         }
-        hr = DirectX::GetMetadataFromTGAFile(fileName.c_str(), DirectX::TGA_FLAGS_NONE, mdata);
+    }
+    hr = DirectX::GetMetadataFromTGAFile(filename.c_str(), DirectX::TGA_FLAGS_NONE, mdata);
+    if (SUCCEEDED(hr))
+    {
+        hr = DirectX::LoadFromTGAFile(filename.c_str(), DirectX::TGA_FLAGS_NONE, &mdata, *imageobj);
         if (SUCCEEDED(hr))
         {
-            hr = DirectX::LoadFromTGAFile(fileName.c_str(), DirectX::TGA_FLAGS_NONE, &mdata, *imageobj);
+            hr = DirectX::CreateShaderResourceView(pDevice, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &m_pTexSRV);
             if (SUCCEEDED(hr))
             {
-                hr = DirectX::CreateShaderResourceView(device, imageobj->GetImages(), imageobj->GetImageCount(), mdata, &mTexSRV);
-                if (SUCCEEDED(hr))
-                {
-                    return true;
-                }
+                return true;
             }
         }
+    }
+    return false;
 }
 
-void TextureManager::Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext)
+void  TextureManager::Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext)
 {
-    mDevice = device;
-    mImmediateContext = immediateContext;
+    m_pDevice = pDevice;
+    m_pImmediateContext = pImmediateContext;
 }
-
-const Texture* TextureManager::Load(wstring filePath)
+const Texture* TextureManager::Load(std::wstring szPullfilePath)
 {
-    size_t found = filePath.find_last_of(L"/");
-    wstring path = filePath.substr(0, found + 1);
-    wstring key = filePath.substr(found + 1);
+    std::size_t found = szPullfilePath.find_last_of(L"/");
+    std::wstring path = szPullfilePath.substr(0, found + 1);
+    std::wstring key = szPullfilePath.substr(found + 1);
     const Texture* data = GetPtr(key);
-
-    if (data != nullptr) {
+    if (data != nullptr)
+    {
         return data;
     }
     Texture* newData = new Texture;
-    if (newData->Load(mDevice, filePath)) {
-        mTexList.insert(make_pair(key, newData));
+    if (newData->Load(m_pDevice, szPullfilePath))
+    {
+        m_list.insert(std::make_pair(key, newData));
         return newData;
     }
     delete newData;
     return nullptr;
 }
-
-const Texture* TextureManager::GetPtr(wstring key)
+const Texture* TextureManager::GetPtr(std::wstring key)
 {
-    auto iter = mTexList.find(key);
-    if (mTexList.end() == iter) {
+    auto iter = m_list.find(key);
+    if (m_list.end() == iter)
+    {
         return nullptr;
     }
-	return iter->second;
+    return iter->second;
 }
-
-bool TextureManager::Get(wstring key, Texture& ret)
+bool TextureManager::Get(std::wstring key, Texture& ret)
 {
-    auto iter = mTexList.find(key);
-    if (mTexList.end() == iter) {
+    auto iter = m_list.find(key);
+    if (m_list.end() == iter)
+    {
         return false;
     }
     ret = *(iter->second);
-	return true;
+    return true;
 }
+TextureManager::TextureManager()
+{
 
-TextureManager::TextureManager() {}
+}
 TextureManager::~TextureManager()
 {
-    for (auto& data : mTexList)
+    for (auto& data : m_list)
     {
         data.second->Release();
         delete data.second;
     }
-    mTexList.clear();
+    m_list.clear();
 }

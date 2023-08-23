@@ -1,41 +1,78 @@
 #include "ShaderManager.h"
+bool  Shader::Release()
+{
+    if (m_VertexShaderCode) m_VertexShaderCode->Release();
+    if (m_pVS) m_pVS->Release();
+    if (m_pPS) m_pPS->Release();
+    if (m_pDS) m_pDS->Release();
+    if (m_pHS) m_pHS->Release();
+    if (m_pGS) m_pGS->Release();
+    if (m_pCS) m_pCS->Release();
+    m_VertexShaderCode = nullptr;
+    m_pVS = nullptr;
+    m_pPS = nullptr;
+    m_pDS = nullptr;
+    m_pHS = nullptr;
+    m_pGS = nullptr;
+    m_pCS = nullptr;
+    return true;
+}
+bool  Shader::Load(ID3D11Device* pDevice, std::wstring filename)
+{
+    if (LoadVertexShader(pDevice, filename) == false)
+    {
 
-bool Shader::LoadVertexShader(ID3D11Device* device, wstring fileName)
+    }
+    if (LoadPixelShader(pDevice, filename) == false)
+    {
+
+    }
+    return true;
+}
+bool  Shader::LoadVertexShader(ID3D11Device* pDevice, std::wstring filename)
 {
     ID3DBlob* ErrorCode;
-    // 버텍스 쉐이더 컴파일
-    HRESULT hResult = D3DCompileFromFile(
-        fileName.c_str(),
+    // 쉐이더 컴파일
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(),
         nullptr,
         nullptr,
         "VS",
         "vs_5_0",
         0,
         0,
-        &mVertexShaderCode,
+        &m_VertexShaderCode,
         &ErrorCode);
-    if (FAILED(hResult))
+    if (FAILED(hr))
     {
-        MessageBox(NULL, NULL, L"LoadVertexShader ERROR", MB_OK);
+        //ErrorCode
+        TCHAR pMessage[500];
+        mbstowcs(pMessage, (CHAR*)ErrorCode->GetBufferPointer(), 500);
+        MessageBox(NULL, pMessage, L"ERROR", MB_OK);
+        if (ErrorCode) ErrorCode->Release();
         return false;
     }
-    hResult = device->CreateVertexShader(
-        mVertexShaderCode->GetBufferPointer(),
-        mVertexShaderCode->GetBufferSize(),
-        nullptr,
-        &mVS);
-
     if (ErrorCode) ErrorCode->Release();
+
+    hr = pDevice->CreateVertexShader(
+        m_VertexShaderCode->GetBufferPointer(),
+        m_VertexShaderCode->GetBufferSize(),
+        nullptr,
+        &m_pVS);
+
+    if (FAILED(hr))
+    {
+        return false;
+    }
     return true;
 }
-
-bool Shader::LoadPixelShader(ID3D11Device* device, wstring fileName)
+bool  Shader::LoadPixelShader(ID3D11Device* pDevice, std::wstring filename)
 {
     ID3DBlob* ShaderCode;
     ID3DBlob* ErrorCode;
-    // 픽셀 쉐이더 컴파일
-    HRESULT hResult = D3DCompileFromFile(
-        fileName.c_str(),
+    // 쉐이더 컴파일
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(),
         nullptr,
         nullptr,
         "PS",
@@ -44,100 +81,84 @@ bool Shader::LoadPixelShader(ID3D11Device* device, wstring fileName)
         0,
         &ShaderCode,
         &ErrorCode);
-    if (FAILED(hResult))
+    if (FAILED(hr))
     {
-        MessageBox(NULL, NULL, L"LoadPixelShader ERROR", MB_OK);
+        //ErrorCode
+        TCHAR pMessage[500];
+        mbstowcs(pMessage, (CHAR*)ErrorCode->GetBufferPointer(), 500);
+        MessageBox(NULL, pMessage, L"ERROR", MB_OK);
+        if (ErrorCode) ErrorCode->Release();
         return false;
     }
-    hResult = device->CreatePixelShader(
+    if (ErrorCode) ErrorCode->Release();
+
+    hr = pDevice->CreatePixelShader(
         ShaderCode->GetBufferPointer(),
         ShaderCode->GetBufferSize(),
         nullptr,
-        &mPS);
+        &m_pPS);
 
     if (ShaderCode) ShaderCode->Release();
-    if (ErrorCode) ErrorCode->Release();
+    if (FAILED(hr))
+    {
+        return false;
+    }
     return true;
 }
 
-bool Shader::Load(ID3D11Device* device, wstring fileName)
+void  ShaderManager::Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext)
 {
-	LoadVertexShader(device, fileName);
-	LoadPixelShader(device, fileName);
-	return true;
+    m_pDevice = pDevice;
+    m_pImmediateContext = pImmediateContext;
 }
-
-bool Shader::Release()
+const Shader* ShaderManager::Load(std::wstring szPullfilePath)
 {
-	if (mVertexShaderCode)
-	{
-		mVertexShaderCode->Release();
-		mVertexShaderCode = nullptr;
-	}
-	if (mVS) {
-		mVS->Release();
-		mVS = nullptr;
-	}
-	if (mPS) {
-		mPS->Release();
-		mPS = nullptr;
-	}
-	return true;
-}
-
-void ShaderManager::Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext)
-{
-    mDevice = device;
-    mImmediateContext = immediateContext;
-}
-
-const Shader* ShaderManager::Load(wstring filePath)
-{
-    size_t found = filePath.find_last_of(L"/");
-    wstring path = filePath.substr(0, found + 1);
-    wstring key = filePath.substr(found + 1);
+    std::size_t found = szPullfilePath.find_last_of(L"/");
+    std::wstring path = szPullfilePath.substr(0, found + 1);
+    std::wstring key = szPullfilePath.substr(found + 1);
     const Shader* data = GetPtr(key);
-
-    if (data != nullptr) {
+    if (data != nullptr)
+    {
         return data;
     }
     Shader* newData = new Shader;
-    if (newData->Load(mDevice, filePath)) {
-        mShaList.insert(make_pair(key, newData));
+    if (newData->Load(m_pDevice, szPullfilePath))
+    {
+        m_list.insert(std::make_pair(key, newData));
         return newData;
     }
     delete newData;
     return nullptr;
 }
-
-const Shader* ShaderManager::GetPtr(wstring key)
+const Shader* ShaderManager::GetPtr(std::wstring key)
 {
-    auto iter = mShaList.find(key);
-    if (mShaList.end() == iter)
+    auto iter = m_list.find(key);
+    if (m_list.end() == iter)
     {
         return nullptr;
     }
     return iter->second;
 }
-
-bool ShaderManager::Get(wstring key, Shader& ret)
+bool ShaderManager::Get(std::wstring key, Shader& ret)
 {
-    auto iter = mShaList.find(key);
-    if (mShaList.end() == iter)
+    auto iter = m_list.find(key);
+    if (m_list.end() == iter)
     {
         return false;
     }
     ret = *(iter->second);
     return true;
 }
+ShaderManager::ShaderManager()
+{
 
-ShaderManager::ShaderManager() {}
+}
 ShaderManager::~ShaderManager()
 {
-    for (auto& data : mShaList)
+    for (auto& data : m_list)
     {
         data.second->Release();
         delete data.second;
     }
-    mShaList.clear();
+    m_list.clear();
 }

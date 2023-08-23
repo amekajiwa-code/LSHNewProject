@@ -1,27 +1,19 @@
 #pragma once
 #include "Window.h"
-
-class Device : public Window {
+class Device : public Window
+{
 public:
-	IDXGIFactory* mFactory = nullptr;
-	ID3D11Device* mDevice = nullptr;
-	ID3D11DeviceContext* mImmediateContext = nullptr;
-	IDXGISwapChain* mSwapChain = nullptr;
-	ID3D11RenderTargetView* mRenderTargetView = nullptr;
-	D3D11_VIEWPORT mViewPort;
+    IDXGISwapChain* m_pSwapChain = nullptr;
+    ID3D11Device* m_pDevice = nullptr;
+    ID3D11DeviceContext* m_pImmediateContext = nullptr;
+    ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
+
+    D3D11_VIEWPORT			m_ViewPort;
 public:
-	bool  Init();
-	bool  Frame();
-	bool  PreRender();
-	bool  PostRender();
-	bool  Render();
-	bool  Release();
-
-	ID3D11Device* GetDevice() {
-		return mDevice;
-	}
-
-	ID3D11DeviceContext* GetContext() {
-		return mImmediateContext;
-	}
+    bool  Init();
+    bool  Frame();
+    bool  PreRender();
+    bool  PostRender();
+    bool  Render();
+    bool  Release();
 };

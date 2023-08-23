@@ -1,45 +1,54 @@
 #pragma once
 #include "Object.h"
-
 class PlaneObject : public Object
 {
 public:
 	virtual bool CreateVertexBuffer() override;
-	virtual bool Frame();
+	virtual bool    Frame();
 };
-
-class NPC : public PlaneObject
+class Npc : public PlaneObject
 {
-private:
-	Vector3 mDirection = { 0, 0, 0 };
+	Vector3 m_vDirection = { 1,1,0 };
 public:
-	NPC()
+	void			Move(float fSecond)
 	{
-		mDirection = { (float)randstep(-1, 1), (float)randstep(-1, 1), 0 };
-	}
+		Vector3 vVelocity = m_vDirection * 500.0f * fSecond;
+		m_vPos = m_vPos + vVelocity;
 
-	void Move(float second)
-	{
-		Vector3 velocity = mDirection * 500.0f * second;
-		mPos = mPos + velocity;
-
-		// 화면 경계에 도달하면 이동 방향을 반대로 바꾸어 반사되도록 합니다.
-		if (mPos.mX < 0.0f || mPos.mX > 800.0f) {
-			mDirection.mX *= -1.0f;
+		if (m_vPos.mX < -1000.0f)
+		{
+			m_vDirection.mX *= -1.0f;
+			m_vPos.mX = -1000.0f;
 		}
-		if (mPos.mY < 0.0f || mPos.mY > 600.0f) {
-			mDirection.mY *= -1.0f;
+		if (m_vPos.mY < -1000.0f)
+		{
+			m_vDirection.mY *= -1.0f;
+			m_vPos.mY = -1000.0f;
 		}
-	}
+		if (m_vPos.mX > 1000.0f)
+		{
+			m_vDirection.mX *= -1.0f;
+			m_vPos.mX = 1000.0f;
+		}
+		if (m_vPos.mY > 1000.0f)
+		{
+			m_vDirection.mY *= -1.0f;
+			m_vPos.mY = 1000.0f;
+		}
 
-	virtual bool Frame()
+	};
+	virtual bool    Frame()
 	{
-		Matrix matScale, matRotation, matTranslate; // SRT
-		matScale.Scale(mScale);
-		matRotation.ZRotate(mRotation.mZ);
-		matTranslate.Translation(mPos);
-		mMatWorld = matScale * matRotation * matTranslate;
+		Matrix matScale, matRotation, matTranslate;
+		matScale.Scale(m_vScale);
+		matRotation.ZRotate(m_vRotation.mZ);
+		matTranslate.Translation(m_vPos);
+		m_matWorld = matScale * matRotation * matTranslate;
 		return true;
 	}
-};
 
+	Npc()
+	{
+		m_vDirection = { randstep(-1, +1), randstep(-1, +1), 0 };
+	}
+};

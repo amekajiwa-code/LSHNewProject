@@ -1,44 +1,43 @@
 #include "sample.h"
-
-//문제점: 똑같은 리소스를 계속 반복해서 불러오기 때문에 비효율적 -> 매니저를 만들어서 해소
-bool sample::Init()
+bool  sample::Init()
 {
-    D3D11_BLEND_DESC blendDesc;
-    ZeroMemory(&blendDesc, sizeof(blendDesc));
-    blendDesc.RenderTarget[0].BlendEnable = true;
-    blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-    blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-    blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-    blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    // alpha blending
+    D3D11_BLEND_DESC bsd;
+    ZeroMemory(&bsd, sizeof(bsd));
+    bsd.RenderTarget[0].BlendEnable = true;
+    bsd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    bsd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    bsd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    bsd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    bsd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    bsd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 
-    mDevice->CreateBlendState(&blendDesc, &mAlphaBlend);
-    mTexMg.Set(mDevice, mImmediateContext);
-    mShaMg.Set(mDevice, mImmediateContext);
+    bsd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    m_pDevice->CreateBlendState(&bsd, &m_AlphaBlend);
 
-    srand(time(NULL)); // 현재 시간으로 시드 설정
-    backObj = new Object;
-    backObj->Set(mDevice, mImmediateContext);
-    backObj->SetPos({ 1, 1, 1 });
-    backObj->SetScale(Vector3(800.0f, 600.0f, 1.0f));
-    backObj->Create(mTexMg, L"../../res/bg.jpg", mShaMg, L"Plane.hlsl");
+    m_texMgr.Set(m_pDevice, m_pImmediateContext);
+    m_shaderMgr.Set(m_pDevice, m_pImmediateContext);
 
-    //for (int i = 0; i < 10; ++i)
-    //{
-    //    Object* tempObj = new NPC; // 자식으로 캐스팅
-    //    tempObj->SetPos(Vector3((float)randstep(-800.0f, 800.0f), (float)randstep(-600.0f, 600.0f), 0));
-    //    tempObj->Set(mDevice, mImmediateContext);
-    //    tempObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
-    //    tempObj->Create(mTexMg, L"../../res/anajuyo_alpha.png", mShaMg, L"Plane.hlsl");
-    //    mNPCs.push_back(tempObj);
-    //}
+    srand(time(NULL));
+    m_pMapObj = new PlaneObject;
+    m_pMapObj->Set(m_pDevice, m_pImmediateContext);
+    m_pMapObj->SetScale(Vector3(1000.0f, 1000.0f, 1.0f));
+    m_pMapObj->Create(m_texMgr, L"../../res/bg.jpg", m_shaderMgr, L"Plane.hlsl");
 
+    for (int iObj = 0; iObj < 10; iObj++)
+    {
+        Object* pObj = new Npc;
+        pObj->Set(m_pDevice, m_pImmediateContext);
+        pObj->SetPos(Vector3(randstep(-1000.0f, +1000.0f),
+            randstep(-1000.0f, +1000.0f), 0));
+        pObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+        pObj->Create(m_texMgr, L"../../res/ana.jpg",
+            m_shaderMgr, L"Plane.hlsl");
+        m_NpcList.push_back(pObj);
+    }
     return true;
 }
-
-bool sample::Frame()
+bool  sample::Frame()
 {
     DWORD dwKeyState[256] = { 0, };
     for (int ikey = 0; ikey < 256; ikey++)
@@ -52,73 +51,72 @@ bool sample::Frame()
 
     if (dwKeyState['A'] == 1)
     {
-        mCameraPos.mX -= (float)500.0f * mGameTimer.mSecondPerFrame;
+        m_vCameraPos.mX -= 500.0f * m_GameTimer.m_fSecondPerFrame;
     }
     if (dwKeyState['D'] == 1)
     {
-        mCameraPos.mX += (float)500.0f * mGameTimer.mSecondPerFrame;
+        m_vCameraPos.mX += 500.0f * m_GameTimer.m_fSecondPerFrame;
     }
     if (dwKeyState['W'] == 1)
     {
-        mCameraPos.mY += (float)500.0f * mGameTimer.mSecondPerFrame;
+        m_vCameraPos.mY += 500.0f * m_GameTimer.m_fSecondPerFrame;
     }
     if (dwKeyState['S'] == 1)
     {
-        mCameraPos.mY -= (float)500.0f * mGameTimer.mSecondPerFrame;
+        m_vCameraPos.mY -= 500.0f * m_GameTimer.m_fSecondPerFrame;
     }
 
-    backObj->Frame();
+    m_pMapObj->Frame();
 
-    //for (auto o : mNPCs)
-    //{
-    //    o->Move(mGameTimer.mSecondPerFrame);
-    //    o->Frame();
-    //}
-
-    //mMatView._41 = -mCameraPos.mX;
-    //mMatView._42 = -mCameraPos.mY;
-    //mMatView._43 = -mCameraPos.mZ;
-    //mMatOrthonormalProjection._11 = 2.0f / ((float)mDwWindowWidth);
-    //mMatOrthonormalProjection._22 = 2.0f / ((float)mDwWindowHeight);
-
-    return true;
-}
-
-bool sample::Render()
-{
-    mImmediateContext->OMSetBlendState(mAlphaBlend, 0, -1);
-
-    //backObj->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
-    backObj->Render();
-    
-    //for (auto o : mNPCs)
-    //{
-    //    o->SetMatrix(nullptr, &mMatView, &mMatOrthonormalProjection);
-    //    o->Render();
-    //}
-
-    return true;
-}
-//커맛
-bool sample::Release()
-{
-    backObj->Release();
-    delete backObj;
-
-    for (auto o : mNPCs)
+    for (auto obj : m_NpcList)
     {
-        o->Release();
-        delete o;
+        obj->Move(m_GameTimer.m_fSecondPerFrame);
+        obj->Frame();
     }
+    return true;
+}
+bool  sample::Render()
+{
+    m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
+    m_matView._41 = -m_vCameraPos.mX;
+    m_matView._42 = -m_vCameraPos.mY;
+    m_matView._43 = -m_vCameraPos.mZ;
+    m_matOrthoProjection._11 = 2.0f / ((float)m_dwWindowWidth);
+    m_matOrthoProjection._22 = 2.0f / ((float)m_dwWindowHeight);
+    // 월드좌표 범위(-10 ~ +10)  camera (0,0)
+    // -10 ~ +10 camera (-5,0)가 원점이 된다.
+    // 뷰 좌표 -> -5 ~ 15
+    // 투영좌표 -> 9 ~ 10 ~ 11
+    // 투영좌표 -> -1 ~ 0 ~ +1
+    m_pMapObj->SetMatrix(nullptr, &m_matView, &m_matOrthoProjection);
+    m_pMapObj->Render();
+    for (auto obj : m_NpcList)
+    {
+        obj->SetMatrix(nullptr, &m_matView, &m_matOrthoProjection);
+        obj->Render();
+    }
+    return true;
+}
+bool  sample::Release()
+{
+    m_pMapObj->Release();
+    delete m_pMapObj;
+    m_pMapObj = nullptr;
 
-    mAlphaBlend->Release();
+    for (auto obj : m_NpcList)
+    {
+        obj->Release();
+        delete obj;
+    }
+    m_NpcList.clear();
+    m_AlphaBlend->Release();
     return true;
 }
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) // 메인
 {
     sample mySample;
-    mySample.SetRegisterWindow(hInstance);
+    mySample.SetRegisterClassWindow(hInstance);
     mySample.SetWindow(L"아무거나", 800, 600);
     mySample.Run();
     return 0;

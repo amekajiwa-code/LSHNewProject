@@ -3,33 +3,31 @@
 
 class Texture
 {
-private:
-	ID3D11ShaderResourceView* mTexSRV = nullptr;
+	ID3D11ShaderResourceView* m_pTexSRV = nullptr;
 public:
-	wstring mName;
-	wstring mPath;
-
-	void Apply(ID3D11DeviceContext* immediateContext, int slot) const
+	std::wstring   m_csName;
+	std::wstring   m_csPath;
+	void Apply(ID3D11DeviceContext* pImmediateContext, int iSlot) const
 	{
-		immediateContext->PSSetShaderResources(slot, 1, &mTexSRV);
+		pImmediateContext->PSSetShaderResources(iSlot, 1, &m_pTexSRV);
 	}
-	bool Load(ID3D11Device* device, wstring fileName);
-	bool Release();
+	bool  Load(ID3D11Device* pDevice, std::wstring filename);
+	bool  Release();
 };
-
 class TextureManager
 {
-private:
-    ID3D11Device* mDevice = nullptr;
-    ID3D11DeviceContext* mImmediateContext = nullptr;
-	//unordered_map<wstring, Texture*> mTexList;
-	map<wstring, Texture*> mTexList;
+	ID3D11Device* m_pDevice = nullptr;
+	ID3D11DeviceContext* m_pImmediateContext = nullptr;
+	using tList = std::map<std::wstring, Texture*>;
 public:
-    void Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext);
-	const Texture* Load(wstring filePath);
-	const Texture* GetPtr(wstring key);
-	bool Get(wstring key, Texture& ret);
+	tList   m_list;
+public:
+	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
 
+	const Texture* Load(std::wstring szFilepath);
+	const Texture* GetPtr(std::wstring key);
+	bool	  Get(std::wstring key, Texture& ret);
+public:
 	TextureManager();
 	virtual ~TextureManager();
 };

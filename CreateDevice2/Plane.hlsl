@@ -1,6 +1,6 @@
 struct VS_IN
 {
-    float3 p : POSITION;
+    float3 p : POS;
     float2 t : TEXTURE;
 };
 
@@ -10,27 +10,24 @@ struct VS_OUT
     float2 t : TEXTURE;
 };
 
-cbuffer VS_CBUFFER
+cbuffer cb0
 {
-    matrix g_matWorld : packoffset(c0);
-    matrix g_matView : packoffset(c4);
-    matrix g_matProjection : packoffset(c8);
+    matrix g_matWorld  : packoffset(c0);
+    matrix g_matView  : packoffset(c4);
+    matrix g_matProj  : packoffset(c8);
 };
-
 VS_OUT VS(VS_IN vIn)
 {
     VS_OUT vOut = (VS_OUT)0;
-
+  
     float4 vWorld = mul(float4(vIn.p, 1.0f), g_matWorld);
     float4 vView = mul(vWorld, g_matView);
-    float4 vProjection = mul(vView, g_matProjection);
-
-    vOut.p = vIn.p;
+    float4 vProj = mul(vView, g_matProj);
+    vOut.p = vProj;
 
     vOut.t = vIn.t;
     return vOut;
 }
-
 
 Texture2D g_txDiffuse1 : register(t0);
 SamplerState sample0 : register(s0);

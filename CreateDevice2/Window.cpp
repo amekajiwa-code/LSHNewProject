@@ -1,8 +1,8 @@
 #include "Window.h"
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) // 윈도우 프로시저
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message) //메시지에 따라 동작
+    switch (message)
     {
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -13,10 +13,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
     return 0;
 }
 
-bool Window::SetRegisterWindow(HINSTANCE hInstance) // 윈도우 클래스 등록
+bool Window::SetRegisterClassWindow(HINSTANCE hInstance)
 {
-    mHInstance = hInstance;
-    WNDCLASSEX wcex; // 윈도우클래스 특성관련 구조체
+    m_hInstance = hInstance;
+    WNDCLASSEX wcex;
     ZeroMemory(&wcex, sizeof(wcex));
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -25,31 +25,31 @@ bool Window::SetRegisterWindow(HINSTANCE hInstance) // 윈도우 클래스 등록
     wcex.hbrBackground = (HBRUSH)CreateSolidBrush(RGB(0, 0, 0));// (COLOR_WINDOW + 1);
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.lpszClassName = L"윈도우";
-    WORD ret = RegisterClassExW(&wcex); // 구조체 전달하여 윈도우 클래스 등록
+    WORD ret = RegisterClassExW(&wcex);
     return true;
 }
-
-bool Window::SetWindow(const WCHAR* szTitle, DWORD dwWindowWidth, DWORD dwWindowHeight) // 윈도우 설정한뒤 윈도우 띄움
+bool Window::SetWindow(const WCHAR* szTitle,//std::wstring szTitle,
+    DWORD       dwWindowWidth,
+    DWORD       dwWindowHeight)
 {
-    mDwWindowWidth = dwWindowWidth;
-    mDwWindowHeight = dwWindowHeight;
-    mDwWindowPosX = 1920 / 2 - dwWindowWidth / 2;
-    mDwWindowPosY = 1080 / 2 - dwWindowHeight / 2;
+    m_dwWindowWidth = dwWindowWidth;
+    m_dwWindowHeight = dwWindowHeight;
 #ifndef _DEBUG
     dwExStyle = WS_EX_TOPMOST;
     dwStyle = WS_POPUPWINDOW;
 #else
-    mDwExStyle = WS_EX_APPWINDOW;
+    m_dwExStyle = WS_EX_APPWINDOW;
 #endif
-    mHWnd = CreateWindowEx(mDwExStyle, L"윈도우", szTitle, mDwStyle,
-        mDwWindowPosX, mDwWindowPosY, mDwWindowWidth, mDwWindowHeight,
-        nullptr, nullptr, mHInstance, nullptr);
-
-    if (!mHWnd)
+    m_hWnd = CreateWindowEx(m_dwExStyle, L"윈도우", szTitle,
+        //szTitle.c_str(), 
+        m_dwStyle,
+        m_dwWindowPosX, m_dwWindowPosY,
+        m_dwWindowWidth, m_dwWindowHeight,
+        nullptr, nullptr, m_hInstance, nullptr);
+    if (!m_hWnd)
     {
         return FALSE;
     }
-
-    ShowWindow(mHWnd, SW_SHOWNORMAL);
+    ShowWindow(m_hWnd, SW_SHOWNORMAL);
     return true;
 }

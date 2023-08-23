@@ -1,185 +1,187 @@
 #include "Object.h"
 
-void Object::Set(ID3D11Device* device, ID3D11DeviceContext* immediateContext)
+void Object::SetPos(Vector3 p)
 {
-    mDevice = device;
-    mImmediateContext = immediateContext;
+    m_vPos = p;
 }
-
-bool Object::Create(TextureManager& texMg, wstring texFileName, ShaderManager& shaMg, wstring shaFileName)
+void  Object::SetScale(Vector3 s)
 {
-    CreateConstantBuffer();
-    CreateVertexBuffer();
-    mShader = shaMg.Load(shaFileName);
-    InputLayout();
-    mTexture = texMg.Load(texFileName);
-    
-    //LoadVertexShader();
-    //LoadPixelShader();
-    
-    //LoadTextureFile(texFileName);
-    
-    return true;
+    m_vScale = s;
 }
-
-void Object::SetPos(Vector3 pos)
-{
-    mPos = pos;
-}
-
-void Object::SetScale(Vector3 scale)
-{
-    mScale = scale;
-}
-
-void Object::SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProjection)
+void  Object::SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProj)
 {
     if (matWorld != nullptr)
     {
-        mMatWorld = *matWorld;
+        m_matWorld = *matWorld;
     }
-    
     if (matView != nullptr)
     {
-        mMatView = *matView;
+        m_matView = *matView;
     }
-
-    if (matProjection != nullptr)
+    if (matProj != nullptr)
     {
-        mMatProjection = *matProjection;
+        m_matProj = *matProj;
     }
+    m_cbData.matWorld = m_matWorld.Transpose();
+    m_cbData.matView = m_matView.Transpose();
+    m_cbData.matProj = m_matProj.Transpose();
+    m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &m_cbData, 0, 0);
 
-    //mMatData.matWorld = mMatWorld.Transpose();
-    //mMatData.matView = mMatView.Transpose();
-    //mMatData.matProjection = mMatProjection.Transpose();
-
-    //mMatData.matWorld = mMatWorld.Transpose;
-    //mMatData.matView = mMatView.Transpose();
-    //mMatData.matProjection = mMatProjection.Transpose();
-
-    Matrix m1, m2, m3;
-    mMatData.matWorld = m1;
-    mMatData.matView = m2;
-    mMatData.matProjection = m3;
-    mImmediateContext->UpdateSubresource(mConstantBuffer, 0, nullptr, &mMatData, 0, 0);
 }
-
-bool Object::CreateConstantBuffer()
+bool  Object::Create(TextureManager& texMgr, std::wstring texFilename,
+    ShaderManager& shaderMgr, std::wstring shaderFilename)
 {
-    D3D11_BUFFER_DESC bufferDesc = {};
-    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = sizeof(MatrixData);
-    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    CreateConstantBuffer();
+    CreateVertexBuffer();
+    m_pShader = shaderMgr.Load(shaderFilename);
+    CreateInputLayout();
+    m_pTex = texMgr.Load(texFilename);
+    return true;
+}
+void  Object::Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext)
+{
+    m_pDevice = pDevice;
+    m_pImmediateContext = pImmediateContext;
+}
+bool  Object::CreateVertexBuffer()
+{
+    //m_VertexList.resize(6);
+    //m_VertexList[0].u = 0.0f; m_VertexList[0].v = 0.0f;
+    //m_VertexList[1].u = 1.0f; m_VertexList[1].v = 0.0f;
+    //m_VertexList[2].u = 0.0f; m_VertexList[2].v = 1.0f;
+    //m_VertexList[3].u = 0.0f; m_VertexList[3].v = 1.0f;
+    //m_VertexList[4].u = 1.0f; m_VertexList[4].v = 0.0f;
+    //m_VertexList[5].u = 1.0f; m_VertexList[5].v = 1.0f; 
 
-    HRESULT hResult = mDevice->CreateBuffer(&bufferDesc, nullptr, &mConstantBuffer);
-    if (FAILED(hResult))
-    {
-        return false;
-    }
+    //float x = randstep(-1.0f, +1.0f);
+    //float y = randstep(-1.0f, +1.0f);
+
+    //m_VertexList[0].x = x; m_VertexList[0].y = y;  m_VertexList[0].z = 0.5f;
+    //m_VertexList[1].x = x+0.3f; m_VertexList[1].y = y;  m_VertexList[1].z = 0.5f;
+    //m_VertexList[2].x = x; m_VertexList[2].y = y-0.3f;  m_VertexList[2].z = 0.5f;
+    //m_VertexList[3]  = m_VertexList[2];
+    //m_VertexList[4] = m_VertexList[1];
+    //m_VertexList[5].x = x+0.3f; m_VertexList[5].y = y - 0.3f;  m_VertexList[5].z = 0.5f;
+
+    ///*m_VertexList[0].x = -1.0f; m_VertexList[0].y = 1.0f; m_VertexList[0].z = 0.5f;
+    //m_VertexList[0].u = 0.0f; m_VertexList[0].v = 0.0f;
+    //m_VertexList[1].x = 1.0f; m_VertexList[1].y = 1.0f; m_VertexList[1].z = 0.5f;
+    //m_VertexList[1].u = 1.0f; m_VertexList[1].v = 0.0f;
+    //m_VertexList[2].x = -1.0f; m_VertexList[2].y = -1.0f; m_VertexList[2].z = 0.5f;
+    //m_VertexList[2].u = 0.0f; m_VertexList[2].v = 1.0f;
+
+    //m_VertexList[3].x = -1.0f; m_VertexList[3].y = -1.0f; m_VertexList[3].z = 0.5f;
+    //m_VertexList[3].u = 0.0f; m_VertexList[3].v = 1.0f;
+
+    //m_VertexList[4].x = 1.0f; m_VertexList[4].y = 1.0f; m_VertexList[4].z = 0.5f;
+    //m_VertexList[4].u = 1.0f; m_VertexList[4].v = 0.0f;
+    //m_VertexList[5].x = 1.0f; m_VertexList[5].y = -1.0f; m_VertexList[5].z = 0.5f;
+    //m_VertexList[5].u = 1.0f; m_VertexList[5].v = 1.0f;*/
+
+    //D3D11_BUFFER_DESC Desc;
+    //ZeroMemory(&Desc, sizeof(Desc));
+    //Desc.ByteWidth = sizeof(PT_Vertex) * m_VertexList.size();
+    //Desc.Usage = D3D11_USAGE_DEFAULT;
+    //Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+    //D3D11_SUBRESOURCE_DATA InitialData;
+    //ZeroMemory(&InitialData, sizeof(InitialData));
+    //InitialData.pSysMem = &m_VertexList.at(0);
+
+    //HRESULT hr = m_pDevice->CreateBuffer(
+    //    &Desc,
+    //    &InitialData,
+    //    &m_pVertexBuffer);
+    //if (FAILED(hr))
+    //{
+    //    return false;
+    //}
+
 
     return true;
 }
-
-bool Object::CreateVertexBuffer()
+bool  Object::CreateConstantBuffer()
 {
-    verticles.resize(6);
-    verticles[0].t.mX= 0.0f; verticles[0].t.mY = 0.0f;
-    verticles[1].t.mX = 1.0f; verticles[1].t.mY = 0.0f;
-    verticles[2].t.mX = 0.0f; verticles[2].t.mY = 1.0f;
-    verticles[3].t.mX = 0.0f; verticles[3].t.mY = 1.0f;
-    verticles[4].t.mX = 1.0f; verticles[4].t.mY = 0.0f;
-    verticles[5].t.mX = 1.0f; verticles[5].t.mY = 1.0f;
+    D3D11_BUFFER_DESC Desc;
+    ZeroMemory(&Desc, sizeof(Desc));
+    Desc.ByteWidth = sizeof(CB_Data);
+    Desc.Usage = D3D11_USAGE_DEFAULT;
+    Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
-    verticles[0].p.mX = -1.0f; verticles[0].p.mY = 1.0f;  verticles[0].p.mZ = 0.0f;
-    verticles[1].p.mX = 1.0f; verticles[1].p.mY = 1.0f;  verticles[1].p.mZ = 0.0f;
-    verticles[2].p.mX = -1.0f; verticles[2].p.mY = -1.0f;  verticles[2].p.mZ = 0.0f;
-    verticles[3] = verticles[2];
-    verticles[4] = verticles[1];
-    verticles[5].p.mX = 1.0f; verticles[5].p.mY = -1.0f;  verticles[5].p.mZ = 0.0f;
-
-    D3D11_BUFFER_DESC bufferDesc = {};
-    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = sizeof(P3VERTEX) * verticles.size();
-    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA InitData = {};
-    InitData.pSysMem = &verticles.at(0);
-
-    HRESULT hResult = mDevice->CreateBuffer(&bufferDesc, &InitData, &mVertexBuffer);
-    if (FAILED(hResult))
+    HRESULT hr = m_pDevice->CreateBuffer(
+        &Desc,
+        nullptr,
+        &m_pConstantBuffer);
+    if (FAILED(hr))
     {
         return false;
     }
-
     return true;
 }
-
-bool Object::InputLayout()
+bool  Object::CreateInputLayout()
 {
     const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "POS",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXTURE",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
+    UINT iNumCount = sizeof(layout) / sizeof(layout[0]);
 
-    UINT numCount = sizeof(layout) / sizeof(layout[0]);
-
-    if (mShader) {
-        HRESULT hResult = mDevice->CreateInputLayout(
+    if (m_pShader)
+    {
+        HRESULT hr = m_pDevice->CreateInputLayout(
             layout,
-            numCount,
-            mShader->GetBufferPointer(),
-            mShader->GetBufferSize(),
-            &mVertexLayout);
-
-        if (FAILED(hResult)) {
+            iNumCount,
+            m_pShader->GetBufferPointer(),
+            m_pShader->GetBufferSize(),
+            &m_pVertexLayout);
+        if (FAILED(hr))
+        {
             return false;
         }
     }
-  
     return true;
 }
+bool  Object::Init()
+{
 
-bool Object::Init()
+    return true;
+}
+bool  Object::Frame()
 {
     return true;
 }
-
-bool Object::Frame()
+bool  Object::Render()
 {
-    return true;
-}
+    m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
-bool Object::Render()
-{
-    //ID3D11ShaderResourceView* texSRV = nullptr;
-//    mImmediateContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
-
-    if (mTexture)
+    if (m_pTex)
     {
-        mTexture->Apply(mImmediateContext, 0);
+        m_pTex->Apply(m_pImmediateContext, 0);
+    }
+    m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
+    if (m_pShader)
+    {
+        m_pShader->Apply(m_pImmediateContext, 0);
     }
 
-    mImmediateContext->IASetInputLayout(mVertexLayout);
-
-    if (mShader)
-    {
-        mShader->Apply(mImmediateContext, 0);
-    }
-
-    UINT stride = sizeof(P3VERTEX);
+    UINT stride = sizeof(PT_Vertex);
     UINT offset = 0;
-    mImmediateContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-    mImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    mImmediateContext->Draw(verticles.size(), 0);
+    m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+    m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_pImmediateContext->Draw(m_VertexList.size(), 0);
     return true;
 }
-
-bool Object::Release()
+bool  Object::Release()
 {
-    if (mVertexBuffer) mVertexBuffer->Release();
-    if (mVertexLayout) mVertexLayout->Release();
-    if (mConstantBuffer) mConstantBuffer->Release();
-
+    if (m_pVertexBuffer) m_pVertexBuffer->Release();
+    if (m_pVertexLayout) m_pVertexLayout->Release();
+    if (m_pConstantBuffer)m_pConstantBuffer->Release();
     return true;
+}
+Object::Object()
+{
+    m_vPos = Vector3(0, 0, 0);
+    m_vScale = Vector3(1, 1, 1);
+    m_vRotation = Vector3(0, 0, 0);
 }

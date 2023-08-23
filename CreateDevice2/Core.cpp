@@ -1,40 +1,38 @@
 #include "Core.h"
-
-bool  Core::Init() {	return true;}
-bool  Core::Frame() {	return true;}
-bool  Core::Render() {	return true;}
-bool  Core::Release() {	return true;}
-
-bool  Core::EngineInit() {
+bool  Core::Init() { return true; }
+bool  Core::Frame() { return true; }
+bool  Core::Render() { return true; }
+bool  Core::Release() { return true; }
+bool  Core::EngineInit()
+{
     Device::Init();
-    mGameTimer.Init();
-	Init();
-	return true;
+    m_GameTimer.Init();
+    Init();
+    return true;
 }
-
-bool  Core::EngineFrame() {
+bool  Core::EngineFrame()
+{
+    m_GameTimer.Frame();
     Device::Frame();
-    mGameTimer.Frame();
-	Frame();
-	return true;
+    Frame();
+    return true;
 }
-
-bool  Core::EngineRender() {
+bool  Core::EngineRender()
+{
     Device::PreRender();
-    mGameTimer.Render();
-	Render();
+    Render();
+    m_GameTimer.Render();
     Device::PostRender();
-	return true;
+    return true;
 }
-
-bool  Core::EngineRelease() {
+bool  Core::EngineRelease()
+{
+    Release();
+    m_GameTimer.Release();
     Device::Release();
-    mGameTimer.Release();
-	Release();
-	return true;
+    return true;
 }
-
-bool  Core::Run() // 윈도우 루프 동작
+bool Core::Run()
 {
     EngineInit();
     MSG msg = { 0 };
@@ -47,8 +45,8 @@ bool  Core::Run() // 윈도우 루프 동작
         }
         else
         {
-            // 게임로직을 처리
-            if (!EngineFrame() || !EngineRender()) {
+            if (!EngineFrame() || !EngineRender())
+            {
                 break;
             }
         }
