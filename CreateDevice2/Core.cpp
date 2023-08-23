@@ -9,7 +9,7 @@ bool  Core::EngineInit()
 {
     Device::Init();
     m_GameTimer.Init();
-    //Input::GetInstance().Init();
+    Input::GetInstance().Init();
     mMainCamera.Init();
     Init();
 
@@ -19,7 +19,7 @@ bool  Core::EngineInit()
 bool  Core::EngineFrame()
 {
     m_GameTimer.Frame();
-    //Input::GetInstance().Frame();
+    Input::GetInstance().Frame();
     mMainCamera.Frame();
     Device::Frame();
     Frame();
@@ -32,7 +32,7 @@ bool  Core::EngineRender()
     Device::PreRender();
     Render();
     m_GameTimer.Render();
-    //Input::GetInstance().Render();
+    Input::GetInstance().Render();
     mMainCamera.Render();
     Device::PostRender();
 
@@ -43,7 +43,7 @@ bool  Core::EngineRelease()
 {
     Release();
     m_GameTimer.Release();
-    //Input::GetInstance().Release();
+    Input::GetInstance().Release();
     mMainCamera.Release();
     Device::Release();
 

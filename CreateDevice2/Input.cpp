@@ -9,7 +9,7 @@ bool Input::Init()
 bool Input::Frame()
 {
     ::GetCursorPos(&mMousePos);
-    ::ScreenToClient(sample::GetInstance().m_hWnd, &mMousePos);
+    ::ScreenToClient(g_hWnd, &mMousePos);
 
     for (int ikey = 0; ikey < 256; ikey++)
     {

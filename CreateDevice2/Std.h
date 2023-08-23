@@ -28,4 +28,6 @@
 #define DegreeToRadian(degree) ( degree *( T_PI / 180.0f))
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 
+extern HWND g_hWnd;
+
 using namespace std;

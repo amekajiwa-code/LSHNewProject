@@ -1,7 +1,7 @@
 #pragma once
 #include "Device.h"
 #include "Timer.h"
-//#include "Input.h"
+#include "Input.h"
 #include "Camera.h"
 
 class Core : public Device

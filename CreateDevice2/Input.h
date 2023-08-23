@@ -1,5 +1,6 @@
 #pragma once
-#include "sample.h"
+#include "Std.h"
+//#include "sample.h"
 
 enum class KeyState
 {

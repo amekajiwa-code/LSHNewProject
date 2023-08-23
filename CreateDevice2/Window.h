@@ -13,10 +13,9 @@ public:
     DWORD m_dwStyle = WS_OVERLAPPEDWINDOW;
     DWORD m_dwWindowPosX = 0;
     DWORD m_dwWindowPosY = 0;
-    DWORD m_dwWindowWidth = 800;
-    DWORD m_dwWindowHeight = 600;
+    DWORD m_dwWindowWidth;
+    DWORD m_dwWindowHeight;
 
     virtual ~Window() {}
 private:
-     
 };

@@ -1,5 +1,5 @@
 #include "Window.h"
-
+HWND g_hWnd;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -59,7 +59,7 @@ bool Window::SetWindow(const WCHAR* szTitle, DWORD dwWindowWidth, DWORD dwWindow
     {
         return FALSE;
     }
-
+    g_hWnd = m_hWnd;
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
 
     return true;

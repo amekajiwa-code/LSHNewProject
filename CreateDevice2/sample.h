@@ -1,11 +1,13 @@
 #pragma once
 #include "Core.h"
 #include "PlaneObject.h"
+#include "Player.h"
 
 class sample : public Core
 {
 private:
     Object* m_pMapObj = nullptr;
+    Object* mPlayer = nullptr;
     TextureManager m_texMgr;
     ShaderManager m_shaderMgr;
     std::vector<Object*> m_NpcList;

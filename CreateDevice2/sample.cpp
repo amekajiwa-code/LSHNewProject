@@ -21,8 +21,16 @@ bool  sample::Init()
     srand(time(NULL));
     m_pMapObj = new PlaneObject;
     m_pMapObj->Set(m_pDevice, m_pImmediateContext);
-    m_pMapObj->SetScale(Vector3(m_dwWindowWidth / 2, m_dwWindowHeight / 2, 1.0f));
+    m_pMapObj->SetScale(Vector3(static_cast<float>(m_dwWindowWidth) / 2, static_cast<float>(m_dwWindowHeight) / 2, 1.0f));
     m_pMapObj->Create(m_texMgr, L"../../res/bg.jpg", m_shaderMgr, L"Plane.hlsl");
+
+    mPlayer = new Player;
+    mPlayer->Set(m_pDevice, m_pImmediateContext);
+    mPlayer->SetPos({ 0.0f, 0.0f, 0.0f });
+    mPlayer->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+    mPlayer->Create(m_texMgr, L"../../res/anajuyo_alpha.png", m_shaderMgr, L"Plane.hlsl");
+
+    mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
     for (int iObj = 0; iObj < 10; iObj++)
     {
@@ -39,6 +47,7 @@ bool  sample::Init()
 }
 bool  sample::Frame()
 {
+    mPlayer->Frame();
     m_pMapObj->Frame();
 
     for (auto obj : m_NpcList)
@@ -51,19 +60,19 @@ bool  sample::Frame()
 bool  sample::Render()
 {
     m_pImmediateContext->OMSetBlendState(m_AlphaBlend, 0, -1);
-    m_matView._41 = -m_vCameraPos.mX;
-    m_matView._42 = -m_vCameraPos.mY;
-    m_matView._43 = -m_vCameraPos.mZ;
-    m_matOrthoProjection._11 = 2.0f / ((float)m_dwWindowWidth);
-    m_matOrthoProjection._22 = 2.0f / ((float)m_dwWindowHeight);
-
-    m_pMapObj->SetMatrix(nullptr, &m_matView, &m_matOrthoProjection);
+    mMainCamera.mCameraPos = mPlayer->m_vPos;
+    m_pMapObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     m_pMapObj->Render();
+
     for (auto obj : m_NpcList)
     {
-        obj->SetMatrix(nullptr, &m_matView, &m_matOrthoProjection);
+        obj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
         obj->Render();
     }
+
+    mPlayer->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
+    mPlayer->Render();
+
     return true;
 }
 bool  sample::Release()
@@ -71,6 +80,10 @@ bool  sample::Release()
     m_pMapObj->Release();
     delete m_pMapObj;
     m_pMapObj = nullptr;
+
+    mPlayer->Release();
+    delete mPlayer;
+    mPlayer = nullptr;
 
     for (auto obj : m_NpcList)
     {
