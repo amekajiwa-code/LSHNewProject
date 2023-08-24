@@ -11,19 +11,19 @@ bool Player::Frame()
 {
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mX -= 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
+        m_vPos.mX -= 500.0f * g_SecondPerFrame;
     }
     if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mX += 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
+        m_vPos.mX += 500.0f * g_SecondPerFrame;
     }
     if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mY += 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
+        m_vPos.mY += 500.0f * g_SecondPerFrame;
     }
     if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mY -= 500.0f * sample::GetInstance().m_GameTimer.m_fSecondPerFrame;
+        m_vPos.mY -= 500.0f * g_SecondPerFrame;
     }
 
     Matrix matScale, matRotation, matTranslate;

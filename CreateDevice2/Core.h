@@ -3,12 +3,14 @@
 #include "Timer.h"
 #include "Input.h"
 #include "Camera.h"
+#include "Writer.h"
 
 class Core : public Device
 {
 public:
-    Timer m_GameTimer;
+    Timer mGameTimer;
     Camera mMainCamera;
+    Writer mFont;
 
     virtual bool  Init();
     virtual bool  Frame();

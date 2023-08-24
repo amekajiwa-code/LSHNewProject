@@ -1,5 +1,5 @@
 #pragma once
-#include "Window.h"
+#include "Std.h"
 
 class Texture
 {
@@ -20,14 +20,20 @@ private:
 	ID3D11Device* m_pDevice = nullptr;
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-	unordered_map<wstring, Texture*> m_list = unordered_map<wstring, Texture*>();
-public:
-	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
+	static TextureManager& GetInstance()
+	{
+		static TextureManager instance;
+		return instance;
+	}
 
+	unordered_map<wstring, Texture*> m_list = unordered_map<wstring, Texture*>();
+	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
 	const Texture* Load(std::wstring szFilepath);
 	const Texture* GetPtr(std::wstring key);
 	bool	  Get(std::wstring key, Texture& ret);
-public:
+
+private:
 	TextureManager();
+public:
 	virtual ~TextureManager();
 };

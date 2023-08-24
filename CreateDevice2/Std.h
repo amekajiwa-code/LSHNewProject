@@ -29,5 +29,9 @@
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 
 extern HWND g_hWnd;
+extern DWORD g_dwWindowWidth;
+extern DWORD g_dwWindowHeight;
+extern float g_SecondPerFrame;
+extern float g_GameTimer;
 
 using namespace std;

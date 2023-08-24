@@ -1,5 +1,8 @@
 #include "Window.h"
 HWND g_hWnd;
+DWORD g_dwWindowWidth;
+DWORD g_dwWindowHeight;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -32,8 +35,8 @@ bool Window::SetRegisterClassWindow(HINSTANCE hInstance)
 
 bool Window::SetWindow(const WCHAR* szTitle, DWORD dwWindowWidth, DWORD dwWindowHeight)
 {
-    m_dwWindowWidth = dwWindowWidth;
-    m_dwWindowHeight = dwWindowHeight;
+    g_dwWindowWidth = m_dwWindowWidth = dwWindowWidth;
+    g_dwWindowHeight = m_dwWindowHeight = dwWindowHeight;
     m_dwWindowPosX = 1920 / 2 - dwWindowWidth / 2;
     m_dwWindowPosY = 1080 / 2 - dwWindowHeight / 2;
 

@@ -98,7 +98,8 @@ bool  Object::Frame()
 {
     return true;
 }
-bool  Object::Render()
+
+bool Object::PreRender()
 {
     m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
@@ -116,9 +117,23 @@ bool  Object::Render()
     UINT offset = 0;
     m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
     m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    return true;
+}
+
+bool  Object::Render()
+{
+    PreRender();
+    PostRender();
+    return true;
+}
+
+bool Object::PostRender()
+{
     m_pImmediateContext->Draw(m_VertexList.size(), 0);
     return true;
 }
+
 bool  Object::Release()
 {
     if (m_pVertexBuffer) m_pVertexBuffer->Release();

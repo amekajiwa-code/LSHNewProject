@@ -5,11 +5,11 @@
 class Timer
 {
 public:
-	float	m_fGameTimer;
-	float   m_fSecondPerFrame;
-	DWORD	m_dwBeforeTime;
-	float   m_fFramePerSecond;
-	int     m_iFPS;
+	float mGameTimer;
+	float mSecondPerFrame;
+	DWORD mDwBeforeTime;
+	float mFramePerSecond;
+	int mFPS;
 public:
 	int		GetFPS();
 public:

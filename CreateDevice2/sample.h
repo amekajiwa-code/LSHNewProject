@@ -6,27 +6,23 @@
 class sample : public Core
 {
 private:
-    Object* m_pMapObj = nullptr;
+    Object* mMapObj = nullptr;
     Object* mPlayer = nullptr;
-    TextureManager m_texMgr;
-    ShaderManager m_shaderMgr;
-    std::vector<Object*> m_NpcList;
-    ID3D11BlendState* m_AlphaBlend = nullptr;
-    Matrix m_matView;
-    Matrix m_matOrthoProjection;
-    Vector3 m_vCameraPos;
+    //TextureManager mTexMgr;
+    //ShaderManager mShaderMgr;
+    vector<Object*> mNpcList;
+    ID3D11BlendState* mAlphaBlend = nullptr;
 
-    sample() {};
-    virtual ~sample() {};
+    Object* mSpriteObj = nullptr;
+    vector<const Texture*>  mTexList;
+    int mTexIndex = 0;
+    
 public:
-    static sample& GetInstance()
-    {
-        static sample instance;
-        return instance;
-    }
-
     bool  Init();
     bool  Frame();
     bool  Render();
     bool  Release();
+
+    sample() {};
+    virtual ~sample() {};
 };

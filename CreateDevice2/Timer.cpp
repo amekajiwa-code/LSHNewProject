@@ -1,39 +1,42 @@
 #include "Timer.h"
 
+float g_SecondPerFrame;
+float g_GameTimer;
+
 bool	Timer::Init()
 {
-	m_fFramePerSecond = 0.0f;
-	m_fGameTimer = 0.0f;
-	m_fSecondPerFrame = 0.0f;
-	m_dwBeforeTime = timeGetTime();
+	mFramePerSecond = 0.0f;
+	mGameTimer = 0.0f;
+	mSecondPerFrame = 0.0f;
+	mDwBeforeTime = timeGetTime();
 	return true;
 }
 bool	Timer::Frame()
 {
 	DWORD dwCurrentTime = timeGetTime();
-	DWORD dwElapseTime = dwCurrentTime - m_dwBeforeTime;
-	m_fSecondPerFrame = dwElapseTime / 1000.0f;
-	m_fGameTimer += m_fSecondPerFrame;
-	m_dwBeforeTime = dwCurrentTime;
+	DWORD dwElapseTime = dwCurrentTime - mDwBeforeTime;
+	g_SecondPerFrame = mSecondPerFrame = dwElapseTime / 1000.0f;
+	g_GameTimer = mGameTimer += mSecondPerFrame;
+	mDwBeforeTime = dwCurrentTime;
 
-	m_fFramePerSecond += m_fSecondPerFrame;
+	mFramePerSecond += mSecondPerFrame;
 	return true;
 }
 int   Timer::GetFPS()
 {
 	static int iFPS = 0;
-	if (m_fFramePerSecond >= 1.0f)
+	if (mFramePerSecond >= 1.0f)
 	{
-		m_iFPS = iFPS;
+		mFPS = iFPS;
 		iFPS = 0;
-		m_fFramePerSecond -= 1.0f;
+		mFramePerSecond -= 1.0f;
 	}
 	iFPS++;
-	return m_iFPS;
+	return mFPS;
 }
 bool	Timer::Render()
 {
-	std::cout << "[FPS]" << GetFPS() << " [GT]" << m_fGameTimer << " [SPF]" << m_fSecondPerFrame << std::endl;
+	std::cout << "[FPS]" << GetFPS() << " [GT]" << mGameTimer << " [SPF]" << mSecondPerFrame << std::endl;
 	return true;
 }
 bool	Timer::Release()

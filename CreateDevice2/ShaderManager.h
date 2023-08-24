@@ -1,5 +1,5 @@
 #pragma once
-#include "Window.h"
+#include "Std.h"
 
 class Shader
 {
@@ -41,14 +41,20 @@ class ShaderManager
 	ID3D11Device* m_pDevice = nullptr;
 	ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-	unordered_map<wstring, Shader*> m_list = unordered_map<wstring, Shader*>();
-public:
-	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
+	static ShaderManager& GetInstance()
+	{
+		static ShaderManager instance;
+		return instance;
+	}
 
+	unordered_map<wstring, Shader*> m_list = unordered_map<wstring, Shader*>();
+	void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
 	const Shader* Load(std::wstring szFilepath);
 	const Shader* GetPtr(std::wstring key);
 	bool	  Get(std::wstring key, Shader& ret);
-public:
+	
+private:
 	ShaderManager();
+public:
 	virtual ~ShaderManager();
 };
