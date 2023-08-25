@@ -53,14 +53,15 @@ bool  sample::Init()
     //카메라 생성
     mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
-    for (int iObj = 0; iObj < 10; iObj++)
+    for (int iObj = 0; iObj < 100; iObj++)
     {
         Object* pObj = new Npc;
         pObj->Set(m_pDevice, m_pImmediateContext);
-        pObj->SetPos(Vector3(randstep(-static_cast<float>(g_dwWindowWidth), +static_cast<float>(g_dwWindowWidth)),
-            randstep(-static_cast<float>(g_dwWindowHeight), +static_cast<float>(g_dwWindowHeight)), 0));
+        /*pObj->SetPos(Vector3(randstep(-static_cast<float>(g_dwWindowWidth), +static_cast<float>(g_dwWindowWidth)),
+            randstep(-static_cast<float>(g_dwWindowHeight), +static_cast<float>(g_dwWindowHeight)), 0));*/
+        pObj->SetPos(Vector3(500.0f, 0.0f, 0.0f));
         pObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
-        Vector2 rt = { pObj->m_vPos.mX * 2.0f, pObj->m_vPos.mY * 2.0f };
+        Vector2 rt = { pObj->m_vPos.mX, pObj->m_vPos.mY };
         pObj->SetRect(rt, pObj->m_vScale.mX * 2.0f, pObj->m_vScale.mY * 2.0f);
         pObj->Create(TextureManager::GetInstance(), L"../../res/anajuyo_alpha.png",
             ShaderManager::GetInstance(), L"Plane.hlsl");
@@ -81,42 +82,25 @@ bool  sample::Init()
         if (pBackBuffer) pBackBuffer->Release();
     }
 
-    mFont.AddText(L"가", 10, 100, { 1.0f, 0.0f, 0.0f, 1.0f });
-    mFont.AddText(L"나", 10, 150, { 0.0f, 1.0f, 0.0f, 1.0f });
-    mFont.AddText(L"다", 10, 200, { 0.0f, 0.0f, 1.0f, 1.0f });
-
-    
+    mFont.AddText(L"프레임", 10, 100, { 1.0f, 0.0f, 0.0f, 1.0f });
 
     return true;
 }
 bool  sample::Frame()
 {
-    if (Input::GetInstance().mkeyState[VK_HOME] == 2)
-    {
-        mTexIndex++;
-        if (mTexIndex >= mTexList.size())
-        {
-            mTexIndex = mTexList.size() - 1;
-        }
-    }
-    if (Input::GetInstance().mkeyState[VK_END] == 2)
-    {
-        mTexIndex--;
-        if (mTexIndex < 0)
-        {
-            mTexIndex = 0;
-        }
-    }
-
     mPlayer->Frame();
     mMapObj->Frame();
     mSpriteObj->Frame();
 
     for (auto obj : mNpcList)
     {
-        if (obj->m_bDead) continue;
-        obj->Move(mGameTimer.mSecondPerFrame);
-        obj->Frame();
+        if (obj->m_bDead == false)
+        {
+            obj->Move(mGameTimer.mSecondPerFrame);
+            obj->Frame();
+            Vector2 rt = { obj->m_vPos.mX, obj->m_vPos.mY };
+            obj->SetRect(rt, obj->m_vScale.mX * 2.0f, obj->m_vScale.mY * 2.0f);
+        }
     }
 
     for (auto obj : mNpcList)
@@ -139,11 +123,9 @@ bool  sample::Render()
 
     for (auto obj : mNpcList)
     {
-        if (obj->m_bDead == false)
-        {
-            obj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
-            obj->Render();
-        }
+        if (obj->m_bDead) continue;
+        obj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
+        obj->Render();
     }
 
     mPlayer->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);

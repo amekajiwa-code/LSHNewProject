@@ -8,9 +8,7 @@ public:
 	void Move(float fSecond);
 	virtual bool Frame();
 
-	Npc()
-	{
-		m_vDirection = { randstep(-1, +1), randstep(-1, +1), 0 };
-	}
+	Npc();
+	virtual ~Npc();
 };
 

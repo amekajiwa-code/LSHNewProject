@@ -2,7 +2,7 @@
 
 void Npc::Move(float fSecond)
 {
-	Vector3 vVelocity = m_vDirection * 1000.0f * fSecond;
+	Vector3 vVelocity = m_vDirection * 500.0f * fSecond;
 	m_vPos = m_vPos + vVelocity;
 
 	if (m_vPos.mX < -static_cast<float>(g_dwWindowWidth) / 2)
@@ -36,4 +36,14 @@ bool Npc::Frame()
 	matTranslate.Translation(m_vPos);
 	m_matWorld = matScale * matRotation * matTranslate;
 	return true;
+}
+
+Npc::Npc()
+{
+	m_vDirection = { randstep(-1, +1), randstep(-1, +1), 0 };
+}
+
+Npc::~Npc()
+{
+	//something cool code~!
 }
