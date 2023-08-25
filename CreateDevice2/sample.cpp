@@ -44,7 +44,9 @@ bool  sample::Init()
     mPlayer = new Player;
     mPlayer->Set(m_pDevice, m_pImmediateContext);
     mPlayer->SetPos({ 0.0f, 0.0f, 0.0f });
-    mPlayer->SetScale(Vector3(100.0f, 100.0f, 1.0f));
+    mPlayer->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+    Vector2 rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
+    mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
     mPlayer->Create(TextureManager::GetInstance(), L"../../res/siruyo.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     
@@ -58,6 +60,8 @@ bool  sample::Init()
         pObj->SetPos(Vector3(randstep(-static_cast<float>(g_dwWindowWidth), +static_cast<float>(g_dwWindowWidth)),
             randstep(-static_cast<float>(g_dwWindowHeight), +static_cast<float>(g_dwWindowHeight)), 0));
         pObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+        Vector2 rt = { pObj->m_vPos.mX * 2.0f, pObj->m_vPos.mY * 2.0f };
+        pObj->SetRect(rt, pObj->m_vScale.mX * 2.0f, pObj->m_vScale.mY * 2.0f);
         pObj->Create(TextureManager::GetInstance(), L"../../res/anajuyo_alpha.png",
             ShaderManager::GetInstance(), L"Plane.hlsl");
         mNpcList.push_back(pObj);
@@ -77,9 +81,9 @@ bool  sample::Init()
         if (pBackBuffer) pBackBuffer->Release();
     }
 
-    mFont.AddText(L"가나다", 10, 100, { 1.0f, 0.0f, 0.0f, 1.0f });
-    mFont.AddText(L"나랑드사이다", 10, 150, { 0.0f, 1.0f, 0.0f, 1.0f });
-    mFont.AddText(L"다람쥐는사실사이다", 10, 200, { 0.0f, 0.0f, 1.0f, 1.0f });
+    mFont.AddText(L"가", 10, 100, { 1.0f, 0.0f, 0.0f, 1.0f });
+    mFont.AddText(L"나", 10, 150, { 0.0f, 1.0f, 0.0f, 1.0f });
+    mFont.AddText(L"다", 10, 200, { 0.0f, 0.0f, 1.0f, 1.0f });
 
     
 
@@ -107,25 +111,39 @@ bool  sample::Frame()
     mPlayer->Frame();
     mMapObj->Frame();
     mSpriteObj->Frame();
+
     for (auto obj : mNpcList)
     {
+        if (obj->m_bDead) continue;
         obj->Move(mGameTimer.mSecondPerFrame);
         obj->Frame();
     }
+
+    for (auto obj : mNpcList)
+    {
+        if (mPlayer->mRect.ToRect(obj->mRect))
+        {
+            obj->m_bDead = true;
+        }
+    }
+
     return true;
 }
 bool  sample::Render()
 {
     m_pImmediateContext->OMSetBlendState(mAlphaBlend, 0, -1);
-    mMainCamera.mCameraPos = mPlayer->m_vPos;
+    //mMainCamera.mCameraPos = mPlayer->m_vPos;
 
     mMapObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     mMapObj->Render();
 
     for (auto obj : mNpcList)
     {
-        obj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
-        obj->Render();
+        if (obj->m_bDead == false)
+        {
+            obj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
+            obj->Render();
+        }
     }
 
     mPlayer->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);

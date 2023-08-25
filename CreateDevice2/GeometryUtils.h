@@ -2,6 +2,7 @@
 #define GEOMETRY_UTILS_H
 
 #include <cmath>
+#include <algorithm>
 
 class Vector2
 {
@@ -248,6 +249,37 @@ public:
         mHeight = height;
         mDepth = depth;
     }
+};
+
+struct Rect
+{
+    bool  m_bEnable = true;
+    float m_fWidth = 0.0f;
+    float m_fHeight = 0.0f;
+    Vector2 m_Point[4];
+    Vector2 m_Center;
+    Vector2 m_Half;
+    Vector2 m_Min;
+    Vector2 m_Max;
+    Vector2 v;
+    Vector2 s;
+
+    bool operator == (Rect& p);
+    bool operator != (Rect& p);
+    Rect operator + (Rect& p);
+    Rect operator - (Rect& p);
+    Rect operator - (Vector2& p);
+    Rect operator * (float fValue);
+    Rect operator / (float fValue);
+    void Set(Vector2 p);
+    void Set(float fw, float fh);
+    void Set(Vector2 p, float fw, float fh);
+    void Set(float fx, float fy, float fw, float fh);
+
+    bool ToRect(Rect& rt);
+    bool ToPoint(Vector2& p);
+    Rect();
+    Rect(float fx, float fy, float fw, float fh);
 };
 
 #endif

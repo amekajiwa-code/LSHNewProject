@@ -7,6 +7,23 @@ bool Camera::Init()
 
 bool Camera::Frame()
 {
+	if (mCameraPos.mX < -static_cast<float>(g_dwWindowWidth))
+	{
+		mCameraPos.mX = -static_cast<float>(g_dwWindowWidth);
+	}
+	if (mCameraPos.mY < -static_cast<float>(g_dwWindowHeight))
+	{
+		mCameraPos.mY = -static_cast<float>(g_dwWindowHeight);
+	}
+	if (mCameraPos.mX > static_cast<float>(g_dwWindowWidth))
+	{
+		mCameraPos.mX = static_cast<float>(g_dwWindowWidth);
+	}
+	if (mCameraPos.mY > static_cast<float>(g_dwWindowHeight))
+	{
+		mCameraPos.mY = static_cast<float>(g_dwWindowHeight);
+	}
+
     mMatView._41 = -mCameraPos.mX;
     mMatView._42 = -mCameraPos.mY;
     mMatView._43 = -mCameraPos.mZ;

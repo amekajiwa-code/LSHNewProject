@@ -18,6 +18,7 @@ struct CB_Data
 class Object
 {
 public:
+    bool m_bDead = false;
     Matrix m_matWorld;
     Matrix m_matView;
     Matrix m_matProj;
@@ -28,8 +29,10 @@ public:
     Vector3 m_vPos;
     Vector3 m_vScale;
     Vector3 m_vRotation;
-    void          SetPos(Vector3 p);
-    void          SetScale(Vector3 s);
+    Rect mRect;
+    void SetPos(Vector3 p);
+    void SetScale(Vector3 s);
+    virtual void SetRect(Vector2& center, float width, float height);
 public:
     ID3D11Buffer* m_pVertexBuffer = nullptr;
     ID3D11Buffer* m_pConstantBuffer = nullptr;

@@ -1,13 +1,20 @@
 #include "Object.h"
 
+void Object::SetRect(Vector2& center, float width, float height)
+{
+    mRect.Set(center, width, height);
+}
+
 void Object::SetPos(Vector3 p)
 {
     m_vPos = p;
 }
+
 void  Object::SetScale(Vector3 s)
 {
     m_vScale = s;
 }
+
 void  Object::SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProj)
 {
     if (matWorld != nullptr)

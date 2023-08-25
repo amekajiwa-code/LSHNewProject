@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "PlaneObject.h"
 #include "Player.h"
+#include "NPC.h"
 
 class sample : public Core
 {
