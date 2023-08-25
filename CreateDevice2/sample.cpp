@@ -77,12 +77,12 @@ bool  sample::Init()
             (LPVOID*)&pBackBuffer);
         if (SUCCEEDED(hr))
         {
-            mFont.Create(pBackBuffer);
+            Writer::GetInstance().Create(pBackBuffer);
         }
         if (pBackBuffer) pBackBuffer->Release();
     }
 
-    mFont.AddText(L"프레임", 10, 100, { 1.0f, 0.0f, 0.0f, 1.0f });
+    //Writer::GetInstance().AddText(L"프레임", 20, 20, { 1.0f, 0.0f, 0.0f, 1.0f });
 
     return true;
 }

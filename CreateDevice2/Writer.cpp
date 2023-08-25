@@ -147,3 +147,8 @@ void Writer::AddText(wstring text, float x, float y, D2D1::ColorF color)
 
     mTextList.push_back(texts);
 }
+
+void Writer::UpdateText(wstring text, int index)
+{
+    mTextList[index].text = text;
+}

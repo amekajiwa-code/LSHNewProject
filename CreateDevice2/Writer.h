@@ -16,8 +16,17 @@ struct TextData
 class Writer
 {
 private:
-	vector<TextData> mTextList;
+	Writer() {};
 public:
+	vector<TextData> mTextList;
+	virtual ~Writer() {};
+
+	static Writer& GetInstance()
+	{
+		static Writer instance;
+		return instance;
+	}
+
 	ID2D1Factory* mD2DFactory = nullptr;
 	IDWriteFactory* mWriteFactory = nullptr;
 	IDWriteTextFormat* mTextFormat = nullptr;
@@ -33,5 +42,6 @@ public:
 	bool Release();
 	bool CreateDXWriteRT(IDXGISurface1* surface);
 	void AddText(wstring text, float x, float y, D2D1::ColorF color);
+	void UpdateText(wstring text, int index);
 };
 

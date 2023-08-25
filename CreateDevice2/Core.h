@@ -10,7 +10,6 @@ class Core : public Device
 public:
     Timer mGameTimer;
     Camera mMainCamera;
-    Writer mFont;
 
     virtual bool  Init();
     virtual bool  Frame();
