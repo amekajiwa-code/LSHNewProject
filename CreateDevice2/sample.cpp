@@ -18,6 +18,11 @@ bool  sample::Init()
 
     TextureManager::GetInstance().Set(m_pDevice, m_pImmediateContext);
     ShaderManager::GetInstance().Set(m_pDevice, m_pImmediateContext);
+
+    //사운드
+    mSound = SoundManager::GetInstance().Load(L"../../res/song_bunker_1.ogg");
+    mSound->Play();
+    mEffectSound = SoundManager::GetInstance().Load(L"../../res/slash_2.wav");
     //오브젝트 세팅
     srand(time(NULL));
     mMapObj = new PlaneObject;
@@ -92,6 +97,7 @@ bool  sample::Frame()
     mMapObj->Frame();
     mSpriteObj->Frame();
 
+
     for (auto obj : mNpcList)
     {
         if (obj->m_bDead == false)
@@ -109,6 +115,32 @@ bool  sample::Frame()
         {
             obj->m_bDead = true;
         }
+    }
+
+    if (Input::GetInstance().mkeyState[VK_LBUTTON]
+        == 2)
+    {
+        mEffectSound->PlayEffect();
+    }
+    if (Input::GetInstance().mkeyState[VK_RBUTTON]
+        == 2)
+    {
+        mSound->Stop();
+    }
+    if (Input::GetInstance().mkeyState[VK_SPACE]
+        == 2)
+    {
+        mSound->Paused();
+    }
+    if (Input::GetInstance().mkeyState[VK_LEFT]
+        == 3)
+    {
+        mSound->VolumeDown();
+    }
+    if (Input::GetInstance().mkeyState[VK_RIGHT]
+        == 3)
+    {
+        mSound->VolumeUp();
     }
 
     return true;

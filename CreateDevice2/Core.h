@@ -4,12 +4,15 @@
 #include "Input.h"
 #include "Camera.h"
 #include "Writer.h"
+#include "SoundManager.h"
 
 class Core : public Device
 {
 public:
     Timer mGameTimer;
     Camera mMainCamera;
+    Sound* mSound;
+    Sound* mEffectSound;
 
     virtual bool  Init();
     virtual bool  Frame();
