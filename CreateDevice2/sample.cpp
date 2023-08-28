@@ -28,7 +28,7 @@ bool  sample::Init()
     mMapObj = new PlaneObject;
     mMapObj->Set(m_pDevice, m_pImmediateContext);
     mMapObj->SetScale(Vector3(static_cast<float>(g_dwWindowWidth) / 2, static_cast<float>(g_dwWindowHeight) / 2, 1.0f));
-    mMapObj->Create(TextureManager::GetInstance(), L"../../res/bg.jpg", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mMapObj->Create(TextureManager::GetInstance(), L"../../res/LastStage.bmp", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     //스프라이트 애니메이션
     const Texture* tex = TextureManager::GetInstance().Load(L"../../res/anajuyo_ani_0.png");
@@ -42,7 +42,9 @@ bool  sample::Init()
 
     mSpriteObj = new PlaneObject;
     mSpriteObj->Set(m_pDevice, m_pImmediateContext);
-    mSpriteObj->SetPos({ 0.0f, 0.0f, 0.0f });
+    mSpriteObj->SetPos({ (static_cast<float>(g_dwWindowWidth) / 2) - 100.0f,
+        +(static_cast<float>(g_dwWindowHeight) / 2) - 100.0f,
+        0.0f });
     mSpriteObj->SetScale(Vector3(100.0f, 100.0f, 1.0f));
     mSpriteObj->Create(TextureManager::GetInstance(), L"../../res/anajuyo_ani_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
@@ -58,7 +60,7 @@ bool  sample::Init()
     //카메라 생성
     mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
-    for (int iObj = 0; iObj < 100; iObj++)
+    for (int iObj = 0; iObj < 3; iObj++)
     {
         Object* pObj = new Npc;
         pObj->Set(m_pDevice, m_pImmediateContext);
@@ -97,7 +99,6 @@ bool  sample::Frame()
     mMapObj->Frame();
     mSpriteObj->Frame();
 
-
     for (auto obj : mNpcList)
     {
         if (obj->m_bDead == false)
@@ -111,10 +112,20 @@ bool  sample::Frame()
 
     for (auto obj : mNpcList)
     {
-        if (mPlayer->mRect.ToRect(obj->mRect))
+        Vector3 curMouse = Input::GetInstance().GetWorldPos(
+            { static_cast<float>(g_dwWindowWidth) / 2,
+            static_cast<float>(g_dwWindowHeight) / 2 },
+            mMainCamera.mCameraPos);
+        if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
+            && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
         {
             obj->m_bDead = true;
         }
+
+        /*if (mPlayer->mRect.ToRect(obj->mRect))
+        {
+            obj->m_bDead = true;
+        }*/
     }
 
     if (Input::GetInstance().mkeyState[VK_LBUTTON]

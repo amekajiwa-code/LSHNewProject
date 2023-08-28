@@ -1,4 +1,20 @@
 #include "Input.h"
+#include "Writer.h"
+
+Vector3 Input::GetWorldPos(Vector2 window, Vector3 camera)
+{
+    float fHalfWidth = window.mX / 2.0f;
+    float fHalfHeight = window.mY / 2.0f;
+
+    // client
+    Vector3 clientMouse = { (float)mMousePos.x, (float)mMousePos.y , 0.0f };
+    // world
+    Vector2 WorldMouse = { camera.mX - fHalfWidth,
+                               camera.mY + fHalfHeight };
+    clientMouse.mX = WorldMouse.mX + clientMouse.mX;
+    clientMouse.mY = WorldMouse.mY - clientMouse.mY;
+    return clientMouse;
+}
 
 bool Input::Init()
 {
@@ -44,7 +60,14 @@ bool Input::Frame()
 
 bool Input::Render()
 {
-	return false;
+    std::wstring mousePos = std::to_wstring(mMousePos.x);
+    mousePos += L",";
+    mousePos += std::to_wstring(mMousePos.y);
+    mousePos += L"\n";
+  
+        Writer::GetInstance().AddText(mousePos, 50, 50, { 1.0f, 1.0f, 1.0f, 1.0f });
+
+	return true;
 }
 
 bool Input::Release()

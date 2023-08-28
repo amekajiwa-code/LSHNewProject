@@ -27,6 +27,8 @@ public:
 	bool Render();
 	bool Release();
 
+	Vector3 GetWorldPos(Vector2 vWindow, Vector3 vCamera);
+
 	virtual ~Input() {};
 private:
 	Input() {};

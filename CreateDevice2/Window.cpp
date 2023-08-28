@@ -26,7 +26,7 @@ bool Window::SetRegisterClassWindow(HINSTANCE hInstance)
     wcex.lpfnWndProc = WndProc; //윈도우프로시저 각종이벤트->메세지큐 저장
     wcex.hInstance = hInstance;
     wcex.hbrBackground = (HBRUSH)CreateSolidBrush(RGB(0, 0, 0));// (COLOR_WINDOW + 1);
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hCursor = LoadCursor(nullptr, IDC_CROSS);
     wcex.lpszClassName = L"윈도우";
     WORD ret = RegisterClassExW(&wcex);
 
