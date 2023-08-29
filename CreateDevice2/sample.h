@@ -14,7 +14,7 @@ private:
     vector<Object*> mNpcList;
     ID3D11BlendState* mAlphaBlend = nullptr;
 
-    Object* mSpriteObj = nullptr;
+    //Object* mSpriteObj = nullptr;
     Object* mCursorObj = nullptr;
     vector<const Texture*>  mTexList;
     int mTexIndex = 0;

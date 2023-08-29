@@ -26,21 +26,21 @@ bool Player::Frame()
         m_vPos.mY -= 500.0f * g_SecondPerFrame;
     }
 
-	if (m_vPos.mX < -static_cast<float>(g_dwWindowWidth) / 2)
+	if (m_vPos.mX < -static_cast<float>(g_dwWindowWidth))
 	{
-		m_vPos.mX = -static_cast<float>(g_dwWindowWidth) / 2;
+		m_vPos.mX = -static_cast<float>(g_dwWindowWidth);
 	}
-	if (m_vPos.mY < -static_cast<float>(g_dwWindowHeight) / 2)
+	if (m_vPos.mY < -static_cast<float>(g_dwWindowHeight))
 	{
-		m_vPos.mY = -static_cast<float>(g_dwWindowHeight) / 2;
+		m_vPos.mY = -static_cast<float>(g_dwWindowHeight);
 	}
-	if (m_vPos.mX > static_cast<float>(g_dwWindowWidth) / 2)
+	if (m_vPos.mX > static_cast<float>(g_dwWindowWidth))
 	{
-		m_vPos.mX = static_cast<float>(g_dwWindowWidth) / 2;
+		m_vPos.mX = static_cast<float>(g_dwWindowWidth);
 	}
-	if (m_vPos.mY > static_cast<float>(g_dwWindowHeight) / 2)
+	if (m_vPos.mY > static_cast<float>(g_dwWindowHeight))
 	{
-		m_vPos.mY = static_cast<float>(g_dwWindowHeight) / 2;
+		m_vPos.mY = static_cast<float>(g_dwWindowHeight);
 	}
 
     Vector2 rt = { m_vPos.mX, m_vPos.mY };

@@ -20,39 +20,53 @@ bool  sample::Init()
     ShaderManager::GetInstance().Set(m_pDevice, m_pImmediateContext);
 
     //사운드
-    mSound = SoundManager::GetInstance().Load(L"../../res/song_bunker_1.ogg");
+    mSound = SoundManager::GetInstance().Load(L"../../res/sound/song_bunker_1.ogg");
     mSound->Play();
-    mEffectSound = SoundManager::GetInstance().Load(L"../../res/slash_2.wav");
+    mEffectSound = SoundManager::GetInstance().Load(L"../../res/sound/slash_2.wav");
     //오브젝트 세팅
     srand(time(NULL));
     mMapObj = new PlaneObject;
     mMapObj->Set(m_pDevice, m_pImmediateContext);
-    mMapObj->SetScale(Vector3(static_cast<float>(g_dwWindowWidth) / 2, static_cast<float>(g_dwWindowHeight) / 2, 1.0f));
-    mMapObj->Create(TextureManager::GetInstance(), L"../../res/LastStage.bmp", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mMapObj->SetScale(Vector3(static_cast<float>(g_dwWindowWidth), static_cast<float>(g_dwWindowHeight), 1.0f));
+    mMapObj->Create(TextureManager::GetInstance(), L"../../res/background/LastStage.bmp", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     //스프라이트 애니메이션
-    const Texture* tex = TextureManager::GetInstance().Load(L"../../res/anajuyo_ani_0.png");
+    const Texture* tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/0.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/anajuyo_ani_1.png");
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/1.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/anajuyo_ani_2.png");
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/2.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/anajuyo_ani_3.png");
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/3.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/4.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/5.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/6.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/7.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/8.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/9.png");
+    mTexList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/10.png");
     mTexList.push_back(tex);
 
-    mSpriteObj = new PlaneObject;
+    /*mSpriteObj = new PlaneObject;
     mSpriteObj->Set(m_pDevice, m_pImmediateContext);
     mSpriteObj->SetPos({ (static_cast<float>(g_dwWindowWidth) / 2) - 100.0f,
         +(static_cast<float>(g_dwWindowHeight) / 2) - 100.0f,
         0.0f });
     mSpriteObj->SetScale(Vector3(100.0f, 100.0f, 1.0f));
-    mSpriteObj->Create(TextureManager::GetInstance(), L"../../res/anajuyo_ani_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mSpriteObj->Create(TextureManager::GetInstance(), L"../../res/animation/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");*/
 
     mCursorObj = new PlaneObject;
     mCursorObj->Set(m_pDevice, m_pImmediateContext);
     mCursorObj->SetPos({ 0.0f, 0.0f, 0.0f });
     mCursorObj->SetScale(Vector3(25.0f, 25.0f, 1.0f));
-    mCursorObj->Create(TextureManager::GetInstance(), L"../../res/cursor_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mCursorObj->Create(TextureManager::GetInstance(), L"../../res/ui/cursor_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     mPlayer = new Player;
     mPlayer->Set(m_pDevice, m_pImmediateContext);
@@ -60,7 +74,7 @@ bool  sample::Init()
     mPlayer->SetScale(Vector3(50.0f, 50.0f, 1.0f));
     Vector2 rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
     mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
-    mPlayer->Create(TextureManager::GetInstance(), L"../../res/siruyo.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mPlayer->Create(TextureManager::GetInstance(), L"../../res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     
     //카메라 생성
@@ -76,7 +90,7 @@ bool  sample::Init()
         pObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
         Vector2 rt = { pObj->m_vPos.mX, pObj->m_vPos.mY };
         pObj->SetRect(rt, pObj->m_vScale.mX * 2.0f, pObj->m_vScale.mY * 2.0f);
-        pObj->Create(TextureManager::GetInstance(), L"../../res/anajuyo_alpha.png",
+        pObj->Create(TextureManager::GetInstance(), L"../../res/npc/anajuyo_alpha.png",
             ShaderManager::GetInstance(), L"Plane.hlsl");
         mNpcList.push_back(pObj);
     }
@@ -111,7 +125,7 @@ bool  sample::Frame()
 
     mPlayer->Frame();
     mMapObj->Frame();
-    mSpriteObj->Frame();
+    //mSpriteObj->Frame();
     mCursorObj->Frame();
 
     for (auto obj : mNpcList)
@@ -169,7 +183,7 @@ bool  sample::Frame()
 bool  sample::Render()
 {
     m_pImmediateContext->OMSetBlendState(mAlphaBlend, 0, -1);
-    //mMainCamera.mCameraPos = mPlayer->m_vPos;
+    mMainCamera.mCameraPos = mPlayer->m_vPos;
 
     mMapObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     mMapObj->Render();
@@ -182,18 +196,19 @@ bool  sample::Render()
     }
 
     mPlayer->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
-    mPlayer->Render();
+    mPlayer->PreRender();
 
-    mSpriteObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
-    mSpriteObj->PreRender();
+    //mSpriteObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
+    //mSpriteObj->PreRender();
 
-    mTexIndex = (int)(g_GameTimer*8) % 4;
+    mTexIndex = (int)(g_GameTimer * 10) % mTexList.size();
     if (mTexList[mTexIndex] != nullptr)
     {
         mTexList[mTexIndex]->Apply(m_pImmediateContext, 0);
     }
 
-   mSpriteObj->PostRender();
+   //mSpriteObj->PostRender();
+    mPlayer->PostRender();
 
    mCursorObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
    mCursorObj->Render();
@@ -210,9 +225,9 @@ bool  sample::Release()
     delete mPlayer;
     mPlayer = nullptr;
 
-    mSpriteObj->Release();
-    delete mSpriteObj;
-    mSpriteObj = nullptr;
+    //mSpriteObj->Release();
+    //delete mSpriteObj;
+    //mSpriteObj = nullptr;
 
     for (auto obj : mNpcList)
     {

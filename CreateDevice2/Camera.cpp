@@ -7,22 +7,22 @@ bool Camera::Init()
 
 bool Camera::Frame()
 {
-	if (mCameraPos.mX < -static_cast<float>(g_dwWindowWidth))
-	{
-		mCameraPos.mX = -static_cast<float>(g_dwWindowWidth);
-	}
-	if (mCameraPos.mY < -static_cast<float>(g_dwWindowHeight))
-	{
-		mCameraPos.mY = -static_cast<float>(g_dwWindowHeight);
-	}
-	if (mCameraPos.mX > static_cast<float>(g_dwWindowWidth))
-	{
-		mCameraPos.mX = static_cast<float>(g_dwWindowWidth);
-	}
-	if (mCameraPos.mY > static_cast<float>(g_dwWindowHeight))
-	{
-		mCameraPos.mY = static_cast<float>(g_dwWindowHeight);
-	}
+    if (mCameraPos.mX < -static_cast<float>(g_dwWindowWidth / 2))
+    {
+        mCameraPos.mX = -static_cast<float>(g_dwWindowWidth / 2);
+    }
+    if (mCameraPos.mX > static_cast<float>(g_dwWindowWidth / 2))
+    {
+        mCameraPos.mX = static_cast<float>(g_dwWindowWidth / 2);
+    }
+    if (mCameraPos.mY > static_cast<float>(g_dwWindowHeight / 2))
+    {
+        mCameraPos.mY = static_cast<float>(g_dwWindowHeight / 2);
+    }
+    if (mCameraPos.mY < -static_cast<float>(g_dwWindowHeight / 2))
+    {
+        mCameraPos.mY = -static_cast<float>(g_dwWindowHeight / 2);
+    }
 
     mMatView._41 = -mCameraPos.mX;
     mMatView._42 = -mCameraPos.mY;
