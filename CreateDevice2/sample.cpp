@@ -71,7 +71,7 @@ bool  sample::Init()
     mPlayer = new Player;
     mPlayer->Set(m_pDevice, m_pImmediateContext);
     mPlayer->SetPos({ 0.0f, 0.0f, 0.0f });
-    mPlayer->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+    mPlayer->SetScale(Vector3(50.0f, 50.0f, 75.0f));
     Vector2 rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
     mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
     mPlayer->Create(TextureManager::GetInstance(), L"res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
@@ -80,7 +80,7 @@ bool  sample::Init()
     //카메라 생성
     mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
-    for (int iObj = 0; iObj < 50; iObj++)
+    for (int iObj = 0; iObj < 5; iObj++)
     {
         Object* pObj = new Npc;
         pObj->Set(m_pDevice, m_pImmediateContext);
@@ -240,7 +240,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 {
     sample mySample;
     mySample.SetRegisterClassWindow(hInstance);
-    mySample.SetWindow(L"아무거나", 1600, 900);
+    mySample.SetWindow(L"아무거나", 1280, 720);
     ::ShowCursor(FALSE);
     mySample.Run();
 

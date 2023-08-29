@@ -4,5 +4,5 @@ class PlaneObject : public Object
 {
 public:
 	virtual bool CreateVertexBuffer() override;
-	virtual bool    Frame();
+	virtual bool Frame();
 };

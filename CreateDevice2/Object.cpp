@@ -1,5 +1,10 @@
 #include "Object.h"
 
+string Object::GetTag()
+{
+    return mTag;
+}
+
 void Object::SetRect(Vector2& center, float width, float height)
 {
     mRect.Set(center, width, height);

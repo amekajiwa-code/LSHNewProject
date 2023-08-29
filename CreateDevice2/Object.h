@@ -42,6 +42,9 @@ public:
     const Texture* m_pTex = nullptr;
     std::vector< PT_Vertex> m_VertexList;
 public:
+    string mTag = "";
+    string GetTag();
+public:
     void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
     virtual bool  CreateVertexBuffer();
     virtual bool  CreateConstantBuffer();

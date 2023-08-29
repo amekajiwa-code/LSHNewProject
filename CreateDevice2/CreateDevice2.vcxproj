@@ -149,6 +149,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Floor.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MyCollision.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Device.h" />
+    <ClInclude Include="Floor.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MyCollision.h" />
