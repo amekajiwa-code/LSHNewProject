@@ -8,6 +8,7 @@ void Player::PlayerMove()
     if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_DOWN) && isFloor)
     {
         isJump = true;
+        mPlayerState = PlayerState::JUMP;
         isFloor = false;
     }
     if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
@@ -17,15 +18,17 @@ void Player::PlayerMove()
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX -= 500.0f * g_SecondPerFrame;
+        mPlayerState = PlayerState::RUN;
         isFlipY = true;
     }
     if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX += 500.0f * g_SecondPerFrame;
+        mPlayerState = PlayerState::RUN;
         isFlipY = false;
     }
 
-    if (isJump && (mJumpTimer <= 0.3f))
+    if (isJump && (mJumpTimer <= MAX_JUMP_TIME))
     {
         m_vPos.mY += 700.0f * g_SecondPerFrame;
         mJumpTimer += g_SecondPerFrame;
@@ -34,6 +37,7 @@ void Player::PlayerMove()
     {
         m_vPos.mY -= 300.0f * g_SecondPerFrame;
         isJump = false;
+        mPlayerState = PlayerState::FALL;
         mJumpTimer = 0.0f;
     }
 
