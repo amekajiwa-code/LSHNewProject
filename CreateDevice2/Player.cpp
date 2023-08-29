@@ -82,9 +82,9 @@ bool Player::Frame()
 
 bool Player::Render()
 {
+    PlaneObject::Render();
     if (isFlipY)
     {
-        m_VertexList.resize(6);
         m_VertexList[0].t.mX = 1.0f; m_VertexList[0].t.mY = 0.0f;
         m_VertexList[1].t.mX = 0.0f; m_VertexList[1].t.mY = 0.0f;
         m_VertexList[2].t.mX = 1.0f; m_VertexList[2].t.mY = 1.0f;
@@ -94,7 +94,6 @@ bool Player::Render()
     }
     else
     {
-        m_VertexList.resize(6);
         m_VertexList[0].t.mX = 0.0f; m_VertexList[0].t.mY = 0.0f;
         m_VertexList[1].t.mX = 1.0f; m_VertexList[1].t.mY = 0.0f;
         m_VertexList[2].t.mX = 0.0f; m_VertexList[2].t.mY = 1.0f;
@@ -102,9 +101,8 @@ bool Player::Render()
         m_VertexList[4].t.mX = 1.0f; m_VertexList[4].t.mY = 0.0f;
         m_VertexList[5].t.mX = 1.0f; m_VertexList[5].t.mY = 1.0f;
     }
-
-    PlaneObject::Render();
-	return false;
+    m_pImmediateContext->UpdateSubresource(m_pVertexBuffer, 0, nullptr, &m_VertexList.at(0), 0, 0);
+	return true;
 }
 
 bool Player::Release()

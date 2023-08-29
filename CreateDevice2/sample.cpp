@@ -197,7 +197,7 @@ bool  sample::Render()
 
     //mSpriteObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     //mSpriteObj->PreRender();
-
+    mPlayer->Render();
     mTexIndex = (int)(g_GameTimer * 10) % mTexList.size();
     if (mTexList[mTexIndex] != nullptr)
     {
