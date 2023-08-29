@@ -48,6 +48,12 @@ bool  sample::Init()
     mSpriteObj->SetScale(Vector3(100.0f, 100.0f, 1.0f));
     mSpriteObj->Create(TextureManager::GetInstance(), L"../../res/anajuyo_ani_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
+    mCursorObj = new PlaneObject;
+    mCursorObj->Set(m_pDevice, m_pImmediateContext);
+    mCursorObj->SetPos({ 0.0f, 0.0f, 0.0f });
+    mCursorObj->SetScale(Vector3(25.0f, 25.0f, 1.0f));
+    mCursorObj->Create(TextureManager::GetInstance(), L"../../res/cursor_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+
     mPlayer = new Player;
     mPlayer->Set(m_pDevice, m_pImmediateContext);
     mPlayer->SetPos({ 0.0f, 0.0f, 0.0f });
@@ -60,13 +66,13 @@ bool  sample::Init()
     //카메라 생성
     mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
-    for (int iObj = 0; iObj < 3; iObj++)
+    for (int iObj = 0; iObj < 10; iObj++)
     {
         Object* pObj = new Npc;
         pObj->Set(m_pDevice, m_pImmediateContext);
         /*pObj->SetPos(Vector3(randstep(-static_cast<float>(g_dwWindowWidth), +static_cast<float>(g_dwWindowWidth)),
             randstep(-static_cast<float>(g_dwWindowHeight), +static_cast<float>(g_dwWindowHeight)), 0));*/
-        pObj->SetPos(Vector3(500.0f, 0.0f, 0.0f));
+        pObj->SetPos(Vector3(0.0f, 0.0f, 0.0f));
         pObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
         Vector2 rt = { pObj->m_vPos.mX, pObj->m_vPos.mY };
         pObj->SetRect(rt, pObj->m_vScale.mX * 2.0f, pObj->m_vScale.mY * 2.0f);
@@ -95,9 +101,18 @@ bool  sample::Init()
 }
 bool  sample::Frame()
 {
+    Vector3 curMouse = Input::GetInstance().GetWorldPos(
+        { static_cast<float>(g_dwWindowWidth),
+        static_cast<float>(g_dwWindowHeight) },
+        mMainCamera.mCameraPos);
+    mCursorObj->SetPos(curMouse);
+    Vector2 rt = { mCursorObj->m_vPos.mX * 2.0f, mCursorObj->m_vPos.mY * 2.0f };
+    mCursorObj->SetRect(rt, mCursorObj->m_vScale.mX * 2.0f, mCursorObj->m_vScale.mY * 2.0f);
+
     mPlayer->Frame();
     mMapObj->Frame();
     mSpriteObj->Frame();
+    mCursorObj->Frame();
 
     for (auto obj : mNpcList)
     {
@@ -110,28 +125,23 @@ bool  sample::Frame()
         }
     }
 
-    for (auto obj : mNpcList)
-    {
-        Vector3 curMouse = Input::GetInstance().GetWorldPos(
-            { static_cast<float>(g_dwWindowWidth) / 2,
-            static_cast<float>(g_dwWindowHeight) / 2 },
-            mMainCamera.mCameraPos);
-        if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
-            && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
-        {
-            obj->m_bDead = true;
-        }
-
-        /*if (mPlayer->mRect.ToRect(obj->mRect))
-        {
-            obj->m_bDead = true;
-        }*/
-    }
-
     if (Input::GetInstance().mkeyState[VK_LBUTTON]
         == 2)
     {
         mEffectSound->PlayEffect();
+        for (auto obj : mNpcList)
+        {
+            if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
+                && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
+            {
+                obj->m_bDead = true;
+            }
+
+            /*if (mCursorObj->mRect.ToRect(obj->mRect))
+            {
+                obj->m_bDead = true;
+            }*/
+        }
     }
     if (Input::GetInstance().mkeyState[VK_RBUTTON]
         == 2)
@@ -185,6 +195,9 @@ bool  sample::Render()
 
    mSpriteObj->PostRender();
 
+   mCursorObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
+   mCursorObj->Render();
+
     return true;
 }
 bool  sample::Release()
@@ -216,6 +229,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
     sample mySample;
     mySample.SetRegisterClassWindow(hInstance);
     mySample.SetWindow(L"아무거나", 1600, 900);
+    ::ShowCursor(FALSE);
     mySample.Run();
 
     return 0;
