@@ -20,38 +20,38 @@ bool  sample::Init()
     ShaderManager::GetInstance().Set(m_pDevice, m_pImmediateContext);
 
     //사운드
-    mSound = SoundManager::GetInstance().Load(L"../../res/sound/song_bunker_1.ogg");
+    mSound = SoundManager::GetInstance().Load(L"res/sound/song_bunker_1.ogg");
     mSound->Play();
-    mEffectSound = SoundManager::GetInstance().Load(L"../../res/sound/slash_2.wav");
+    mEffectSound = SoundManager::GetInstance().Load(L"res/sound/slash_2.wav");
     //오브젝트 세팅
     srand(time(NULL));
     mMapObj = new PlaneObject;
     mMapObj->Set(m_pDevice, m_pImmediateContext);
     mMapObj->SetScale(Vector3(static_cast<float>(g_dwWindowWidth), static_cast<float>(g_dwWindowHeight), 1.0f));
-    mMapObj->Create(TextureManager::GetInstance(), L"../../res/background/LastStage.bmp", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mMapObj->Create(TextureManager::GetInstance(), L"res/background/LastStage.bmp", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     //스프라이트 애니메이션
-    const Texture* tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/0.png");
+    const Texture* tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/0.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/1.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/1.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/2.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/2.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/3.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/3.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/4.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/4.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/5.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/5.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/6.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/6.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/7.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/7.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/8.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/8.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/9.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/9.png");
     mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"../../res/player/spr_idle/10.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/10.png");
     mTexList.push_back(tex);
 
     /*mSpriteObj = new PlaneObject;
@@ -66,7 +66,7 @@ bool  sample::Init()
     mCursorObj->Set(m_pDevice, m_pImmediateContext);
     mCursorObj->SetPos({ 0.0f, 0.0f, 0.0f });
     mCursorObj->SetScale(Vector3(25.0f, 25.0f, 1.0f));
-    mCursorObj->Create(TextureManager::GetInstance(), L"../../res/ui/cursor_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mCursorObj->Create(TextureManager::GetInstance(), L"res/ui/cursor_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     mPlayer = new Player;
     mPlayer->Set(m_pDevice, m_pImmediateContext);
@@ -74,23 +74,23 @@ bool  sample::Init()
     mPlayer->SetScale(Vector3(50.0f, 50.0f, 1.0f));
     Vector2 rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
     mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
-    mPlayer->Create(TextureManager::GetInstance(), L"../../res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    mPlayer->Create(TextureManager::GetInstance(), L"res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     
     //카메라 생성
     mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
-    for (int iObj = 0; iObj < 10; iObj++)
+    for (int iObj = 0; iObj < 50; iObj++)
     {
         Object* pObj = new Npc;
         pObj->Set(m_pDevice, m_pImmediateContext);
-        /*pObj->SetPos(Vector3(randstep(-static_cast<float>(g_dwWindowWidth), +static_cast<float>(g_dwWindowWidth)),
-            randstep(-static_cast<float>(g_dwWindowHeight), +static_cast<float>(g_dwWindowHeight)), 0));*/
-        pObj->SetPos(Vector3(0.0f, 0.0f, 0.0f));
+        pObj->SetPos(Vector3(randstep(-static_cast<float>(g_dwWindowWidth), +static_cast<float>(g_dwWindowWidth)),
+            randstep(-static_cast<float>(g_dwWindowHeight), +static_cast<float>(g_dwWindowHeight)), 0));
+        //pObj->SetPos(Vector3(0.0f, 0.0f, 0.0f));
         pObj->SetScale(Vector3(50.0f, 50.0f, 1.0f));
         Vector2 rt = { pObj->m_vPos.mX, pObj->m_vPos.mY };
         pObj->SetRect(rt, pObj->m_vScale.mX * 2.0f, pObj->m_vScale.mY * 2.0f);
-        pObj->Create(TextureManager::GetInstance(), L"../../res/npc/anajuyo_alpha.png",
+        pObj->Create(TextureManager::GetInstance(), L"res/npc/anajuyo_alpha.png",
             ShaderManager::GetInstance(), L"Plane.hlsl");
         mNpcList.push_back(pObj);
     }
@@ -145,16 +145,13 @@ bool  sample::Frame()
         mEffectSound->PlayEffect();
         for (auto obj : mNpcList)
         {
+            if (obj->m_bDead) continue;
+
             if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
                 && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
             {
                 obj->m_bDead = true;
             }
-
-            /*if (mCursorObj->mRect.ToRect(obj->mRect))
-            {
-                obj->m_bDead = true;
-            }*/
         }
     }
     if (Input::GetInstance().mkeyState[VK_RBUTTON]

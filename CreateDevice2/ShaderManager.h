@@ -5,7 +5,6 @@ class Shader
 {
 	ID3D11VertexShader* m_pVS = nullptr;
 	ID3D11PixelShader* m_pPS = nullptr;
-
 	ID3D11HullShader* m_pHS = nullptr;
 	ID3D11DomainShader* m_pDS = nullptr;
 	ID3D11ComputeShader* m_pCS = nullptr;
@@ -25,7 +24,6 @@ public:
 	{
 		pContext->VSSetShader(m_pVS, NULL, 0);
 		pContext->PSSetShader(m_pPS, NULL, 0);
-
 		pContext->HSSetShader(m_pHS, NULL, 0);
 		pContext->DSSetShader(m_pDS, NULL, 0);
 		pContext->CSSetShader(m_pCS, NULL, 0);

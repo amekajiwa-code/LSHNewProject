@@ -18,6 +18,9 @@ bool  Device::Init()
     D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE;
     UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
     D3D_FEATURE_LEVEL pFeatureLevels = D3D_FEATURE_LEVEL_11_0;
+    #ifdef _DEBUG
+        Flags |= D3D11_CREATE_DEVICE_DEBUG;
+    #endif
     // 1) 디바이스
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
         NULL,
@@ -27,7 +30,6 @@ bool  Device::Init()
         &pFeatureLevels, 1,
         D3D11_SDK_VERSION,
         &SwapChainDesc,
-
         &m_pSwapChain,   // 백버퍼인터페이스
         &m_pDevice,      // dx 인터페이스( 생성 )
         NULL,

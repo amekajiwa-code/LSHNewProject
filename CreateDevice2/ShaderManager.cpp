@@ -33,13 +33,18 @@ bool  Shader::LoadVertexShader(ID3D11Device* pDevice, std::wstring filename)
 {
     ID3DBlob* ErrorCode;
     // 쉐이더 컴파일
+    UINT flags = 0;
+#ifdef _DEBUG
+    flags = D3DCOMPILE_DEBUG;
+    flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(),
         nullptr,
         nullptr,
         "VS",
         "vs_5_0",
-        0,
+        flags,
         0,
         &m_VertexShaderCode,
         &ErrorCode);
@@ -71,13 +76,18 @@ bool  Shader::LoadPixelShader(ID3D11Device* pDevice, std::wstring filename)
     ID3DBlob* ShaderCode;
     ID3DBlob* ErrorCode;
     // 쉐이더 컴파일
+    UINT flags = 0;
+#ifdef _DEBUG
+    flags = D3DCOMPILE_DEBUG;
+    flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(),
         nullptr,
         nullptr,
         "PS",
         "ps_5_0",
-        0,
+        flags,
         0,
         &ShaderCode,
         &ErrorCode);
