@@ -9,10 +9,10 @@ void Player::PlayerMove()
     {
         isJump = true;
     }
-    if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
+    /*if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mY -= 500.0f * g_SecondPerFrame;
-    }
+    }*/
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX -= 500.0f * g_SecondPerFrame;

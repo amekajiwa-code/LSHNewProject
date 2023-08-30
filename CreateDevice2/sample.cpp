@@ -47,6 +47,9 @@ bool  sample::Init()
     mCursorObj->SetPos({ 0.0f, 0.0f, 0.0f });
     mCursorObj->SetScale(Vector3(25.0f, 25.0f, 1.0f));
     mCursorObj->Create(TextureManager::GetInstance(), L"res/ui/cursor_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    #pragma endregion
+
+    #pragma region 스프라이트애니메이션
 
     mPlayer = new Player;
     mPlayer->Set(m_pDevice, m_pImmediateContext);
@@ -54,85 +57,83 @@ bool  sample::Init()
     mPlayer->SetScale(Vector3(50.0f, 50.0f, 75.0f));
     rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
     mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
-    mPlayer->Create(TextureManager::GetInstance(), L"res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
-    #pragma endregion
+    mPlayer->Create(TextureManager::GetInstance(), L"res/player/spr_idle/idle_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
-    #pragma region 스프라이트애니메이션
-    const Texture* tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/0.png");
+    const Texture* tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_0.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/1.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_1.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/2.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_2.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/3.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_3.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/4.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_4.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/5.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_5.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/6.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_6.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/7.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_7.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/8.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_8.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/9.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_9.png");
     mPlayer->mIdleList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/10.png");
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/idle_10.png");
     mPlayer->mIdleList.push_back(tex);
 
-    const Texture* tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/0.png");
+    const Texture* tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_0.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/1.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_1.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/2.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_2.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/3.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_3.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/4.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_4.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/5.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_5.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/6.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_6.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/7.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_7.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/8.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_8.png");
     mPlayer->mRunList.push_back(tex1);
-    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/9.png");
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/run_9.png");
     mPlayer->mRunList.push_back(tex1);
 
-    const Texture* tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/0.png");
+    const Texture* tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/jump_0.png");
     mPlayer->mJumpList.push_back(tex2);
-    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/1.png");
+    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/jump_1.png");
     mPlayer->mJumpList.push_back(tex2);
-    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/2.png");
+    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/jump_2.png");
     mPlayer->mJumpList.push_back(tex2);
-    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/3.png");
+    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/jump_3.png");
     mPlayer->mJumpList.push_back(tex2);
 
-    const Texture* tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/0.png");
+    const Texture* tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/fall_0.png");
     mPlayer->mFallList.push_back(tex3);
-    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/1.png");
+    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/fall_1.png");
     mPlayer->mFallList.push_back(tex3);
-    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/2.png");
+    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/fall_2.png");
     mPlayer->mFallList.push_back(tex3);
-    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/3.png");
+    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/fall_3.png");
     mPlayer->mFallList.push_back(tex3);
 
-    const Texture* tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/0.png");
+    const Texture* tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_0.png");
     mPlayer->mAttackList.push_back(tex4);
-    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/1.png");
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_1.png");
     mPlayer->mAttackList.push_back(tex4);
-    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/2.png");
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_2.png");
     mPlayer->mAttackList.push_back(tex4);
-    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/3.png");
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_3.png");
     mPlayer->mAttackList.push_back(tex4);
-    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/4.png");
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_4.png");
     mPlayer->mAttackList.push_back(tex4);
-    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/5.png");
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_5.png");
     mPlayer->mAttackList.push_back(tex4);
-    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/6.png");
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/attack_6.png");
     mPlayer->mAttackList.push_back(tex4);
 
     #pragma endregion
