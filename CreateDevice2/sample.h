@@ -8,7 +8,7 @@ class sample : public Core
 {
 private:
     Object* mMapObj = nullptr;
-    Object* mPlayer = nullptr;
+    Player* mPlayer = nullptr;
     //TextureManager mTexMgr;
     //ShaderManager mShaderMgr;
     vector<Object*> mNpcList;

@@ -58,8 +58,8 @@ bool  Device::Init()
 
     pBackBuffer->Release();
 
-    m_ViewPort.Width = m_dwWindowWidth;
-    m_ViewPort.Height = m_dwWindowHeight;
+    m_ViewPort.Width = static_cast<float>(m_dwWindowWidth);
+    m_ViewPort.Height = static_cast<float>(m_dwWindowHeight);
     m_ViewPort.MinDepth = 0.0f;
     m_ViewPort.MaxDepth = 1.0f;
     m_ViewPort.TopLeftX = 0;

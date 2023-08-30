@@ -49,6 +49,8 @@ struct IWICMetadataQueryReader;
 
 #define DIRECTX_TEX_VERSION 199
 
+#pragma warning(disable: 26812)
+
 
 namespace DirectX
 {

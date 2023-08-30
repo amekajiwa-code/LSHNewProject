@@ -17,19 +17,21 @@ private:
 	bool isFloor;
 	bool isJump;
 	bool isFlipY;
-	float mJumpTimer;
-
-	PlayerState mPlayerState = PlayerState::IDLE;
-	vector<const Texture*>  mIdleList;
-	vector<const Texture*>  mRunList;
-	vector<const Texture*>  mJumpList;
-	vector<const Texture*>  mFallList;
-	vector<const Texture*>  mAttackList;
+	float mJumpTimer = 0.0f;
+	PlayerState mPlayerState;
 
 	void PlayerMove();
 	void PlayerAttack();
-	bool CheckCollision(Object* other);
 public:
+	vector<const Texture*>  mIdleList = vector<const Texture*>();
+	vector<const Texture*>  mRunList = vector<const Texture*>();
+	vector<const Texture*>  mJumpList = vector<const Texture*>();
+	vector<const Texture*>  mFallList = vector<const Texture*>();
+	vector<const Texture*>  mAttackList = vector<const Texture*>();
+
+	bool CheckCollision(Object* other);
+	vector<const Texture*> GetPlayerAnimation();
+
 	bool Init();
 	bool Frame();
 	bool Render();

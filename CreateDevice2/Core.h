@@ -11,8 +11,8 @@ class Core : public Device
 public:
     Timer mGameTimer;
     Camera mMainCamera;
-    Sound* mSound;
-    Sound* mEffectSound;
+    Sound* mSound = nullptr;
+    Sound* mEffectSound = nullptr;
 
     virtual bool  Init();
     virtual bool  Frame();

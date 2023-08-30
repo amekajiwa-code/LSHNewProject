@@ -20,7 +20,7 @@ public:
 	}
 
 	POINT mMousePos;
-	DWORD mkeyState[256];
+	DWORD mkeyState[256] ;
 
 	bool Init();
 	bool Frame();

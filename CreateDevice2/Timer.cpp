@@ -4,28 +4,28 @@
 float g_SecondPerFrame;
 float g_GameTimer;
 
-bool	Timer::Init()
+bool Timer::Init()
 {
 	mFramePerSecond = 0.0f;
 	mGameTimer = 0.0f;
 	mSecondPerFrame = 0.0f;
-	mDwBeforeTime = timeGetTime();
+	mBeforeTime = std::chrono::high_resolution_clock::now();
 	return true;
 }
-bool	Timer::Frame()
+bool Timer::Frame()
 {
-	DWORD dwCurrentTime = timeGetTime();
-	DWORD dwElapseTime = dwCurrentTime - mDwBeforeTime;
-	g_SecondPerFrame = mSecondPerFrame = dwElapseTime / 1000.0f;
+	chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapseTime = currentTime - mBeforeTime;
+	g_SecondPerFrame = mSecondPerFrame = elapseTime.count();
 	g_GameTimer = mGameTimer += mSecondPerFrame;
-	mDwBeforeTime = dwCurrentTime;
+	mBeforeTime = currentTime;
 
 	mFramePerSecond += mSecondPerFrame;
 
 	Writer::GetInstance().mTextList.clear();
 	return true;
 }
-int   Timer::GetFPS()
+int Timer::GetFPS()
 {
 	static int iFPS = 0;
 	if (mFramePerSecond >= 1.0f)
@@ -37,7 +37,7 @@ int   Timer::GetFPS()
 	iFPS++;
 	return mFPS;
 }
-bool	Timer::Render()
+bool Timer::Render()
 {
 #ifdef _DEBUG
 	std::cout << "[FPS]" << GetFPS() << " [GT]" << mGameTimer << " [SPF]" << mSecondPerFrame << std::endl;
@@ -46,7 +46,7 @@ bool	Timer::Render()
 #endif
 	return true;
 }
-bool	Timer::Release()
+bool Timer::Release()
 {
 	return true;
 }

@@ -9,7 +9,7 @@ class Timer
 public:
 	float mGameTimer;
 	float mSecondPerFrame;
-	DWORD mDwBeforeTime;
+	std::chrono::high_resolution_clock::time_point mBeforeTime;
 	float mFramePerSecond;
 	int mFPS;
 public:

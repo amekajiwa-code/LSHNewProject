@@ -2,7 +2,7 @@
 
 bool  sample::Init()
 {
-    // alpha blending
+    #pragma region 알파블랜딩
     D3D11_BLEND_DESC bsd;
     ZeroMemory(&bsd, sizeof(bsd));
     bsd.RenderTarget[0].BlendEnable = true;
@@ -18,41 +18,20 @@ bool  sample::Init()
 
     TextureManager::GetInstance().Set(m_pDevice, m_pImmediateContext);
     ShaderManager::GetInstance().Set(m_pDevice, m_pImmediateContext);
+    #pragma endregion
 
-    //사운드
+    #pragma region 사운드
     mSound = SoundManager::GetInstance().Load(L"res/sound/song_bunker_1.ogg");
     mSound->Play();
     mEffectSound = SoundManager::GetInstance().Load(L"res/sound/slash_2.wav");
-    //오브젝트 세팅
+    #pragma endregion
+
+    #pragma region 오브젝트세팅
     srand(time(NULL));
     mMapObj = new PlaneObject;
     mMapObj->Set(m_pDevice, m_pImmediateContext);
     mMapObj->SetScale(Vector3(static_cast<float>(g_dwWindowWidth), static_cast<float>(g_dwWindowHeight), 1.0f));
     mMapObj->Create(TextureManager::GetInstance(), L"res/background/LastStage.bmp", ShaderManager::GetInstance(), L"Plane.hlsl");
-
-    //스프라이트 애니메이션
-    const Texture* tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/0.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/1.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/2.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/3.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/4.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/5.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/6.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/7.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/8.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/9.png");
-    mTexList.push_back(tex);
-    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/10.png");
-    mTexList.push_back(tex);
 
     mFloorObj = new PlaneObject;
     mFloorObj->Set(m_pDevice, m_pImmediateContext);
@@ -76,9 +55,89 @@ bool  sample::Init()
     rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
     mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
     mPlayer->Create(TextureManager::GetInstance(), L"res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
+    #pragma endregion
 
+    #pragma region 스프라이트애니메이션
+    const Texture* tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/0.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/1.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/2.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/3.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/4.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/5.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/6.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/7.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/8.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/9.png");
+    mPlayer->mIdleList.push_back(tex);
+    tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/10.png");
+    mPlayer->mIdleList.push_back(tex);
+
+    const Texture* tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/0.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/1.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/2.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/3.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/4.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/5.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/6.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/7.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/8.png");
+    mPlayer->mRunList.push_back(tex1);
+    tex1 = TextureManager::GetInstance().Load(L"res/player/spr_run/9.png");
+    mPlayer->mRunList.push_back(tex1);
+
+    const Texture* tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/0.png");
+    mPlayer->mJumpList.push_back(tex2);
+    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/1.png");
+    mPlayer->mJumpList.push_back(tex2);
+    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/2.png");
+    mPlayer->mJumpList.push_back(tex2);
+    tex2 = TextureManager::GetInstance().Load(L"res/player/spr_jump/3.png");
+    mPlayer->mJumpList.push_back(tex2);
+
+    const Texture* tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/0.png");
+    mPlayer->mFallList.push_back(tex3);
+    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/1.png");
+    mPlayer->mFallList.push_back(tex3);
+    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/2.png");
+    mPlayer->mFallList.push_back(tex3);
+    tex3 = TextureManager::GetInstance().Load(L"res/player/spr_fall/3.png");
+    mPlayer->mFallList.push_back(tex3);
+
+    const Texture* tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/0.png");
+    mPlayer->mAttackList.push_back(tex4);
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/1.png");
+    mPlayer->mAttackList.push_back(tex4);
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/2.png");
+    mPlayer->mAttackList.push_back(tex4);
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/3.png");
+    mPlayer->mAttackList.push_back(tex4);
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/4.png");
+    mPlayer->mAttackList.push_back(tex4);
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/5.png");
+    mPlayer->mAttackList.push_back(tex4);
+    tex4 = TextureManager::GetInstance().Load(L"res/player/spr_attack/6.png");
+    mPlayer->mAttackList.push_back(tex4);
+
+    #pragma endregion
     
-    //카메라 생성
+    #pragma region 카메라생성
     mMainCamera.Create(mPlayer->m_vPos, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
 
     for (int iObj = 0; iObj < 5; iObj++)
@@ -95,7 +154,9 @@ bool  sample::Init()
             ShaderManager::GetInstance(), L"Plane.hlsl");
         mNpcList.push_back(pObj);
     }
-    // 폰트
+    #pragma endregion
+
+    #pragma region 폰트
     HRESULT hr;
 
     if (m_pSwapChain)
@@ -109,6 +170,7 @@ bool  sample::Init()
         }
         if (pBackBuffer) pBackBuffer->Release();
     }
+    #pragma endregion
 
     return true;
 }
@@ -199,10 +261,15 @@ bool  sample::Render()
     mPlayer->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     mPlayer->PreRender();
     mPlayer->Render();
-    mTexIndex = (int)(g_GameTimer * 10) % mTexList.size();
-    if (mTexList[mTexIndex] != nullptr)
+    mTexList.clear();
+    mTexList = mPlayer->GetPlayerAnimation();
+    if (!mTexList.empty())
     {
-        mTexList[mTexIndex]->Apply(m_pImmediateContext, 0);
+        mTexIndex = (int)(g_GameTimer * 10) % mTexList.size();
+        if (mTexList[mTexIndex] != nullptr)
+        {
+            mTexList[mTexIndex]->Apply(m_pImmediateContext, 0);
+        }
     }
     mPlayer->PostRender();
 

@@ -17,18 +17,20 @@ void Player::PlayerMove()
     {
         m_vPos.mX -= 500.0f * g_SecondPerFrame;
         isFlipY = true;
+        mPlayerState = PlayerState::RUN;
     }
     if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX += 500.0f * g_SecondPerFrame;
-
         isFlipY = false;
+        mPlayerState = PlayerState::RUN;
     }
 
     if (isJump && (mJumpTimer <= MAX_JUMP_TIME))
     {
         m_vPos.mY += 700.0f * g_SecondPerFrame;
         mJumpTimer += g_SecondPerFrame;
+        mPlayerState = PlayerState::JUMP;
     }
     else
     {
@@ -37,6 +39,7 @@ void Player::PlayerMove()
             m_vPos.mY -= 300.0f * g_SecondPerFrame;
             mJumpTimer = 0.0f;
             isJump = false;
+            mPlayerState = PlayerState::FALL;
         }
     }
 
@@ -69,6 +72,7 @@ bool Player::CheckCollision(Object* other)
     if (Player::mRect.ToRect(other->mRect))
     {
         if (other->mTag == "Floor") isFloor = true;
+        mPlayerState = PlayerState::IDLE;
     }
     else
     {
@@ -77,16 +81,38 @@ bool Player::CheckCollision(Object* other)
     return true;
 }
 
+vector<const Texture*> Player::GetPlayerAnimation()
+{
+    switch (mPlayerState)
+    {
+    case PlayerState::IDLE:
+        return mIdleList;
+        break;
+    case PlayerState::RUN:
+        return mRunList;
+        break;
+    case PlayerState::JUMP:
+        return mJumpList;
+        break;
+    case PlayerState::FALL:
+        return mFallList;
+        break;
+    case PlayerState::ATTACK:
+        return mAttackList;
+        break;
+    default:
+        break;
+    }
+}
+
 bool Player::Init()
 {
-    mJumpTimer = 0.0f;
 	return true;
 }
 
 bool Player::Frame()
 {
     PlayerMove();
-
 #ifdef _DEBUG
     wstring fontFPS;
     switch (mPlayerState)
@@ -110,7 +136,6 @@ bool Player::Frame()
         fontFPS = L"State : ";
         break;
     }
-
     Writer::GetInstance().AddText(fontFPS, 10, 100, { 1.0f, 1.0f, 1.0f, 1.0f });
 #endif
     Vector2 rt = { m_vPos.mX, m_vPos.mY };

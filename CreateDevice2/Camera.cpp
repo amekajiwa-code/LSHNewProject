@@ -46,8 +46,8 @@ bool Camera::Release()
 bool Camera::Create(Vector3 pos, Vector2 size)
 {
     mCameraPos = pos;
-    mWindowWidth = size.mX;
-    mWindowHeight = size.mY;
+    mWindowWidth = static_cast<DWORD>(size.mX);
+    mWindowHeight = static_cast<DWORD>(size.mY);
     return false;
 }
 
