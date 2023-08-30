@@ -1,5 +1,10 @@
 #include "Object.h"
 
+void Object::SetTag(string tag)
+{
+    mTag = tag;
+}
+
 string Object::GetTag()
 {
     return mTag;

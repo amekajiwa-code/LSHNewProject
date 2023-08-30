@@ -60,14 +60,14 @@ bool Input::Frame()
 
 bool Input::Render()
 {
+#ifdef _DEBUG
     std::wstring mousePos = L"Mouse : ";
     mousePos += std::to_wstring(mMousePos.x);
     mousePos += L",";
     mousePos += std::to_wstring(mMousePos.y);
     mousePos += L"\n";
-  
-        Writer::GetInstance().AddText(mousePos, 10, 50, { 1.0f, 1.0f, 1.0f, 1.0f });
-
+    Writer::GetInstance().AddText(mousePos, 10, 50, { 1.0f, 1.0f, 1.0f, 1.0f });
+#endif
 	return true;
 }
 

@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Input.h"
-#include "sample.h"
+#include "Writer.h"
 
 void Player::PlayerMove()
 {
@@ -8,8 +8,6 @@ void Player::PlayerMove()
     if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_DOWN) && isFloor)
     {
         isJump = true;
-        mPlayerState = PlayerState::JUMP;
-        isFloor = false;
     }
     if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
@@ -18,13 +16,12 @@ void Player::PlayerMove()
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX -= 500.0f * g_SecondPerFrame;
-        mPlayerState = PlayerState::RUN;
         isFlipY = true;
     }
     if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX += 500.0f * g_SecondPerFrame;
-        mPlayerState = PlayerState::RUN;
+
         isFlipY = false;
     }
 
@@ -35,10 +32,12 @@ void Player::PlayerMove()
     }
     else
     {
-        m_vPos.mY -= 300.0f * g_SecondPerFrame;
-        isJump = false;
-        mPlayerState = PlayerState::FALL;
-        mJumpTimer = 0.0f;
+        if (isFloor == false)
+        {
+            m_vPos.mY -= 300.0f * g_SecondPerFrame;
+            mJumpTimer = 0.0f;
+            isJump = false;
+        }
     }
 
     //카메라 이동
@@ -46,11 +45,9 @@ void Player::PlayerMove()
     {
         m_vPos.mX = -static_cast<float>(g_dwWindowWidth);
     }
-    if (m_vPos.mY <= -static_cast<float>(g_dwWindowHeight) + 225.0f)
+    if (m_vPos.mY <= -static_cast<float>(g_dwWindowHeight))
     {
-        isFloor = true;
-        m_vPos.mY = -static_cast<float>(g_dwWindowHeight) + 225.0f;
-
+        m_vPos.mY = -static_cast<float>(g_dwWindowHeight);
     }
     if (m_vPos.mX > static_cast<float>(g_dwWindowWidth))
     {
@@ -60,6 +57,24 @@ void Player::PlayerMove()
     {
         m_vPos.mY = static_cast<float>(g_dwWindowHeight);
     }
+}
+
+void Player::PlayerAttack()
+{
+    //sdfsdf
+}
+
+bool Player::CheckCollision(Object* other)
+{
+    if (Player::mRect.ToRect(other->mRect))
+    {
+        if (other->mTag == "Floor") isFloor = true;
+    }
+    else
+    {
+        isFloor = false;
+    }
+    return true;
 }
 
 bool Player::Init()
@@ -72,6 +87,32 @@ bool Player::Frame()
 {
     PlayerMove();
 
+#ifdef _DEBUG
+    wstring fontFPS;
+    switch (mPlayerState)
+    {
+    case PlayerState::IDLE:
+        fontFPS = L"State : Idle";
+        break;
+    case PlayerState::RUN:
+        fontFPS = L"State : Run";
+        break;
+    case PlayerState::JUMP:
+        fontFPS = L"State : Jump";
+        break;
+    case PlayerState::FALL:
+        fontFPS = L"State : Fall";
+        break;
+    case PlayerState::ATTACK:
+        fontFPS = L"State : Attack";
+        break;
+    default:
+        fontFPS = L"State : ";
+        break;
+    }
+
+    Writer::GetInstance().AddText(fontFPS, 10, 100, { 1.0f, 1.0f, 1.0f, 1.0f });
+#endif
     Vector2 rt = { m_vPos.mX, m_vPos.mY };
     SetRect(rt, m_vScale.mX * 2.0f, m_vScale.mY * 2.0f);
 
@@ -86,7 +127,6 @@ bool Player::Frame()
 
 bool Player::Render()
 {
-    PlaneObject::Render();
     if (isFlipY)
     {
         m_VertexList[0].t.mX = 1.0f; m_VertexList[0].t.mY = 0.0f;

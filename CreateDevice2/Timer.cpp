@@ -39,16 +39,11 @@ int   Timer::GetFPS()
 }
 bool	Timer::Render()
 {
+#ifdef _DEBUG
 	std::cout << "[FPS]" << GetFPS() << " [GT]" << mGameTimer << " [SPF]" << mSecondPerFrame << std::endl;
-	wstring fontFPS = L"FPS : " + to_wstring(GetFPS()) +
-		L" SPF : " + to_wstring(mFramePerSecond) + 
-		L" Timer : " + to_wstring(mGameTimer);
-	// chita's comment : timer -> core gogo~!
-	if (Writer::GetInstance().mTextList.empty())
-	{
-		Writer::GetInstance().AddText(fontFPS, 10, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
-	}
-
+	wstring fontFPS = L"FPS : " + to_wstring(GetFPS()) + L" SPF : " + to_wstring(mFramePerSecond) + L" Timer : " + to_wstring(mGameTimer);
+	Writer::GetInstance().AddText(fontFPS, 10, 0, { 1.0f, 1.0f, 1.0f, 1.0f });
+#endif
 	return true;
 }
 bool	Timer::Release()

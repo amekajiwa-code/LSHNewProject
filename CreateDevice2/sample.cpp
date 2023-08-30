@@ -54,13 +54,14 @@ bool  sample::Init()
     tex = TextureManager::GetInstance().Load(L"res/player/spr_idle/10.png");
     mTexList.push_back(tex);
 
-    /*mSpriteObj = new PlaneObject;
-    mSpriteObj->Set(m_pDevice, m_pImmediateContext);
-    mSpriteObj->SetPos({ (static_cast<float>(g_dwWindowWidth) / 2) - 100.0f,
-        +(static_cast<float>(g_dwWindowHeight) / 2) - 100.0f,
-        0.0f });
-    mSpriteObj->SetScale(Vector3(100.0f, 100.0f, 1.0f));
-    mSpriteObj->Create(TextureManager::GetInstance(), L"../../res/animation/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");*/
+    mFloorObj = new PlaneObject;
+    mFloorObj->Set(m_pDevice, m_pImmediateContext);
+    mFloorObj->SetPos({ 0.0f, -static_cast<float>(g_dwWindowHeight) + 170.0f, 0.0f });
+    mFloorObj->SetScale(Vector3(static_cast<float>(g_dwWindowWidth), 20.0f, 1.0f));
+    Vector2 rt = { mFloorObj->m_vPos.mX, mFloorObj->m_vPos.mY};
+    mFloorObj->SetRect(rt, mFloorObj->m_vScale.mX * 2.0f, mFloorObj->m_vScale.mY * 2.0f);
+    mFloorObj->SetTag("Floor");
+    mFloorObj->Create(TextureManager::GetInstance(), L"res/floor.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
     mCursorObj = new PlaneObject;
     mCursorObj->Set(m_pDevice, m_pImmediateContext);
@@ -72,7 +73,7 @@ bool  sample::Init()
     mPlayer->Set(m_pDevice, m_pImmediateContext);
     mPlayer->SetPos({ 0.0f, 0.0f, 0.0f });
     mPlayer->SetScale(Vector3(50.0f, 50.0f, 75.0f));
-    Vector2 rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
+    rt = { mPlayer->m_vPos.mX * 2.0f, mPlayer->m_vPos.mY * 2.0f };
     mPlayer->SetRect(rt, mPlayer->m_vScale.mX * 2.0f, mPlayer->m_vScale.mY * 2.0f);
     mPlayer->Create(TextureManager::GetInstance(), L"res/player/spr_idle/0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
@@ -109,8 +110,6 @@ bool  sample::Init()
         if (pBackBuffer) pBackBuffer->Release();
     }
 
-    //Writer::GetInstance().AddText(L"ÇÁ·¹ÀÓ", 20, 20, { 1.0f, 0.0f, 0.0f, 1.0f });
-
     return true;
 }
 bool  sample::Frame()
@@ -123,9 +122,11 @@ bool  sample::Frame()
     Vector2 rt = { mCursorObj->m_vPos.mX * 2.0f, mCursorObj->m_vPos.mY * 2.0f };
     mCursorObj->SetRect(rt, mCursorObj->m_vScale.mX * 2.0f, mCursorObj->m_vScale.mY * 2.0f);
 
+    mPlayer->CheckCollision(mFloorObj);
+
     mPlayer->Frame();
     mMapObj->Frame();
-    //mSpriteObj->Frame();
+    mFloorObj->Frame();
     mCursorObj->Frame();
 
     for (auto obj : mNpcList)
@@ -185,6 +186,9 @@ bool  sample::Render()
     mMapObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     mMapObj->Render();
 
+    mFloorObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
+    mFloorObj->Render();
+
     for (auto obj : mNpcList)
     {
         if (obj->m_bDead) continue;
@@ -194,17 +198,12 @@ bool  sample::Render()
 
     mPlayer->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
     mPlayer->PreRender();
-
-    //mSpriteObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);
-    //mSpriteObj->PreRender();
     mPlayer->Render();
     mTexIndex = (int)(g_GameTimer * 10) % mTexList.size();
     if (mTexList[mTexIndex] != nullptr)
     {
         mTexList[mTexIndex]->Apply(m_pImmediateContext, 0);
     }
-
-   //mSpriteObj->PostRender();
     mPlayer->PostRender();
 
    mCursorObj->SetMatrix(nullptr, &mMainCamera.mMatView, &mMainCamera.mMatOrthonormalProjection);

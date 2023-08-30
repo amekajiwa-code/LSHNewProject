@@ -1,4 +1,6 @@
 #pragma once
+#include <chrono>
+#include <thread>
 #include <Windows.h>
 #include <iostream>
 #pragma comment(lib, "winmm.lib") //timeGetTime()
