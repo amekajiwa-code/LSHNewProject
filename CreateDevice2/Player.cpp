@@ -94,13 +94,13 @@ void Player::PlayerAttack()
             isFlipY = false;
         }
 
-        if (direction.mY > 0.3f)
+        if (direction.mY > 0.4f)
         {
             vVelocity = direction * 100.0f * g_SecondPerFrame;
         }
         else
         {
-            vVelocity = direction * 500.0f * g_SecondPerFrame;
+            vVelocity = direction * 700.0f * g_SecondPerFrame;
         }
 
         m_vPos = m_vPos + vVelocity;
