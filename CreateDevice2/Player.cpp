@@ -83,20 +83,28 @@ void Player::PlayerAttack()
     {
         Vector3 direction = Input::GetInstance().curWorldPos - m_vPos;
         Vector3 vVelocity;
+        Vector3 NormalX;
         direction.Normalize();
 
         if (direction.mX < 0)
         {
             isFlipY = true;
+            NormalX = { -1.0f, 0.0f, 0.0f };
         }
         else
         {
             isFlipY = false;
+            NormalX = { 1.0f, 0.0f, 0.0f };
         }
-
+        
+        //바닥보다 위면서 위쪽각도로 너무 솟지 않게끔
         if (direction.mY > 0.4f)
         {
             vVelocity = direction * 100.0f * g_SecondPerFrame;
+        }
+        else if (direction.mY < 0.0f)
+        {
+            vVelocity = NormalX * 700.0f * g_SecondPerFrame;
         }
         else
         {
@@ -116,9 +124,9 @@ void Player::PlayerAttack()
 
 bool Player::CheckCollision(Object* other)
 {
-    if (Player::mRect.ToRect(other->mRect))
+    if (Player::mRect.ToRect(other->mRect) && other->mTag == "Floor")
     {
-        if (other->mTag == "Floor") isFloor = true;
+        isFloor = true;
         return true;
     }
     else
