@@ -7,8 +7,8 @@ public:
 	Matrix mMatView;
 	Matrix mMatOrthonormalProjection;
 	Vector3 mCameraPos = { 0, 0, 0 };
-	DWORD mWindowWidth = 800;
-	DWORD mWindowHeight = 600;
+	DWORD mWindowWidth;
+	DWORD mWindowHeight;
 
 	bool Init();
 	bool Frame();

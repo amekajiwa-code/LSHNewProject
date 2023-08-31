@@ -63,7 +63,7 @@ bool  sample::Init()
     mEffectObj->SetScale(Vector3(123.0f, 30.0f, 1.0f));
     mEffectObj->Create(TextureManager::GetInstance(), L"res/effect/spr_master_slash/master_slash_0.png", ShaderManager::GetInstance(), L"Plane.hlsl");
 
-    for (int iObj = 0; iObj < 5; iObj++)
+    for (int iObj = 0; iObj < 100; iObj++)
     {
         Object* pObj = new Npc;
         pObj->Set(m_pDevice, m_pImmediateContext);
@@ -204,7 +204,7 @@ bool  sample::Frame()
     mCursorObj->SetRect(rt, mCursorObj->m_vScale.mX * 2.0f, mCursorObj->m_vScale.mY * 2.0f);
 
     mEffectObj->SetPos(mPlayer->m_vPos);
-    rt = { mEffectObj->m_vPos.mX * 2.0f, mEffectObj->m_vPos.mY * 2.0f };
+    rt = { mEffectObj->m_vPos.mX, mEffectObj->m_vPos.mY };
     mEffectObj->SetRect(rt, mEffectObj->m_vScale.mX * 2.0f, mEffectObj->m_vScale.mY * 2.0f);
 
     mPlayer->Frame();
@@ -234,11 +234,17 @@ bool  sample::Frame()
         {
             if (obj->m_bDead) continue;
 
-            if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
-                && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
+            if (mEffectObj->mRect.ToRect(obj->mRect))
             {
                 obj->m_bDead = true;
             }
+
+            //마우스 충돌
+            /*if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
+                && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
+            {
+                obj->m_bDead = true;
+            }*/
         }
     }
     mPlayer->CheckCollision(mFloorObj);
