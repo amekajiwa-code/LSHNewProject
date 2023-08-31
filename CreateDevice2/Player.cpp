@@ -82,7 +82,9 @@ void Player::PlayerAttack()
     if (mAttackTimer <= MAX_ATTACK_TIME)
     {
         Vector3 direction = Input::GetInstance().curWorldPos - m_vPos;
+        Vector3 vVelocity;
         direction.Normalize();
+
         if (direction.mX < 0)
         {
             isFlipY = true;
@@ -91,7 +93,16 @@ void Player::PlayerAttack()
         {
             isFlipY = false;
         }
-        Vector3 vVelocity = direction * 500.0f * g_SecondPerFrame;
+
+        if (direction.mY > 0.3f)
+        {
+            vVelocity = direction * 100.0f * g_SecondPerFrame;
+        }
+        else
+        {
+            vVelocity = direction * 500.0f * g_SecondPerFrame;
+        }
+
         m_vPos = m_vPos + vVelocity;
         
         mAttackTimer += g_SecondPerFrame;

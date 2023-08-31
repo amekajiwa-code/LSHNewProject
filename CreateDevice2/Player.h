@@ -15,7 +15,7 @@ class Player : public PlaneObject
 private:
 	float MAX_JUMP_TIME = 0.3f;
 	float mJumpTimer = 0.0f;
-	float MAX_ATTACK_TIME = 0.4f;
+	float MAX_ATTACK_TIME = 0.3f;
 	float mAttackTimer = 0.0f;
 	bool isFloor;
 	bool isJump;
