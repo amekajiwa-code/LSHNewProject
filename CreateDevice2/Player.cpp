@@ -15,15 +15,23 @@ void Player::PlayerMove()
     }*/
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mX -= 500.0f * g_SecondPerFrame;
+        m_vPos.mX -= 600.0f * g_SecondPerFrame;
         isFlipY = true;
         mPlayerState = PlayerState::RUN;
     }
+    if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_UP))
+    {
+        mPlayerState = PlayerState::IDLE;
+    }
     if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mX += 500.0f * g_SecondPerFrame;
+        m_vPos.mX += 600.0f * g_SecondPerFrame;
         isFlipY = false;
         mPlayerState = PlayerState::RUN;
+    }
+    if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_UP))
+    {
+        mPlayerState = PlayerState::IDLE;
     }
 
     if (isJump && (mJumpTimer <= MAX_JUMP_TIME))
@@ -36,10 +44,17 @@ void Player::PlayerMove()
     {
         if (isFloor == false)
         {
-            m_vPos.mY -= 300.0f * g_SecondPerFrame;
+            m_vPos.mY -= 500.0f * g_SecondPerFrame;
             mJumpTimer = 0.0f;
             isJump = false;
             mPlayerState = PlayerState::FALL;
+        }
+        else
+        {
+            if (mPlayerState != PlayerState::RUN)
+            {
+                mPlayerState = PlayerState::IDLE;
+            }
         }
     }
 
@@ -64,7 +79,28 @@ void Player::PlayerMove()
 
 void Player::PlayerAttack()
 {
-    //sdfsdf
+    if (mAttackTimer <= MAX_ATTACK_TIME)
+    {
+        Vector3 direction = Input::GetInstance().curWorldPos - m_vPos;
+        direction.Normalize();
+        if (direction.mX < 0)
+        {
+            isFlipY = true;
+        }
+        else
+        {
+            isFlipY = false;
+        }
+        Vector3 vVelocity = direction * 500.0f * g_SecondPerFrame;
+        m_vPos = m_vPos + vVelocity;
+        
+        mAttackTimer += g_SecondPerFrame;
+    }
+    else
+    {
+        mAttackTimer = 0.0f;
+        mPlayerState = PlayerState::IDLE;
+    }
 }
 
 bool Player::CheckCollision(Object* other)
@@ -72,13 +108,13 @@ bool Player::CheckCollision(Object* other)
     if (Player::mRect.ToRect(other->mRect))
     {
         if (other->mTag == "Floor") isFloor = true;
-        mPlayerState = PlayerState::IDLE;
+        return true;
     }
     else
     {
         isFloor = false;
+        return false;
     }
-    return true;
 }
 
 vector<const Texture*> Player::GetPlayerAnimation()
@@ -86,18 +122,23 @@ vector<const Texture*> Player::GetPlayerAnimation()
     switch (mPlayerState)
     {
     case PlayerState::IDLE:
+        PlaneObject::SetScale(Vector3(36.0f, 35.0f, 1.0f));
         return mIdleList;
         break;
     case PlayerState::RUN:
+        PlaneObject::SetScale(Vector3(44.0f, 32.0f, 1.0f));
         return mRunList;
         break;
     case PlayerState::JUMP:
+        PlaneObject::SetScale(Vector3(32.0f, 42.0f, 1.0f));
         return mJumpList;
         break;
     case PlayerState::FALL:
+        PlaneObject::SetScale(Vector3(42.0f, 48.0f, 1.0f));
         return mFallList;
         break;
     case PlayerState::ATTACK:
+        PlaneObject::SetScale(Vector3(62.0f, 48.0f, 1.0f));
         return mAttackList;
         break;
     default:
@@ -112,7 +153,14 @@ bool Player::Init()
 
 bool Player::Frame()
 {
-    PlayerMove();
+    if (mPlayerState == PlayerState::ATTACK)
+    {
+        PlayerAttack();
+    }
+    else
+    {
+        PlayerMove();
+    }
 #ifdef _DEBUG
     wstring fontFPS;
     switch (mPlayerState)

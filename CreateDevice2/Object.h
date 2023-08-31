@@ -45,7 +45,6 @@ public:
     string mTag = "";
     void SetTag(string tag);
     string GetTag();
-    virtual bool CheckCollision(Object* other) { return false; }
 public:
     void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
     virtual bool  CreateVertexBuffer();

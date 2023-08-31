@@ -125,7 +125,7 @@ void Sound::VolumeDown()
 {
 	float volume;
 	mChannel->getVolume(&volume);
-	volume += 0.25f * g_SecondPerFrame;
+	volume -= 0.60f;
 	volume = max(0.0f, volume);
 	mChannel->setVolume(volume);
 }

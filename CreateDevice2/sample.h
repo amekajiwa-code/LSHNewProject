@@ -7,19 +7,21 @@
 class sample : public Core
 {
 private:
-    Object* mMapObj = nullptr;
-    Player* mPlayer = nullptr;
-    //TextureManager mTexMgr;
-    //ShaderManager mShaderMgr;
-    vector<Object*> mNpcList;
     ID3D11BlendState* mAlphaBlend = nullptr;
 
+    Object* mMapObj = nullptr;
+    Player* mPlayer = nullptr;
     Object* mFloorObj = nullptr;
-    vector<Object*> mFloorList;
     Object* mCursorObj = nullptr;
-    vector<const Texture*>  mTexList;
+    Object* mEffectObj = nullptr;
+
     int mTexIndex = 0;
-    
+    int mEffectIndex = 0;
+
+    vector<const Texture*>  mTexList;
+    vector<Object*> mNpcList;
+    vector<Object*> mFloorList;
+    vector<const Texture*>  mEffectList;
 public:
     bool  Init();
     bool  Frame();

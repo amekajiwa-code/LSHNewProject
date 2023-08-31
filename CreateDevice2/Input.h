@@ -20,7 +20,8 @@ public:
 	}
 
 	POINT mMousePos;
-	DWORD mkeyState[256] ;
+	DWORD mkeyState[256];
+	Vector3 curWorldPos;
 
 	bool Init();
 	bool Frame();
