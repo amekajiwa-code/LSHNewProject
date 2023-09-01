@@ -15,28 +15,28 @@ void Player::PlayerMove()
     }*/
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mX -= 600.0f * g_SecondPerFrame;
+        m_vPos.mX -= mSpeed * g_SecondPerFrame;
         isFlipY = true;
         mPlayerState = PlayerState::RUN;
     }
-    if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_UP))
+    else if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_UP))
     {
         mPlayerState = PlayerState::IDLE;
     }
     if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
-        m_vPos.mX += 600.0f * g_SecondPerFrame;
+        m_vPos.mX += mSpeed * g_SecondPerFrame;
         isFlipY = false;
         mPlayerState = PlayerState::RUN;
     }
-    if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_UP))
+    else if (Input::GetInstance().mkeyState['D'] == static_cast<DWORD>(KeyState::KEY_UP))
     {
         mPlayerState = PlayerState::IDLE;
     }
 
     if (isJump && (mJumpTimer <= MAX_JUMP_TIME))
     {
-        m_vPos.mY += 700.0f * g_SecondPerFrame;
+        m_vPos.mY += mSpeed * g_SecondPerFrame;
         mJumpTimer += g_SecondPerFrame;
         mPlayerState = PlayerState::JUMP;
     }
@@ -44,7 +44,7 @@ void Player::PlayerMove()
     {
         if (isFloor == false)
         {
-            m_vPos.mY -= 500.0f * g_SecondPerFrame;
+            m_vPos.mY -= mGrabity * g_SecondPerFrame;
             mJumpTimer = 0.0f;
             isJump = false;
             mPlayerState = PlayerState::FALL;
@@ -98,29 +98,41 @@ void Player::PlayerAttack()
         }
         
         //바닥보다 위면서 위쪽각도로 너무 솟지 않게끔
-        if (direction.mY > 0.4f)
+        if (direction.mY < -0.8f && !isFloor)
         {
-            vVelocity = direction * 100.0f * g_SecondPerFrame;
+            vVelocity = direction * mSpeed * g_SecondPerFrame;
         }
         else if (direction.mY < 0.0f)
         {
-            vVelocity = NormalX * 700.0f * g_SecondPerFrame;
+            vVelocity = NormalX * mSpeed * g_SecondPerFrame;
         }
-        else
+        else if (direction.mY > 0.8f)
         {
-            vVelocity = direction * 700.0f * g_SecondPerFrame;
+            vVelocity = direction * mSpeed * g_SecondPerFrame;
+        }
+        else if (direction.mY > 0.0f)
+        {
+            vVelocity = direction * mSpeed * g_SecondPerFrame;
         }
 
         m_vPos = m_vPos + vVelocity;
+        if (isFloor == false) m_vPos.mY -= 200.0f * g_SecondPerFrame;
         
         mAttackTimer += g_SecondPerFrame;
+        
+    }
+    else if (mDelayTimer <= MAX_DELAY_TIME)
+    {
+        mDelayTimer += g_SecondPerFrame;
     }
     else
     {
         mAttackTimer = 0.0f;
+        mDelayTimer = 0.0f;
         mPlayerState = PlayerState::IDLE;
+        return;
     }
-}
+ }
 
 bool Player::CheckCollision(Object* other)
 {
@@ -180,6 +192,7 @@ bool Player::Frame()
     {
         PlayerMove();
     }
+
 #ifdef _DEBUG
     wstring fontFPS;
     switch (mPlayerState)

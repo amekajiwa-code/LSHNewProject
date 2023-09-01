@@ -13,10 +13,14 @@ enum class PlayerState
 class Player : public PlaneObject
 {
 private:
-	float MAX_JUMP_TIME = 0.3f;
+	const float MAX_JUMP_TIME = 0.3f;
 	float mJumpTimer = 0.0f;
-	float MAX_ATTACK_TIME = 0.3f;
+	const float MAX_ATTACK_TIME = 0.3f;
 	float mAttackTimer = 0.0f;
+	const float MAX_DELAY_TIME = 0.2f;
+	float mDelayTimer = 0.0f;
+	float mSpeed = 700.0f;
+	float mGrabity = 500.0f;
 	bool isFloor;
 	bool isJump;
 	bool isFlipY;

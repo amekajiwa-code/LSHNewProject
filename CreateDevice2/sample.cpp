@@ -224,12 +224,12 @@ bool  sample::Frame()
         }
     }
 
-    if ((Input::GetInstance().mkeyState[VK_LBUTTON] == 2) && 
+    if ((Input::GetInstance().mkeyState[VK_LBUTTON] == 2) &&
         (mPlayer->GetPlayerState() != PlayerState::ATTACK))
     {
         mEffectSound->PlayEffect();
         mPlayer->SetPlayerState(PlayerState::ATTACK);
-        
+
         for (auto obj : mNpcList)
         {
             if (obj->m_bDead) continue;
@@ -238,15 +238,9 @@ bool  sample::Frame()
             {
                 obj->m_bDead = true;
             }
-
-            //마우스 충돌
-            /*if ((curMouse.mX > obj->mRect.m_Min.mX && curMouse.mX < obj->mRect.m_Max.mX)
-                && (curMouse.mY > obj->mRect.m_Min.mY && curMouse.mY < obj->mRect.m_Max.mY))
-            {
-                obj->m_bDead = true;
-            }*/
         }
     }
+
     mPlayer->CheckCollision(mFloorObj);
 
     return true;
