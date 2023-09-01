@@ -15,12 +15,13 @@ class Player : public PlaneObject
 private:
 	const float MAX_JUMP_TIME = 0.3f;
 	float mJumpTimer = 0.0f;
-	const float MAX_ATTACK_TIME = 0.3f;
+	const float MAX_ATTACK_TIME = 0.2f;
 	float mAttackTimer = 0.0f;
-	const float MAX_DELAY_TIME = 0.2f;
+	const float MAX_DELAY_TIME = 0.3f;
 	float mDelayTimer = 0.0f;
-	float mSpeed = 700.0f;
-	float mGrabity = 500.0f;
+	const float mSpeed = 700.0f;
+	const float mPower = 1000.0f;
+	const float mGrabity = 500.0f;
 	bool isFloor;
 	bool isJump;
 	bool isFlipY;

@@ -97,26 +97,16 @@ void Player::PlayerAttack()
             NormalX = { 1.0f, 0.0f, 0.0f };
         }
         
-        //바닥보다 위면서 위쪽각도로 너무 솟지 않게끔
-        if (direction.mY < -0.8f && !isFloor)
+        if (direction.mY < 0.0f && isFloor)
         {
-            vVelocity = direction * mSpeed * g_SecondPerFrame;
+            vVelocity = NormalX * mPower * g_SecondPerFrame;
         }
-        else if (direction.mY < 0.0f)
+        else
         {
-            vVelocity = NormalX * mSpeed * g_SecondPerFrame;
-        }
-        else if (direction.mY > 0.8f)
-        {
-            vVelocity = direction * mSpeed * g_SecondPerFrame;
-        }
-        else if (direction.mY > 0.0f)
-        {
-            vVelocity = direction * mSpeed * g_SecondPerFrame;
+            vVelocity = direction * mPower * g_SecondPerFrame;
         }
 
         m_vPos = m_vPos + vVelocity;
-        if (isFloor == false) m_vPos.mY -= 200.0f * g_SecondPerFrame;
         
         mAttackTimer += g_SecondPerFrame;
         
