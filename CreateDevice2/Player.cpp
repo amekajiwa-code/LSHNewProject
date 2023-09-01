@@ -9,10 +9,10 @@ void Player::PlayerMove()
     {
         isJump = true;
     }
-    /*if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
+    if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD) && !isFloor)
     {
         m_vPos.mY -= 500.0f * g_SecondPerFrame;
-    }*/
+    }
     if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
     {
         m_vPos.mX -= mSpeed * g_SecondPerFrame;
@@ -36,7 +36,7 @@ void Player::PlayerMove()
 
     if (isJump && (mJumpTimer <= MAX_JUMP_TIME))
     {
-        m_vPos.mY += mSpeed * g_SecondPerFrame;
+        m_vPos.mY += (mPower * 0.7f) * g_SecondPerFrame;
         mJumpTimer += g_SecondPerFrame;
         mPlayerState = PlayerState::JUMP;
     }
@@ -82,7 +82,6 @@ void Player::PlayerAttack()
     if (mAttackTimer <= MAX_ATTACK_TIME)
     {
         Vector3 direction = Input::GetInstance().curWorldPos - m_vPos;
-        Vector3 vVelocity;
         Vector3 NormalX;
         direction.Normalize();
 
@@ -96,23 +95,22 @@ void Player::PlayerAttack()
             isFlipY = false;
             NormalX = { 1.0f, 0.0f, 0.0f };
         }
-        
-        if (direction.mY < 0.0f && isFloor)
+
+        if (isFloor && direction.mY < 0.0f)
         {
-            vVelocity = NormalX * mPower * g_SecondPerFrame;
+            mVelocity = NormalX * mPower * g_SecondPerFrame;
         }
         else
         {
-            vVelocity = direction * mPower * g_SecondPerFrame;
+            mVelocity = direction * mPower * g_SecondPerFrame;
         }
-
-        m_vPos = m_vPos + vVelocity;
-        
-        mAttackTimer += g_SecondPerFrame;
-        
+        m_vPos = m_vPos + mVelocity;
+        mAttackTimer += g_SecondPerFrame;  
     }
     else if (mDelayTimer <= MAX_DELAY_TIME)
     {
+
+        if (!isFloor) m_vPos = m_vPos + (mVelocity / 2);
         mDelayTimer += g_SecondPerFrame;
     }
     else

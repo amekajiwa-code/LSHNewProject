@@ -17,11 +17,12 @@ private:
 	float mJumpTimer = 0.0f;
 	const float MAX_ATTACK_TIME = 0.2f;
 	float mAttackTimer = 0.0f;
-	const float MAX_DELAY_TIME = 0.3f;
+	const float MAX_DELAY_TIME = 0.2f;
 	float mDelayTimer = 0.0f;
 	const float mSpeed = 700.0f;
-	const float mPower = 1000.0f;
-	const float mGrabity = 500.0f;
+	const float mPower = 800;
+	const float mGrabity = 9.81f * 50.0f;
+	Vector3 mVelocity;
 	bool isFloor;
 	bool isJump;
 	bool isFlipY;

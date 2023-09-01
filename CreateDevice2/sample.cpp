@@ -21,10 +21,10 @@ bool  sample::Init()
     #pragma endregion
 
     #pragma region 사운드
-    mSound = SoundManager::GetInstance().Load(L"res/sound/song_bunker_1.ogg");
+    mSound = SoundManager::GetInstance().Load(L"res/sound/song_youwillneverknow.ogg");
     mSound->Play();
     mSound->VolumeDown();
-    mEffectSound = SoundManager::GetInstance().Load(L"res/sound/slash_2.wav");
+    mEffectSound = SoundManager::GetInstance().Load(L"res/sound/slash_1.wav");
     #pragma endregion
 
     #pragma region 오브젝트세팅
@@ -242,7 +242,6 @@ bool  sample::Frame()
     }
 
     mPlayer->CheckCollision(mFloorObj);
-
     return true;
 }
 bool  sample::Render()

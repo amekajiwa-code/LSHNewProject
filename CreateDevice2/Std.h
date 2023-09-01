@@ -23,10 +23,6 @@
 
 #include "GeometryUtils.h"
 
-#define T_PI (3.141592f)
-#define T_EPSILON ( 0.0001f)
-#define RadianToDegree(radian) ( radian *( 180.0f / T_PI))
-#define DegreeToRadian(degree) ( degree *( T_PI / 180.0f))
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 
 extern HWND g_hWnd;
