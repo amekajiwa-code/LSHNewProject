@@ -2,7 +2,6 @@
 #include "Input.h"
 #include "Writer.h"
 #include "Timer.h"
-#include "GameManager.h"
 #include <stack>
 
 void Player::MoveX(bool isFlipY)
@@ -42,9 +41,6 @@ void Player::MoveX(bool isFlipY)
 
 void Player::PlayerMove()
 {
-    //플레이어 조작
-    if (GameManager::GetInstance().isReplay == false)
-    {
         if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_DOWN) && isFloor)
         {
             mJumpSound->Play(false);
@@ -72,7 +68,6 @@ void Player::PlayerMove()
             isDashSound = false;
             mDashTimer = 0.0f;
         }
-    }
 
     if (isJump && (mJumpTimer <= MAX_JUMP_TIME))
     {

@@ -160,7 +160,6 @@ copy MyLibrary.lib ..\\..\\MyLibrary\\lib</Command>
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Floor.cpp" />
-    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
     <ClCompile Include="Gunman.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -185,7 +184,6 @@ copy MyLibrary.lib ..\\..\\MyLibrary\\lib</Command>
     <ClInclude Include="Device.h" />
     <ClInclude Include="DirectXTex.h" />
     <ClInclude Include="Floor.h" />
-    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="Gunman.h" />
     <ClInclude Include="Input.h" />

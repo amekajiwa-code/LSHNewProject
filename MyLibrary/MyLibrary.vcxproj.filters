@@ -30,9 +30,6 @@
     <ClCompile Include="Floor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="GeometryUtils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -99,9 +96,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Floor.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GameManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GeometryUtils.h">

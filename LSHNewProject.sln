@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyLibrary", "MyLibrary\MyLi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KatanaZero", "KatanaZero\KatanaZero.vcxproj", "{DBE43AC7-2455-48EC-89FA-CC181737EC62}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0", "Sample0\Sample0.vcxproj", "{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{DBE43AC7-2455-48EC-89FA-CC181737EC62}.Release|x64.Build.0 = Release|x64
 		{DBE43AC7-2455-48EC-89FA-CC181737EC62}.Release|x86.ActiveCfg = Release|Win32
 		{DBE43AC7-2455-48EC-89FA-CC181737EC62}.Release|x86.Build.0 = Release|Win32
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Debug|x64.ActiveCfg = Debug|x64
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Debug|x64.Build.0 = Debug|x64
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Debug|x86.ActiveCfg = Debug|Win32
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Debug|x86.Build.0 = Debug|Win32
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Release|x64.ActiveCfg = Release|x64
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Release|x64.Build.0 = Release|x64
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Release|x86.ActiveCfg = Release|Win32
+		{6BC1EC7A-A279-4D79-AB5C-CF0AB589764D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

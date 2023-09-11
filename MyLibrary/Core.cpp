@@ -1,5 +1,4 @@
 #include "Core.h"
-#include "GameManager.h"
 
 bool  Core::Init() { return true; }
 bool  Core::Frame() { return true; }
@@ -25,7 +24,6 @@ bool  Core::EngineFrame()
     Input::GetInstance().Frame();
     Writer::GetInstance().Frame();
     SoundManager::GetInstance().Frame();
-    GameManager::GetInstance().Frame();
     mMainCamera.Frame();
     Device::Frame();
     Frame();
