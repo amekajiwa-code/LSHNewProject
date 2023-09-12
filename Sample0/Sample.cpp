@@ -54,7 +54,7 @@ bool  sample::Init()
     DWORD screenHeight = GetSystemMetrics(SM_CYSCREEN);
     float aspect = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
 
-    XMFLOAT3 eyeVec = { 5.0f, 10.0f, -5.0f };
+    XMFLOAT3 eyeVec = { 0.0f, 5.0f, -1.0f };
     XMFLOAT3 lookAtVec = { 0.0f, 0.0f, 0.0f };
     XMFLOAT3 upVec = { 0.0f, 1.0f, 0.0f };
 
