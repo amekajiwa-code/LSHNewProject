@@ -3,16 +3,18 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 
-struct PT_Vertex
+struct PNCT_Vertex
 {
-    Vector3 p;
-    Vector2 t;
+    XMFLOAT3 pos;
+    XMFLOAT3 normal;
+    XMFLOAT4 color;
+    XMFLOAT2 tex;
 };
-struct CB_Data
+struct MATRIX_Data
 {
-    Matrix matWorld;
-    Matrix matView;
-    Matrix matProj;
+    XMMATRIX matWorld;
+    XMMATRIX matView;
+    XMMATRIX matProj;
 };
 
 class Object
@@ -20,47 +22,52 @@ class Object
 public:
     bool m_bDead = false;
     bool isInvincible = false;
-    Matrix m_matWorld;
-    Matrix m_matView;
-    Matrix m_matProj;
-    CB_Data m_cbData;
+    XMMATRIX m_matWorld;
+    XMMATRIX m_matView;
+    XMMATRIX m_matProj;
+    MATRIX_Data m_cbData;
     ID3D11Device* m_pDevice = nullptr;
     ID3D11DeviceContext* m_pImmediateContext = nullptr;
 public:
-    Vector3 m_vPos;
-    Vector3 m_vScale;
-    Vector3 m_vRotation;
-    Rect mRect;
-    void SetPos(Vector3 p);
-    void SetScale(Vector3 s);
-    virtual void SetRect(Vector2& center, float width, float height);
+    XMFLOAT3 m_vPos;
+    XMFLOAT3 m_vScale;
+    XMFLOAT3 m_vRotation;
+    void SetPos(XMFLOAT3 p);
+    void SetScale(XMFLOAT3 s);
 public:
     ID3D11Buffer* m_pVertexBuffer = nullptr;
+    ID3D11Buffer* m_pIndexBuffer = nullptr;
     ID3D11Buffer* m_pConstantBuffer = nullptr;
     ID3D11InputLayout* m_pVertexLayout = nullptr;
 
     const Shader* m_pShader = nullptr;
     const Texture* m_pTex = nullptr;
-    std::vector< PT_Vertex> m_VertexList;
-public:
-    string mTag = "";
-    void SetTag(string tag);
-    string GetTag();
+    vector<PNCT_Vertex> m_VertexList;
+    vector<DWORD> mIndexList;
 public:
     void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
     virtual bool  CreateVertexBuffer();
+    virtual bool  CreateIndexBuffer();
     virtual bool  CreateConstantBuffer();
     virtual bool  CreateInputLayout();
+    virtual bool  CreateVertexData()
+    {
+        return true;
+    }
+    virtual bool  CreateIndexData()
+    {
+        return true;
+    }
 public:
-    virtual bool  Create(TextureManager& texMgr, std::wstring shaderFilename,
-        ShaderManager& shaderMgr, std::wstring texFilename);
+    virtual bool  Create(wstring texFilename, wstring shaderFilename);
     virtual bool  Init();
     virtual bool  Frame();
     virtual bool  PreRender();
     virtual bool  Render();
     virtual bool  PostRender();
     virtual bool  Release();
-    virtual void  SetMatrix(Matrix* matWorld, Matrix* matView, Matrix* matProj);
+    virtual void  SetMatrix(XMMATRIX* matWorld, XMMATRIX* matView, XMMATRIX* matProj);
+    virtual void  UpdateMatrix();
     virtual void  Move() {};
 public:
     bool GetInvincible() { return isInvincible; }

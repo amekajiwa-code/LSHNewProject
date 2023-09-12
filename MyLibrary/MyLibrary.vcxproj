@@ -155,21 +155,13 @@ copy MyLibrary.lib ..\\..\\MyLibrary\\lib</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Device.cpp" />
-    <ClCompile Include="Floor.cpp" />
-    <ClCompile Include="GeometryUtils.cpp" />
-    <ClCompile Include="Gunman.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="MyCollision.cpp" />
-    <ClCompile Include="NPC.cpp" />
-    <ClCompile Include="OBB.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PlaneObject.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Record.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -178,22 +170,14 @@ copy MyLibrary.lib ..\\..\\MyLibrary\\lib</Command>
     <ClCompile Include="Writer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="DirectXTex.h" />
-    <ClInclude Include="Floor.h" />
-    <ClInclude Include="GeometryUtils.h" />
-    <ClInclude Include="Gunman.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="MyCollision.h" />
-    <ClInclude Include="NPC.h" />
-    <ClInclude Include="OBB.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PlaneObject.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Record.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Std.h" />

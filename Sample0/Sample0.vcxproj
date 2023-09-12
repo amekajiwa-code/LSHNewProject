@@ -149,11 +149,6 @@
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Plane.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MyLibrary\MyLibrary.vcxproj">
       <Project>{90cc1fec-0a14-4824-a8fe-188d59057e66}</Project>
     </ProjectReference>

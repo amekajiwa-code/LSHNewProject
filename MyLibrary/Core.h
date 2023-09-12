@@ -9,7 +9,7 @@
 class Core : public Device
 {
 public:
-    Camera mMainCamera;
+    shared_ptr<Camera> mMainCamera = make_shared<Camera>();
     Sound* mSound = nullptr;
 
     virtual bool  Init();

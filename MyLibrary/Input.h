@@ -21,14 +21,14 @@ public:
 
 	POINT mMousePos;
 	DWORD mkeyState[256];
-	Vector3 curWorldPos;
+	XMFLOAT3 curWorldPos;
 
 	bool Init();
 	bool Frame();
 	bool Render();
 	bool Release();
 
-	Vector3 GetWorldPos(Vector2 vWindow, Vector3 vCamera);
+	XMFLOAT3 GetWorldPos(XMFLOAT2 vWindow, XMFLOAT3 vCamera);
 
 	virtual ~Input() {};
 private:

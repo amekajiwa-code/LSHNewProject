@@ -35,8 +35,32 @@ bool  sample::Init()
     }
 #pragma endregion
 
-//카메라생성
-    mMainCamera.Create({0,0,0}, { static_cast<float>(m_dwWindowWidth), static_cast<float>(m_dwWindowHeight) });
+#pragma region 맵오브젝트 생성
+    MapDesc mapDesc = {
+        9,
+        9,
+        1,
+        L"../res/background/maple_bg_2.png",
+        L"../MyLibrary/Plane.hlsl"
+    };
+
+    mMapObj = make_shared<Map>();
+    mMapObj->Set(m_pDevice, m_pImmediateContext);
+    mMapObj->CreateMap(mapDesc);
+#pragma endregion
+
+#pragma region 카메라 뷰행렬 생성, 프로젝션(투영)
+    DWORD screenWidth = GetSystemMetrics(SM_CXSCREEN);
+    DWORD screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    float aspect = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
+
+    XMFLOAT3 eyeVec = { 5.0f, 10.0f, -5.0f };
+    XMFLOAT3 lookAtVec = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 upVec = { 0.0f, 1.0f, 0.0f };
+
+    mMainCamera->SetView(eyeVec, lookAtVec, upVec);
+    mMainCamera->SetdProjection(60.0f, aspect, 0.1f, 1000.0f);
+#pragma endregion
 
     return true;
 }
@@ -47,12 +71,17 @@ bool  sample::Frame()
 bool  sample::Render()
 {
     m_pImmediateContext->OMSetBlendState(mAlphaBlend, 0, -1);
-    mMainCamera.mCameraPos = {0, 0, 0};
+    XMMATRIX viewMatrix = mMainCamera->GetViewMatrix();
+    XMMATRIX projMatrix = mMainCamera->GetProjMatrix();
+    mMapObj->SetMatrix(nullptr, &viewMatrix, &projMatrix);
+    mMapObj->Render();
+
     return true;
 }
 bool  sample::Release()
 {
     mAlphaBlend->Release();
+    mMapObj->Release();
     return true;
 }
 

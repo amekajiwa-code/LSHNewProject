@@ -24,7 +24,4 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Plane.hlsl" />
-  </ItemGroup>
 </Project>

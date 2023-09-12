@@ -1,18 +1,18 @@
 #include "Input.h"
 #include "Writer.h"
 
-Vector3 Input::GetWorldPos(Vector2 window, Vector3 camera)
+XMFLOAT3 Input::GetWorldPos(XMFLOAT2 window, XMFLOAT3 camera)
 {
-    float fHalfWidth = window.mX / 2.0f;
-    float fHalfHeight = window.mY / 2.0f;
+    float fHalfWidth = window.x / 2.0f;
+    float fHalfHeight = window.y / 2.0f;
 
     // client
-    Vector3 clientMouse = { (float)mMousePos.x, (float)mMousePos.y , 0.0f };
+    XMFLOAT3 clientMouse = { (float)mMousePos.x, (float)mMousePos.y , 0.0f };
     // world
-    Vector2 WorldMouse = { camera.mX - fHalfWidth,
-                               camera.mY + fHalfHeight };
-    clientMouse.mX = WorldMouse.mX + clientMouse.mX;
-    clientMouse.mY = WorldMouse.mY - clientMouse.mY;
+    XMFLOAT2 WorldMouse = { camera.x - fHalfWidth,
+                               camera.y + fHalfHeight };
+    clientMouse.x = WorldMouse.x + clientMouse.x;
+    clientMouse.y = WorldMouse.y - clientMouse.y;
     return clientMouse;
 }
 

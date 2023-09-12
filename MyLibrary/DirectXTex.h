@@ -724,7 +724,7 @@ namespace DirectX
     HRESULT __cdecl PremultiplyAlpha(
         _In_reads_(nimages) const Image* srcImages, _In_ size_t nimages, _In_ const TexMetadata& metadata,
         _In_ TEX_PMALPHA_FLAGS flags, _Out_ ScratchImage& result) noexcept;
-        // Converts to/from a premultiplied alpha version of the texture
+        // Converts to/from a premultiplied alpha version of the tex
 
     enum TEX_COMPRESS_FLAGS : unsigned long
     {

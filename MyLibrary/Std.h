@@ -12,6 +12,7 @@
 #pragma comment (lib, "d3dcompiler.lib") // d3d11.dll
 #pragma comment (lib, "DirectXTex.lib") // DirectXTex.h
 #include "DirectXTex.h"
+#include <DirectXMath.h>
 
 #include <string>
 #include <vector>
@@ -20,8 +21,6 @@
 #include <unordered_map>
 #include <queue>
 #include <codecvt>
-
-#include "GeometryUtils.h"
 
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 
@@ -32,3 +31,4 @@ extern float g_SecondPerFrame;
 extern float g_GameTimer;
 
 using namespace std;
+using namespace DirectX;

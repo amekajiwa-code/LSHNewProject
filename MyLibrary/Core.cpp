@@ -12,7 +12,7 @@ bool  Core::EngineInit()
     Input::GetInstance().Init();
     Writer::GetInstance().Init();
     SoundManager::GetInstance().Init();
-    mMainCamera.Init();
+    mMainCamera->Init();
     Init();
 
     return true;
@@ -24,8 +24,8 @@ bool  Core::EngineFrame()
     Input::GetInstance().Frame();
     Writer::GetInstance().Frame();
     SoundManager::GetInstance().Frame();
-    mMainCamera.Frame();
     Device::Frame();
+    mMainCamera->Frame();
     Frame();
 
     return true;
@@ -38,7 +38,7 @@ bool  Core::EngineRender()
     Timer::GetInstance().Render();
     Input::GetInstance().Render();
     Writer::GetInstance().Render();
-    mMainCamera.Render();
+    mMainCamera->Render();
     Device::PostRender();
 
     return true;
@@ -51,7 +51,7 @@ bool  Core::EngineRelease()
     Input::GetInstance().Release();
     Writer::GetInstance().Release();
     SoundManager::GetInstance().Release();
-    mMainCamera.Release();
+    mMainCamera->Release();
     Device::Release();
 
     return true;

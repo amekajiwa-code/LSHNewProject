@@ -2,23 +2,23 @@
 bool  PlaneObject::CreateVertexBuffer()
 {
     m_VertexList.resize(6);
-    m_VertexList[0].t.mX = 0.0f; m_VertexList[0].t.mY = 0.0f;
-    m_VertexList[1].t.mX = 1.0f; m_VertexList[1].t.mY = 0.0f;
-    m_VertexList[2].t.mX = 0.0f; m_VertexList[2].t.mY = 1.0f;
-    m_VertexList[3].t.mX = 0.0f; m_VertexList[3].t.mY = 1.0f;
-    m_VertexList[4].t.mX = 1.0f; m_VertexList[4].t.mY = 0.0f;
-    m_VertexList[5].t.mX = 1.0f; m_VertexList[5].t.mY = 1.0f;
+    m_VertexList[0].tex.x = 0.0f; m_VertexList[0].tex.y = 0.0f;
+    m_VertexList[1].tex.x = 1.0f; m_VertexList[1].tex.y = 0.0f;
+    m_VertexList[2].tex.x = 0.0f; m_VertexList[2].tex.y = 1.0f;
+    m_VertexList[3].tex.x = 0.0f; m_VertexList[3].tex.y = 1.0f;
+    m_VertexList[4].tex.x = 1.0f; m_VertexList[4].tex.y = 0.0f;
+    m_VertexList[5].tex.x = 1.0f; m_VertexList[5].tex.y = 1.0f;
 
-    m_VertexList[0].p.mX = -1.0f; m_VertexList[0].p.mY = 1.0f;  m_VertexList[0].p.mZ = 0.0f;
-    m_VertexList[1].p.mX = 1.0f; m_VertexList[1].p.mY = 1.0f;  m_VertexList[1].p.mZ = 0.0f;
-    m_VertexList[2].p.mX = -1.0f; m_VertexList[2].p.mY = -1.0f;  m_VertexList[2].p.mZ = 0.0f;
+    m_VertexList[0].pos.x = -1.0f; m_VertexList[0].pos.y = 1.0f;  m_VertexList[0].pos.z = 0.0f;
+    m_VertexList[1].pos.x = 1.0f; m_VertexList[1].pos.y = 1.0f;  m_VertexList[1].pos.z = 0.0f;
+    m_VertexList[2].pos.x = -1.0f; m_VertexList[2].pos.y = -1.0f;  m_VertexList[2].pos.z = 0.0f;
     m_VertexList[3] = m_VertexList[2];
     m_VertexList[4] = m_VertexList[1];
-    m_VertexList[5].p.mX = 1.0f; m_VertexList[5].p.mY = -1.0f;  m_VertexList[5].p.mZ = 0.0f;
+    m_VertexList[5].pos.x = 1.0f; m_VertexList[5].pos.y = -1.0f;  m_VertexList[5].pos.z = 0.0f;
 
     D3D11_BUFFER_DESC Desc;
     ZeroMemory(&Desc, sizeof(Desc));
-    Desc.ByteWidth = sizeof(PT_Vertex) * m_VertexList.size();
+    Desc.ByteWidth = sizeof(PNCT_Vertex) * m_VertexList.size();
     Desc.Usage = D3D11_USAGE_DEFAULT;
     Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -41,10 +41,10 @@ bool  PlaneObject::CreateVertexBuffer()
 
 bool PlaneObject::Frame()
 {
-    Matrix matScale, matRotation, matTranslate;
-    matScale.Scale(m_vScale);
-    matRotation.ZRotate(m_vRotation.mZ);
-    matTranslate.Translation(m_vPos);
+    XMMATRIX matScale, matRotation, matTranslate;
+    matScale = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z); // 스케일
+    matRotation = XMMatrixRotationZ(m_vRotation.z); // z축회전
+    matTranslate = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z); //이동
     m_matWorld = matScale * matRotation * matTranslate;
     return true;
 }
