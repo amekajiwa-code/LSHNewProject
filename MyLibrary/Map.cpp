@@ -58,5 +58,5 @@ bool Map::CreateIndexData()
 void Map::CreateMap(MapDesc desc)
 {
 	mMapDesc = desc;
-	PlaneObject::Create(mMapDesc.textureFileName, mMapDesc.shaderFileName);
+	Object::Create(mMapDesc.textureFileName, mMapDesc.shaderFileName);
 }

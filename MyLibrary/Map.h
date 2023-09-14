@@ -1,5 +1,5 @@
 #pragma once
-#include "PlaneObject.h"
+#include "Object.h"
 
 struct MapDesc
 {
@@ -10,7 +10,7 @@ struct MapDesc
 	wstring shaderFileName;
 };
 
-class Map : public PlaneObject
+class Map : public Object
 {
 private:
 	MapDesc mMapDesc;
