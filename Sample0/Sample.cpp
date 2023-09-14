@@ -40,7 +40,7 @@ bool  sample::Init()
         9,
         9,
         1,
-        L"../res/background/maple_bg_2.png",
+        L"../res/bg.jpg",
         L"../MyLibrary/Plane.hlsl"
     };
 
@@ -55,11 +55,11 @@ bool  sample::Init()
     float aspect = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
 
     XMFLOAT3 eyeVec = { 0.0f, 5.0f, -1.0f };
-    XMFLOAT3 lookAtVec = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 lookAtVec = { 0.0f, 0.0f, 1.0f };
     XMFLOAT3 upVec = { 0.0f, 1.0f, 0.0f };
 
     mMainCamera->SetView(eyeVec, lookAtVec, upVec);
-    mMainCamera->SetdProjection(60.0f, aspect, 0.1f, 1000.0f);
+    mMainCamera->SetProjection(60.0f, aspect, 0.1f, 1000.0f);
 #pragma endregion
 
     return true;

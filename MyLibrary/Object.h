@@ -5,10 +5,10 @@
 
 struct PNCT_Vertex
 {
-    XMFLOAT3 pos;
-    XMFLOAT3 normal;
-    XMFLOAT4 color;
-    XMFLOAT2 tex;
+    XMFLOAT3 p;
+    XMFLOAT3 n;
+    XMFLOAT4 c;
+    XMFLOAT2 t;
 };
 struct MATRIX_Data
 {
@@ -20,8 +20,6 @@ struct MATRIX_Data
 class Object
 {
 public:
-    bool m_bDead = false;
-    bool isInvincible = false;
     XMMATRIX m_matWorld;
     XMMATRIX m_matView;
     XMMATRIX m_matProj;
@@ -46,10 +44,12 @@ public:
     vector<DWORD> mIndexList;
 public:
     void Set(ID3D11Device* pDevice, ID3D11DeviceContext* pImmediateContext);
+
     virtual bool  CreateVertexBuffer();
     virtual bool  CreateIndexBuffer();
     virtual bool  CreateConstantBuffer();
     virtual bool  CreateInputLayout();
+
     virtual bool  CreateVertexData()
     {
         return true;
@@ -68,10 +68,7 @@ public:
     virtual bool  Release();
     virtual void  SetMatrix(XMMATRIX* matWorld, XMMATRIX* matView, XMMATRIX* matProj);
     virtual void  UpdateMatrix();
-    virtual void  Move() {};
-public:
-    bool GetInvincible() { return isInvincible; }
-    void Setinvincible(bool invincible) { isInvincible = invincible; }
+    virtual void  Move() {}; 
 public:
     Object();
     virtual ~Object() {}

@@ -18,7 +18,7 @@ public:
 
 	bool Create(XMFLOAT3 pos, XMFLOAT2 size);
 	void SetView(XMFLOAT3 eye, XMFLOAT3 lookAt, XMFLOAT3 up);
-	void SetdProjection(float FOV, float aspectRatio, float nearest, float farDistance); //FOV는 라디안 aspectRatio는 종횡비
+	void SetProjection(float FOV, float aspectRatio, float nearest, float farDistance); //FOV는 라디안 aspectRatio는 종횡비
 	XMMATRIX GetViewMatrix()
 	{
 		return mViewMatrix;

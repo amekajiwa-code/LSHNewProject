@@ -5,7 +5,7 @@ void Camera::SetView(XMFLOAT3 eye, XMFLOAT3 lookAt, XMFLOAT3 up)
     mViewMatrix = DirectX::XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&lookAt), XMLoadFloat3(&up));
 }
 
-void Camera::SetdProjection(float FOV, float aspectRatio, float nearest, float farDistance)
+void Camera::SetProjection(float FOV, float aspectRatio, float nearest, float farDistance)
 {
     float fovY = XMConvertToRadians(FOV);
     mProjMatrix = XMMatrixPerspectiveFovLH(fovY, aspectRatio, nearest, farDistance);

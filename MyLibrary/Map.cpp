@@ -12,17 +12,17 @@ bool Map::CreateVertexData()
 		for (int col = 0; col < mMapDesc.numCols; ++col)
 		{
 			int  iVertexIndex = row * mMapDesc.numCols + col;
-			m_VertexList[iVertexIndex].pos.x = (col - mHalfCols) * mMapDesc.sellDistance;
-			m_VertexList[iVertexIndex].pos.z = -((row - mHalfRows) * mMapDesc.sellDistance);
-			m_VertexList[iVertexIndex].pos.y = 0.0f;
+			m_VertexList[iVertexIndex].p.x = (col - mHalfCols) * mMapDesc.sellDistance;
+			m_VertexList[iVertexIndex].p.z = -((row - mHalfRows) * mMapDesc.sellDistance);
+			m_VertexList[iVertexIndex].p.y = 0.0f;
 			XMFLOAT3 xmfloat3 = { 0.0f, 1.0f, 0.0f };
-			m_VertexList[iVertexIndex].normal = xmfloat3;
+			m_VertexList[iVertexIndex].n = xmfloat3;
 			XMFLOAT4 xmfloat4 = { 1.0f, 1.0f, 1.0f, 1.0f };
-			m_VertexList[iVertexIndex].color = xmfloat4;
+			m_VertexList[iVertexIndex].c = xmfloat4;
 			float u = (float)col / (float)(mMapDesc.numCols - 1);
 			float v = (float)row / (float)(mMapDesc.numRows - 1);
 			XMFLOAT2 xmfloat2 = { u , v };
-			m_VertexList[iVertexIndex].tex = xmfloat2;
+			m_VertexList[iVertexIndex].t = xmfloat2;
 		}
 	}
 	return true;

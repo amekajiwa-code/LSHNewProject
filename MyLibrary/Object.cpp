@@ -46,8 +46,8 @@ bool  Object::Create(wstring texFilename, wstring shaderFilename)
     CreateIndexData();
     CreateVertexBuffer();
     CreateIndexBuffer();
+    m_pShader = ShaderManager::GetInstance().Load(shaderFilename); // InputLayOut 하기전에 꼭!! 쉐이더 로드하기
     CreateInputLayout();
-    m_pShader = ShaderManager::GetInstance().Load(shaderFilename);
     m_pTex = TextureManager::GetInstance().Load(texFilename);
     UpdateMatrix();
     return true;
@@ -123,12 +123,12 @@ bool  Object::CreateConstantBuffer()
 }
 bool  Object::CreateInputLayout()
 {
-    const D3D11_INPUT_ELEMENT_DESC layout[] =
+    D3D11_INPUT_ELEMENT_DESC layout[] =
     {
-        { "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXTURE",  0, DXGI_FORMAT_R32G32_FLOAT, 0, 40,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
     UINT iNumCount = sizeof(layout) / sizeof(layout[0]);
 

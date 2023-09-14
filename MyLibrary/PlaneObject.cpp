@@ -2,19 +2,19 @@
 bool  PlaneObject::CreateVertexBuffer()
 {
     m_VertexList.resize(6);
-    m_VertexList[0].tex.x = 0.0f; m_VertexList[0].tex.y = 0.0f;
-    m_VertexList[1].tex.x = 1.0f; m_VertexList[1].tex.y = 0.0f;
-    m_VertexList[2].tex.x = 0.0f; m_VertexList[2].tex.y = 1.0f;
-    m_VertexList[3].tex.x = 0.0f; m_VertexList[3].tex.y = 1.0f;
-    m_VertexList[4].tex.x = 1.0f; m_VertexList[4].tex.y = 0.0f;
-    m_VertexList[5].tex.x = 1.0f; m_VertexList[5].tex.y = 1.0f;
+    m_VertexList[0].t.x = 0.0f; m_VertexList[0].t.y = 0.0f;
+    m_VertexList[1].t.x = 1.0f; m_VertexList[1].t.y = 0.0f;
+    m_VertexList[2].t.x = 0.0f; m_VertexList[2].t.y = 1.0f;
+    m_VertexList[3].t.x = 0.0f; m_VertexList[3].t.y = 1.0f;
+    m_VertexList[4].t.x = 1.0f; m_VertexList[4].t.y = 0.0f;
+    m_VertexList[5].t.x = 1.0f; m_VertexList[5].t.y = 1.0f;
 
-    m_VertexList[0].pos.x = -1.0f; m_VertexList[0].pos.y = 1.0f;  m_VertexList[0].pos.z = 0.0f;
-    m_VertexList[1].pos.x = 1.0f; m_VertexList[1].pos.y = 1.0f;  m_VertexList[1].pos.z = 0.0f;
-    m_VertexList[2].pos.x = -1.0f; m_VertexList[2].pos.y = -1.0f;  m_VertexList[2].pos.z = 0.0f;
+    m_VertexList[0].p.x = -1.0f; m_VertexList[0].p.y = 1.0f;  m_VertexList[0].p.z = 0.0f;
+    m_VertexList[1].p.x = 1.0f; m_VertexList[1].p.y = 1.0f;  m_VertexList[1].p.z = 0.0f;
+    m_VertexList[2].p.x = -1.0f; m_VertexList[2].p.y = -1.0f;  m_VertexList[2].p.z = 0.0f;
     m_VertexList[3] = m_VertexList[2];
     m_VertexList[4] = m_VertexList[1];
-    m_VertexList[5].pos.x = 1.0f; m_VertexList[5].pos.y = -1.0f;  m_VertexList[5].pos.z = 0.0f;
+    m_VertexList[5].p.x = 1.0f; m_VertexList[5].p.y = -1.0f;  m_VertexList[5].p.z = 0.0f;
 
     D3D11_BUFFER_DESC Desc;
     ZeroMemory(&Desc, sizeof(Desc));
