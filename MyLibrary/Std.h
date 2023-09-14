@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include <queue>
 #include <codecvt>
+#include <wrl/client.h>
 
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 

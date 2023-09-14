@@ -40,10 +40,10 @@ bool  sample::Init()
         9,
         9,
         1,
+        0,
         L"../res/floor.png",
         L"../MyLibrary/Plane.hlsl"
     };
-
     mMapObj = make_shared<Map>();
     mMapObj->Set(m_pDevice, m_pImmediateContext);
     mMapObj->CreateMap(mapDesc);
@@ -80,8 +80,6 @@ bool  sample::Render()
 }
 bool  sample::Release()
 {
-    mAlphaBlend->Release();
-    mMapObj->Release();
     return true;
 }
 

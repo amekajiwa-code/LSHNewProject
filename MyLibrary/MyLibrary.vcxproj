@@ -158,6 +158,7 @@ copy MyLibrary.lib ..\\..\\MyLibrary\\lib</Command>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -174,6 +175,7 @@ copy MyLibrary.lib ..\\..\\MyLibrary\\lib</Command>
     <ClInclude Include="Core.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="DirectXTex.h" />
+    <ClInclude Include="HeightMap.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Object.h" />

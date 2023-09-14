@@ -12,8 +12,8 @@ bool Map::CreateVertexData()
 		for (int col = 0; col < mMapDesc.numCols; ++col)
 		{
 			int  iVertexIndex = row * mMapDesc.numCols + col;
-			m_VertexList[iVertexIndex].p.x = (col - mHalfCols) * mMapDesc.sellDistance;
-			m_VertexList[iVertexIndex].p.z = -((row - mHalfRows) * mMapDesc.sellDistance);
+			m_VertexList[iVertexIndex].p.x = (col - mHalfCols) * mMapDesc.cellDistance;
+			m_VertexList[iVertexIndex].p.z = -((row - mHalfRows) * mMapDesc.cellDistance);
 			m_VertexList[iVertexIndex].p.y = 0.0f;
 			XMFLOAT3 xmfloat3 = { 0.0f, 1.0f, 0.0f };
 			m_VertexList[iVertexIndex].n = xmfloat3;

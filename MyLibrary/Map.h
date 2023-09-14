@@ -5,15 +5,17 @@ struct MapDesc
 {
 	unsigned int numCols;
 	unsigned int numRows;
-	float sellDistance;
+	float cellDistance;
+	float scaleHeight;
 	wstring textureFileName;
 	wstring shaderFileName;
 };
 
 class Map : public Object
 {
-private:
+protected:
 	MapDesc mMapDesc;
+
 	unsigned int mNumFace;
 	float mHalfRows;
 	float mHalfCols;
