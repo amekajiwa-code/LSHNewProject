@@ -12,6 +12,7 @@
 #pragma comment (lib, "d3dcompiler.lib") // d3d11.dll
 #pragma comment (lib, "DirectXTex.lib") // DirectXTex.h
 #include "DirectXTex.h"
+
 #include <DirectXMath.h>
 
 #include <string>

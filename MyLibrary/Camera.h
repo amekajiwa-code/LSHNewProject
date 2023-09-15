@@ -3,18 +3,18 @@
 
 class Camera
 {
-private:
+protected:
 	DirectX::XMMATRIX mViewMatrix; //뷰행렬
 	DirectX::XMMATRIX mOrthonormalProjMatrix; //오소노말
 	DirectX::XMMATRIX mProjMatrix; //프로젝션(투영) 행렬
-	XMFLOAT3 mCameraPos = { 0, 0, 0 };
+	XMVECTOR mCameraPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	DWORD mWindowWidth;
 	DWORD mWindowHeight;
 public:
-	bool Init();
-	bool Frame();
-	bool Render();
-	bool Release();
+	virtual bool Init();
+	virtual bool Frame();
+	virtual bool Render();
+	virtual bool Release();
 
 	bool Create(XMFLOAT3 pos, XMFLOAT2 size);
 	void SetView(XMFLOAT3 eye, XMFLOAT3 lookAt, XMFLOAT3 up);

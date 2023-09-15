@@ -4,10 +4,10 @@
 
 enum class KeyState
 {
-	KEY_FREE = 0,
-	KEY_UP = 1,
-	KEY_DOWN = 2,
-	KEY_HOLD = 3,
+	KEY_FREE,
+	KEY_UP,
+	KEY_DOWN,
+	KEY_HOLD,
 };
 
 class Input
@@ -19,6 +19,7 @@ public:
 		return instance;
 	}
 
+	XMVECTOR mOffset = g_XMZero; // vector 0으로 초기화
 	POINT mMousePos;
 	DWORD mkeyState[256];
 	XMFLOAT3 curWorldPos;

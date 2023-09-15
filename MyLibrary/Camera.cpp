@@ -34,7 +34,7 @@ bool Camera::Release()
 
 bool Camera::Create(XMFLOAT3 pos, XMFLOAT2 size)
 {
-    mCameraPos = pos;
+    mCameraPos = XMLoadFloat3(&pos);
     mWindowWidth = static_cast<DWORD>(size.x);
     mWindowHeight = static_cast<DWORD>(size.y);
     return true;
