@@ -1,5 +1,5 @@
 #include "HeightMap.h"
-using namespace Microsoft::WRL;
+
 bool HeightMap::CreateHeightMap(MapDesc desc)
 {
 	Map::CreateMap(desc);

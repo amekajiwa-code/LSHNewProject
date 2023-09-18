@@ -9,12 +9,6 @@ bool  DebugCamera::Init()
 }
 bool  DebugCamera::Frame()
 {
-	if (Input::GetInstance().mkeyState[VK_SPACE] == static_cast<DWORD>(KeyState::KEY_HOLD))
-	{
-		m_fSpeed += Timer::GetInstance().mSecondPerFrame * m_fSpeed;
-	}
-	m_fSpeed -= Timer::GetInstance().mSecondPerFrame * m_fSpeed * 0.5f;
-	m_fSpeed = max(10.0f, m_fSpeed);
 	if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_HOLD))
 	{
 		XMVECTOR vOffset = mCameraPos;
@@ -66,7 +60,7 @@ bool  DebugCamera::Frame()
 	mViewMatrix = XMMatrixInverse(nullptr, matRotation);
 	Camera::UpdateVector();
 
-	m_fCameraRoll += 1.0f * Timer::GetInstance().mSecondPerFrame;
+	//m_fCameraRoll += 1.0f * Timer::GetInstance().mSecondPerFrame;
 
 	return true;
 }

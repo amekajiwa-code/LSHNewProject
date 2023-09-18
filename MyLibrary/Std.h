@@ -14,6 +14,7 @@
 #include "DirectXTex.h"
 
 #include <DirectXMath.h>
+using namespace DirectX;
 
 #include <string>
 #include <vector>
@@ -22,7 +23,9 @@
 #include <unordered_map>
 #include <queue>
 #include <codecvt>
+
 #include <wrl/client.h>
+using namespace Microsoft::WRL;
 
 #define randstep(fmin, fmax) ((float)fmin+((float)fmax-(float)fmin)* rand() / RAND_MAX)
 
@@ -33,5 +36,3 @@ extern float g_SecondPerFrame;
 extern float g_GameTimer;
 
 using namespace std;
-
-using namespace DirectX;

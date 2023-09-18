@@ -21,6 +21,7 @@ public:
 
 	XMVECTOR mOffset = g_XMZero; // vector 0으로 초기화
 	POINT mMousePos;
+	POINT mBeforeMousePos;
 	DWORD mkeyState[256];
 	XMFLOAT3 curWorldPos;
 

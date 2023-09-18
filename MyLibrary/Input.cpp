@@ -27,6 +27,10 @@ bool Input::Frame()
     ::GetCursorPos(&mMousePos);
     ::ScreenToClient(g_hWnd, &mMousePos);
 
+    float tempX = mMousePos.x - mBeforeMousePos.x;
+    float tempY = mMousePos.y - mBeforeMousePos.y;
+    mOffset = XMVectorSet(tempX, tempY, 0.0f, 0.0f);
+
     for (int ikey = 0; ikey < 256; ikey++)
     {
         SHORT s = GetAsyncKeyState(ikey);
@@ -54,6 +58,8 @@ bool Input::Frame()
             }
         }
     }
+
+    mBeforeMousePos = mMousePos;
 
 	return true;
 }

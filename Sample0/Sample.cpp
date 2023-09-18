@@ -60,7 +60,7 @@ bool  sample::Init()
 
     mDebugCamera->Init();
     mDebugCamera->SetView(eyeVec, lookAtVec, upVec);
-    mDebugCamera->SetProjection(45.0f, aspect, 0.1f, 1000.0f);
+    mDebugCamera->SetProjection(45.0f, aspect, 1.0f, 1000.0f);
 
     mMainCamera = mDebugCamera; // 포인터 넘겨줌
 #pragma endregion
@@ -74,9 +74,19 @@ bool  sample::Frame()
 bool  sample::Render()
 {
     m_pImmediateContext->OMSetBlendState(mAlphaBlend, 0, -1);
+    XMMATRIX worldMatrix = XMMatrixIdentity();
     XMMATRIX viewMatrix = mMainCamera->GetViewMatrix();
     XMMATRIX projMatrix = mMainCamera->GetProjMatrix();
-    mMapObj->SetMatrix(nullptr, &viewMatrix, &projMatrix);
+    mMapObj->SetMatrix(&worldMatrix, &viewMatrix, &projMatrix);
+    mMapObj->Render();
+
+    XMMATRIX worldMatrix2 = XMMatrixIdentity();
+    XMMatrixInverse(nullptr, worldMatrix2);
+    XMMatrixTranspose(worldMatrix2);
+    worldMatrix2.r[3].m128_f32[1] = -3.0f; // _42 y축 이동
+    viewMatrix = mMainCamera->GetViewMatrix();
+    projMatrix = mMainCamera->GetProjMatrix();
+    mMapObj->SetMatrix(&worldMatrix2, &viewMatrix, &projMatrix);
     mMapObj->Render();
 
     return true;
