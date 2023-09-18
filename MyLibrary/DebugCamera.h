@@ -6,11 +6,6 @@ public:
     float m_fCameraYaw = 0.0f;
     float m_fCameraPitch = 45.0f;
     float m_fCameraRoll = 0.0f;
-
-    XMVECTOR m_vLook;
-    XMVECTOR m_vUp;
-    XMVECTOR m_vSide;
-    float m_fSpeed = 500.0f;
 public:
     virtual bool  Init();
     virtual bool  Frame();

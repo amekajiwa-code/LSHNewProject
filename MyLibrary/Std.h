@@ -33,4 +33,5 @@ extern float g_SecondPerFrame;
 extern float g_GameTimer;
 
 using namespace std;
+
 using namespace DirectX;

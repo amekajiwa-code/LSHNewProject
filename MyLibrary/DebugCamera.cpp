@@ -19,13 +19,13 @@ bool  DebugCamera::Frame()
 	{
 		XMVECTOR vOffset = mCameraPos;
 		vOffset = m_vLook * Timer::GetInstance().mSecondPerFrame * m_fSpeed;
-		mCameraPos = mCameraPos - vOffset;
+		mCameraPos = mCameraPos + vOffset;
 	}
 	if (Input::GetInstance().mkeyState['S'] == static_cast<DWORD>(KeyState::KEY_HOLD))
 	{
 		XMVECTOR vOffset = mCameraPos;
 		vOffset = m_vLook * Timer::GetInstance().mSecondPerFrame * m_fSpeed;
-		mCameraPos = mCameraPos + vOffset;
+		mCameraPos = mCameraPos - vOffset;
 	}
 	if (Input::GetInstance().mkeyState['A'] == static_cast<DWORD>(KeyState::KEY_HOLD))
 	{
@@ -62,8 +62,11 @@ bool  DebugCamera::Frame()
 	XMVECTOR gRotation;
 	XMMATRIX matRotation;
 	gRotation = XMQuaternionRotationRollPitchYaw(m_fCameraPitch, m_fCameraYaw, m_fCameraRoll); //pitch yaw roll
-	XMVECTOR scaleVec = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	matRotation = XMMatrixAffineTransformation(g_XMOne, g_XMZero, gRotation, mCameraPos);
+	mViewMatrix = XMMatrixInverse(nullptr, matRotation);
+	Camera::UpdateVector();
+
+	m_fCameraRoll += 1.0f * Timer::GetInstance().mSecondPerFrame;
 
 	return true;
 }
