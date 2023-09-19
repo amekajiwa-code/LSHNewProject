@@ -15,8 +15,7 @@ void Camera::UpdateVector()
     elementX = XMVectorGetX(mViewMatrix.r[0]);
     elementY = XMVectorGetX(mViewMatrix.r[1]);
     elementZ = XMVectorGetX(mViewMatrix.r[2]);
-    m_vSide = XMVectorSet(elementX, elementY, elementZ, 0.0f);
-    
+    m_vSide = XMVectorSet(elementX, elementY, elementZ, 0.0f);    
 }
 
 void Camera::SetView(XMFLOAT3 eye, XMFLOAT3 lookAt, XMFLOAT3 up)

@@ -2,9 +2,29 @@
 HWND g_hWnd;
 DWORD g_dwWindowWidth;
 DWORD g_dwWindowHeight;
+Window* g_pWindow = nullptr;
+
+int Window::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_SIZE:
+        if (SIZE_MINIMIZED != wParam) // 최소화가 아니면
+        {
+            UINT width = LOWORD(lParam);
+            UINT height = HIWORD(lParam);
+            ResizeDevice(width, height);
+        }
+        break;
+    }
+    return -1;
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    LRESULT hr = g_pWindow->MsgProc(hWnd, message, wParam, lParam);
+    if (hr > 0) return 0;
+
     switch (message)
     {
     case WM_DESTROY:
@@ -49,13 +69,15 @@ bool Window::SetWindow(const WCHAR* szTitle, DWORD dwWindowWidth, DWORD dwWindow
 #else
     m_dwExStyle = WS_EX_APPWINDOW;
 #endif
+    RECT rect = { 0, 0, dwWindowWidth, dwWindowHeight };
+    AdjustWindowRect(&rect, m_dwStyle, FALSE);
     m_hWnd = CreateWindowEx(
         m_dwExStyle,
         L"윈도우",
         szTitle,
         m_dwStyle,
         m_dwWindowPosX, m_dwWindowPosY,
-        m_dwWindowWidth, m_dwWindowHeight,
+        rect.right - rect.left, rect.bottom - rect.top,
         nullptr,
         nullptr,
         m_hInstance,
@@ -66,7 +88,17 @@ bool Window::SetWindow(const WCHAR* szTitle, DWORD dwWindowWidth, DWORD dwWindow
         return FALSE;
     }
     g_hWnd = m_hWnd;
+
+    GetClientRect(m_hWnd, &mRectClient);
+    g_dwWindowWidth = g_dwWindowWidth = mRectClient.right;
+    g_dwWindowHeight = g_dwWindowHeight = mRectClient.bottom;
+
     ShowWindow(m_hWnd, SW_SHOWNORMAL);
 
     return true;
+}
+
+Window::Window()
+{
+    g_pWindow = this;
 }

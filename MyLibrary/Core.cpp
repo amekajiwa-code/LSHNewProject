@@ -9,6 +9,7 @@ bool  Core::EngineInit()
 {
     Device::Init();
     CreateDepthStencilState();
+    CreateRasterizerState();
     Timer::GetInstance().Init();
     Input::GetInstance().Init();
     Writer::GetInstance().Init();
@@ -36,6 +37,7 @@ bool  Core::EngineRender()
 {
     Device::PreRender();
     m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 1);
+    //m_pImmediateContext->RSSetState(m_pRSWireFrame.Get());
     Render();
     Timer::GetInstance().Render();
     Input::GetInstance().Render();
@@ -119,4 +121,63 @@ void Core::CreateDepthStencilState()
         return;
     }
     return;
+}
+
+void Core::ResizeDevice(UINT width, UINT height)
+{
+    HRESULT hr;
+    if (m_pDevice == nullptr) return;
+    DeleteDxResource();
+
+    m_pImmediateContext->OMSetRenderTargets(0, nullptr, nullptr);
+    m_pRenderTargetView->Release();
+    m_pDepthStencilView->Release();
+
+    hr = m_pSwapChain->ResizeBuffers(mSwapChainDesc.BufferCount, width, height,
+                                     mSwapChainDesc.BufferDesc.Format, mSwapChainDesc.Flags);
+
+    m_pSwapChain->GetDesc(&mSwapChainDesc);
+
+    SetRenderTargetView();
+    SetDepthStencilView();
+    SetViewPort();
+
+    GetClientRect(m_hWnd, &mRectClient);
+    g_dwWindowWidth = m_dwWindowWidth = mRectClient.right;
+    g_dwWindowHeight = m_dwWindowHeight = mRectClient.bottom;
+
+    CreateDxResource();
+}
+
+bool Core::DeleteDxResource()
+{
+    return true;
+}
+
+bool Core::CreateDxResource()
+{
+    if (m_pSwapChain)
+    {
+        IDXGISurface1* pBackBuffer;
+        HRESULT hr = m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface1),
+            (LPVOID*)&pBackBuffer);
+        if (SUCCEEDED(hr))
+        {
+            //Writer
+        }
+        if (pBackBuffer) pBackBuffer->Release();
+    }
+    return true;
+}
+
+void Core::CreateRasterizerState()
+{
+    HRESULT hr;
+    D3D11_RASTERIZER_DESC rd;
+    ZeroMemory(&rd, sizeof(rd));
+    rd.FillMode = D3D11_FILL_SOLID;
+    rd.CullMode = D3D11_CULL_NONE;
+    hr = m_pDevice->CreateRasterizerState(&rd, m_pRSSolid.GetAddressOf());
+    rd.FillMode = D3D11_FILL_WIREFRAME;
+    hr = m_pDevice->CreateRasterizerState(&rd, m_pRSWireFrame.GetAddressOf());
 }

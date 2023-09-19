@@ -1,48 +1,10 @@
 #include "Device.h"
 
-bool  Device::Init()
+bool Device::SetRenderTargetView()
 {
-    DXGI_SWAP_CHAIN_DESC SwapChainDesc;
-    ZeroMemory(&SwapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
-    SwapChainDesc.BufferDesc.Width = m_dwWindowWidth;
-    SwapChainDesc.BufferDesc.Height = m_dwWindowHeight;
-    SwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-    SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-    SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-    SwapChainDesc.SampleDesc.Count = 1;
-    SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    SwapChainDesc.BufferCount = 1;
-    SwapChainDesc.OutputWindow = m_hWnd;
-    SwapChainDesc.Windowed = true;
-
-    D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE;
-    UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-    D3D_FEATURE_LEVEL pFeatureLevels = D3D_FEATURE_LEVEL_11_0;
-    /*#ifdef _DEBUG
-        Flags |= D3D11_CREATE_DEVICE_DEBUG;
-    #endif*/
-    // 1) 디바이스
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(
-        NULL,
-        DriverType,
-        NULL,
-        Flags,
-        &pFeatureLevels, 1,
-        D3D11_SDK_VERSION,
-        &SwapChainDesc,
-        &m_pSwapChain,   // 백버퍼인터페이스
-        &m_pDevice,      // dx 인터페이스( 생성 )
-        NULL,
-        &m_pImmediateContext); // dx 인터페이스( 관리 )
-
-    if (FAILED(hr))
-    {
-        return false;
-    }
-
     // 2) 백버퍼 얻어서
     ID3D11Texture2D* pBackBuffer;
-    hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    HRESULT hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
     if (SUCCEEDED(hr))
     {
@@ -57,7 +19,11 @@ bool  Device::Init()
     }
 
     pBackBuffer->Release();
+    return true;
+}
 
+bool Device::SetDepthStencilView()
+{
     // 3) 깊이 버퍼 생성
     // -깊이 버퍼용 텍스터 생성
     // -생성된 깊이 텍스쳐를 깊이버퍼로 활용
@@ -76,7 +42,7 @@ bool  Device::Init()
         D3D11_BIND_DEPTH_STENCIL,
         0, 0
     };
-    hr = m_pDevice->CreateTexture2D(&texDesc, NULL, depthTexture.GetAddressOf());
+    HRESULT hr = m_pDevice->CreateTexture2D(&texDesc, NULL, depthTexture.GetAddressOf());
 
 
     D3D11_DEPTH_STENCIL_VIEW_DESC dspDesc;
@@ -86,7 +52,11 @@ bool  Device::Init()
 
     hr = m_pDevice->CreateDepthStencilView(depthTexture.Get(),
         &dspDesc, m_pDepthStencilView.GetAddressOf());
+    return true;
+}
 
+bool Device::SetViewPort()
+{
     m_ViewPort.Width = static_cast<float>(m_dwWindowWidth);
     m_ViewPort.Height = static_cast<float>(m_dwWindowHeight);
     m_ViewPort.MinDepth = 0.0f;
@@ -94,6 +64,51 @@ bool  Device::Init()
     m_ViewPort.TopLeftX = 0;
     m_ViewPort.TopLeftY = 0;
     m_pImmediateContext->RSSetViewports(1, &m_ViewPort);
+    return true;
+}
+
+bool  Device::Init()
+{
+    ZeroMemory(&mSwapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+    mSwapChainDesc.BufferDesc.Width = m_dwWindowWidth;
+    mSwapChainDesc.BufferDesc.Height = m_dwWindowHeight;
+    mSwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+    mSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+    mSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    mSwapChainDesc.SampleDesc.Count = 1;
+    mSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    mSwapChainDesc.BufferCount = 1;
+    mSwapChainDesc.OutputWindow = m_hWnd;
+    mSwapChainDesc.Windowed = true;
+
+    D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE;
+    UINT Flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+    D3D_FEATURE_LEVEL pFeatureLevels = D3D_FEATURE_LEVEL_11_0;
+    /*#ifdef _DEBUG
+        Flags |= D3D11_CREATE_DEVICE_DEBUG;
+    #endif*/
+    // 1) 디바이스
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(
+        NULL,
+        DriverType,
+        NULL,
+        Flags,
+        &pFeatureLevels, 1,
+        D3D11_SDK_VERSION,
+        &mSwapChainDesc,
+        &m_pSwapChain,   // 백버퍼인터페이스
+        &m_pDevice,      // dx 인터페이스( 생성 )
+        NULL,
+        &m_pImmediateContext); // dx 인터페이스( 관리 )
+
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+    SetRenderTargetView();
+    SetDepthStencilView();
+    SetViewPort();
 
     return true;
 }
