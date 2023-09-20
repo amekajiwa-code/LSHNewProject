@@ -41,7 +41,7 @@ bool  sample::Init()
         9,
         1,
         0,
-        L"../res/floor.png",
+        L"../res/bg.jpg",
         L"../MyLibrary/Plane.hlsl"
     };
     mMapObj = make_shared<Map>();
@@ -96,13 +96,13 @@ bool  sample::Release()
     return true;
 }
 
-int wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) // 메인
-{
-    sample mySample;
-    mySample.SetRegisterClassWindow(hInstance);
-    mySample.SetWindow(L"아무거나", 1280, 720);
-    ::ShowCursor(TRUE);
-    mySample.Run();
-
-    return 0;
-}
+//int wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) // 메인
+//{
+//    sample mySample;
+//    mySample.SetRegisterClassWindow(hInstance);
+//    mySample.SetWindow(L"아무거나", 1280, 720);
+//    ::ShowCursor(TRUE);
+//    mySample.Run();
+//
+//    return 0;
+//}

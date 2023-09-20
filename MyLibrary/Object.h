@@ -37,7 +37,6 @@ public:
     ID3D11Buffer* m_pIndexBuffer = nullptr;
     ID3D11Buffer* m_pConstantBuffer = nullptr;
     ID3D11InputLayout* m_pVertexLayout = nullptr;
-
     const Shader* m_pShader = nullptr;
     const Texture* m_pTex = nullptr;
     vector<PNCT_Vertex> m_VertexList;
@@ -68,7 +67,7 @@ public:
     virtual bool  Release();
     virtual void  SetMatrix(XMMATRIX* matWorld, XMMATRIX* matView, XMMATRIX* matProj);
     virtual void  UpdateMatrix();
-    virtual void  Move() {}; 
+    virtual void  Move() {};
 public:
     Object();
     virtual ~Object() {}
