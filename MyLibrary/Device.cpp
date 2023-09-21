@@ -36,7 +36,7 @@ bool Device::SetDepthStencilView()
         scDesc.BufferDesc.Width,
         scDesc.BufferDesc.Height,
         1,1,
-        DXGI_FORMAT_R24G8_TYPELESS,//DXGI_FORMAT_D24_UNORM_S8_UINT
+        DXGI_FORMAT_R24G8_TYPELESS,//DXGI_FORMAT_D24_UNORM_S8_UINT , DXGI_FORMAT_R24G8_TYPELESS
         1, 0,
         D3D11_USAGE_DEFAULT,
         D3D11_BIND_DEPTH_STENCIL,

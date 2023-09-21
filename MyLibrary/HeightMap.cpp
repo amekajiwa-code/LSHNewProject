@@ -1,8 +1,8 @@
 #include "HeightMap.h"
 
-bool HeightMap::CreateHeightMap(MapDesc desc)
+bool HeightMap::CreateHeightMap(wstring fileName)
 {
-	Map::CreateMap(desc);
+
 	ComPtr<ID3D11Resource> pTexture;
 	size_t maxSize = 0;
 	ID3D11Texture2D* pTexture2D = NULL;

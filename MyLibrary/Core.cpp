@@ -37,7 +37,16 @@ bool  Core::EngineRender()
 {
     Device::PreRender();
     m_pImmediateContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 1);
-    //m_pImmediateContext->RSSetState(m_pRSWireFrame.Get());
+
+    if (Input::GetInstance().mkeyState['V'] == static_cast<DWORD>(KeyState::KEY_DOWN))
+    {
+        m_pImmediateContext->RSSetState(m_pRSWireFrame.Get());
+    }
+    if (Input::GetInstance().mkeyState['V'] == static_cast<DWORD>(KeyState::KEY_UP))
+    {
+        m_pImmediateContext->RSSetState(m_pRSSolid.Get());
+    }
+    
     Render();
     Timer::GetInstance().Render();
     Input::GetInstance().Render();
