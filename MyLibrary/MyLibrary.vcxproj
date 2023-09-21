@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../fmod/inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../fmod/inc; ../FBX/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -128,7 +128,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>../fmod/lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../fmod/lib; ../FBX/lib/debug;</AdditionalLibraryDirectories>
       <OutputFile>MyLibrary.lib</OutputFile>
     </Lib>
     <PostBuildEvent>
@@ -160,6 +160,7 @@ copy DirectXTex.lib ..\\..\\MyLibrary\\lib</Command>
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="DebugCamera.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="FBX_Import.cpp" />
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -178,6 +179,7 @@ copy DirectXTex.lib ..\\..\\MyLibrary\\lib</Command>
     <ClInclude Include="DebugCamera.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="DirectXTex.h" />
+    <ClInclude Include="FBX_Import.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Map.h" />
