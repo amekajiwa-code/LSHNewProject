@@ -82,6 +82,7 @@ bool  Object::CreateVertexBuffer()
 
 bool  Object::CreateIndexBuffer()
 {
+    if (mIndexList.size() == 0) return true;
     D3D11_BUFFER_DESC Desc;
     ZeroMemory(&Desc, sizeof(Desc));
     Desc.ByteWidth = sizeof(DWORD) * mIndexList.size();

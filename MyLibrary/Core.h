@@ -6,6 +6,7 @@
 #include "Writer.h"
 #include "SoundManager.h"
 
+
 class Core : public Device
 {
 public:

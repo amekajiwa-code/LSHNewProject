@@ -65,6 +65,16 @@ bool  sample::Init()
     mMainCamera = mDebugCamera; // 포인터 넘겨줌
 #pragma endregion
 
+    mFbxImport = make_shared<FBX_Import>();
+    mFbxImport->Init();
+    mFbxImport->Load(L"../res/fbx/box.fbx");
+
+    mBoxObj = make_shared<Object>();
+    mBoxObj->Set(m_pDevice, m_pImmediateContext);
+    mBoxObj->m_VertexList.resize(mFbxImport->mTriList[0].faceList.size());
+    mBoxObj->m_VertexList = mFbxImport->mTriList[0].faceList;
+    mBoxObj->Create(L"../res/floor.png", L"../MyLibrary/Plane.hlsl");
+
     return true;
 }
 bool  sample::Frame()
@@ -78,21 +88,16 @@ bool  sample::Render()
     XMMATRIX viewMatrix = mMainCamera->GetViewMatrix();
     XMMATRIX projMatrix = mMainCamera->GetProjMatrix();
     mMapObj->SetMatrix(&worldMatrix, &viewMatrix, &projMatrix);
-    mMapObj->Render();
+    //mMapObj->Render();
 
-    XMMATRIX worldMatrix2 = XMMatrixIdentity();
-    XMMatrixInverse(nullptr, worldMatrix2);
-    XMMatrixTranspose(worldMatrix2);
-    worldMatrix2.r[3].m128_f32[1] = -3.0f; // _42 y축 이동
-    viewMatrix = mMainCamera->GetViewMatrix();
-    projMatrix = mMainCamera->GetProjMatrix();
-    mMapObj->SetMatrix(&worldMatrix2, &viewMatrix, &projMatrix);
-    mMapObj->Render();
+    mBoxObj->SetMatrix(nullptr, &viewMatrix, &projMatrix);
+    mBoxObj->Render();
 
     return true;
 }
 bool  sample::Release()
 {
+    mBoxObj->Release();
     return true;
 }
 
