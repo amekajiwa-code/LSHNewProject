@@ -9,6 +9,14 @@ bool  DebugCamera::Init()
 }
 bool  DebugCamera::Frame()
 {
+	if (Input::GetInstance().mkeyState[VK_SPACE] == static_cast<DWORD>(KeyState::KEY_DOWN))
+	{
+		m_fSpeed = 1000.0f;
+	}
+	if (Input::GetInstance().mkeyState[VK_SPACE] == static_cast<DWORD>(KeyState::KEY_UP))
+	{
+		m_fSpeed = 100.0f;
+	}
 	if (Input::GetInstance().mkeyState['W'] == static_cast<DWORD>(KeyState::KEY_HOLD))
 	{
 		XMVECTOR vOffset = mCameraPos;

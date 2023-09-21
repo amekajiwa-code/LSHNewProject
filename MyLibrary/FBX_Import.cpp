@@ -9,36 +9,37 @@ string wstring_to_string(const wstring& wideStr) {
 FbxVector2 FBX_Import::ReadTextureCoord(FbxLayerElementUV* uvLayer, int uvIndex)
 {
 	FbxVector2 uv;
-	switch (uvLayer->GetMappingMode())
-	{
-		// 제어점 당 1개의 텍스처 좌표가 있다.
-	case FbxLayerElementUV::eByControlPoint:
-	{
-		switch (uvLayer->GetReferenceMode())
-		{
-		case FbxLayerElementUV::eDirect: //배열에서 직접 얻는다.
-		{
+	//switch (uvLayer->GetMappingMode())
+	//{
+	//	// 제어점 당 1개의 텍스처 좌표가 있다.
+	//case FbxLayerElementUV::eByControlPoint:
+	//{
+	//	switch (uvLayer->GetReferenceMode())
+	//	{
+	//	case FbxLayerElementUV::eDirect: //배열에서 직접 얻는다.
+	//	{
 
-		}break;
-		case FbxLayerElementUV::eIndexToDirect:// 인덱스를 통해서 배열에 접근해서 얻는다.
-		{
+	//	}break;
+	//	case FbxLayerElementUV::eIndexToDirect:// 인덱스를 통해서 배열에 접근해서 얻는다.
+	//	{
 
-		}break;
-		}
-	}break;
-	// 정점 당 1개의 텍스처 좌표가 있다.
-	case FbxLayerElementUV::eByPolygonVertex:
-	{
-		switch (uvLayer->GetReferenceMode())
-		{
-		case FbxLayerElementUV::eDirect:
-		case FbxLayerElementUV::eIndexToDirect:
-		{
-			uv = uvLayer->GetDirectArray().GetAt(uvIndex);
-		}break;
-		}
-	}break;
-	}
+	//	}break;
+	//	}
+	//}break;
+	//// 정점 당 1개의 텍스처 좌표가 있다.
+	//case FbxLayerElementUV::eByPolygonVertex:
+	//{
+	//	switch (uvLayer->GetReferenceMode())
+	//	{
+	//	case FbxLayerElementUV::eDirect:
+	//	case FbxLayerElementUV::eIndexToDirect:
+	//	{
+	//		uv = uvLayer->GetDirectArray().GetAt(uvIndex);
+	//	}break;
+	//	}
+	//}break;
+	//}
+	uv = uvLayer->GetDirectArray().GetAt(uvIndex);
 	return uv;
 }
 

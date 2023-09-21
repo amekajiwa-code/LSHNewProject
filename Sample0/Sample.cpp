@@ -67,13 +67,13 @@ bool  sample::Init()
 
     mFbxImport = make_shared<FBX_Import>();
     mFbxImport->Init();
-    mFbxImport->Load(L"../res/fbx/box.fbx");
+    mFbxImport->Load(L"../res/fbx/cerberus.fbx");
 
     mBoxObj = make_shared<Object>();
     mBoxObj->Set(m_pDevice, m_pImmediateContext);
     mBoxObj->m_VertexList.resize(mFbxImport->mTriList[0].faceList.size());
     mBoxObj->m_VertexList = mFbxImport->mTriList[0].faceList;
-    mBoxObj->Create(L"../res/floor.png", L"../MyLibrary/Plane.hlsl");
+    mBoxObj->Create(L"../res/cerberus_A.dds", L"../MyLibrary/Plane.hlsl");
 
     return true;
 }

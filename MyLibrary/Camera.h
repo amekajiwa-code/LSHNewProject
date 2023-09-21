@@ -14,7 +14,7 @@ public:
 	XMVECTOR m_vLook;
 	XMVECTOR m_vUp;
 	XMVECTOR m_vSide;
-	float m_fSpeed = 30.0f;
+	float m_fSpeed = 100.0f;
 public:
 	virtual bool Init();
 	virtual bool Frame();

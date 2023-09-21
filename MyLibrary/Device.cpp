@@ -74,7 +74,7 @@ bool  Device::Init()
     mSwapChainDesc.BufferDesc.Height = m_dwWindowHeight;
     mSwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
     mSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-    mSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+    mSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     mSwapChainDesc.SampleDesc.Count = 1;
     mSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     mSwapChainDesc.BufferCount = 1;
