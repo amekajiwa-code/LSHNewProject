@@ -67,13 +67,37 @@ bool  sample::Init()
 
     mFbxImport = make_shared<FBX_Import>();
     mFbxImport->Init();
-    mFbxImport->Load(L"../res/fbx/cerberus.fbx");
+    mFbxImport->Load(L"../res/fbx/MultiCameras/MultiCameras.fbx");
 
-    mBoxObj = make_shared<Object>();
+    mBoxObj = make_shared<Model>();
     mBoxObj->Set(m_pDevice, m_pImmediateContext);
-    mBoxObj->m_VertexList.resize(mFbxImport->mTriList[0].faceList.size());
-    mBoxObj->m_VertexList = mFbxImport->mTriList[0].faceList;
-    mBoxObj->Create(L"../res/cerberus_A.dds", L"../MyLibrary/Plane.hlsl");
+    mBoxObj->m_VertexList.resize(mFbxImport->mFbxMeshList[0].polygonNum * 3);
+    mBoxObj->mMeshStruct = &mFbxImport->mFbxMeshList[0];
+
+    UINT numSubMaterial = mFbxImport->mFbxMeshList[0].triangleList.size();
+    UINT subVertexIndex = 0;
+    for (int i = 0; i < numSubMaterial; ++i)
+    {
+        mFbxImport->mFbxMeshList[0].triangleOffsetList.push_back(subVertexIndex);
+        for (int v = 0; v < mFbxImport->mFbxMeshList[0].triangleList[i].size(); v++)
+        {
+            mBoxObj->m_VertexList[subVertexIndex + v] = mFbxImport->mFbxMeshList[0].triangleList[i][v];
+        }
+        subVertexIndex += mFbxImport->mFbxMeshList[0].triangleList[i].size();
+    }
+
+    wstring filename = mFbxImport->mFbxMeshList[0].textureFileName[0];
+    wstring defaultPath = L"../res/fbx/MultiCameras/";
+    defaultPath += filename;
+    mBoxObj->Create(defaultPath, L"../MyLibrary/Plane.hlsl");
+
+    for (int i = 0; i < mFbxImport->mFbxMeshList[0].textureFileName.size(); ++i)
+    {
+        wstring filename = mFbxImport->mFbxMeshList[0].textureFileName[i];
+        wstring defaultPath = L"../res/fbx/MultiCameras/";
+        defaultPath += filename;
+        mBoxObj->LoadTextureList(defaultPath);
+    }
 
     return true;
 }
