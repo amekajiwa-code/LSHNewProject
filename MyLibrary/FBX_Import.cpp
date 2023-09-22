@@ -357,6 +357,7 @@ bool FBX_Import::LoadMesh(FbxNode* node, FbxMeshStruct& fbxTri)
 
 		basePolyIndex += polygonSize;
 	}
+
 #pragma endregion
 
 	return true;
