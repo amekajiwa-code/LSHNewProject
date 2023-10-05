@@ -5,7 +5,7 @@ string wstring_to_string(const wstring& wideStr) {
 	narrowStr.assign(wideStr.begin(), wideStr.end());
 	return narrowStr;
 }
-
+//kk
 wstring string_to_wstring(const std::string& narrowStr) {
 	std::wstring wideStr;
 	wideStr.assign(narrowStr.begin(), narrowStr.end());
