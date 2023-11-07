@@ -28,7 +28,7 @@ int main()
 
     iRet = bind(sock, (SOCKADDR*)&sa, sizeof(sa)); // bind : 서버소켓을 특정 ip주소와 포트에 바인딩
     if (iRet == SOCKET_ERROR) return 1;
-
+     
     iRet = listen(sock, SOMAXCONN); // 서버 소켓에서 클라이언트 연결을 받아들일수 있도록 대기 상태
     if (iRet == SOCKET_ERROR) return 1;
 
@@ -108,7 +108,7 @@ int main()
         }
     }
     closesocket(sock);
-    // )  윈속 해제    
+    // )  winsock 해제    
     WSACleanup();
     std::cout << "Hello World!\n";
 }
