@@ -27,7 +27,7 @@ int main()
     }
     else
     {
-        printf("서버 접속 ip=%s, Port:%d 불가, 서버켜.\n",
+        printf("서버 접속 ip=%s, Port:%d 실패, 서버켜.\n",
             inet_ntoa(sa.sin_addr),
             ntohs(sa.sin_port));
     }
