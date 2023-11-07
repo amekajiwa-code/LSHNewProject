@@ -2,27 +2,20 @@
 #include <iostream>
 #include <winsock2.h>
 #include <list>
-const short port = 10000;
-int g_time = 0;
+const short port = 8080;
 
 std::list<SOCKET>  g_userlist;
 
 int main()
 {
-    /*while(1)
-    {
-        double time = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-        std::cout << time << std::endl;
-    }*/
-    // 1) 윈속 초기화
+    // 1) winsock 초기화
     WSADATA wsa;
     int iRet = 0;
     iRet = WSAStartup(MAKEWORD(2, 2), &wsa);
     if (iRet != 0) return 1;
-    //                           IP                    TCP
     //SOCKET sockTCP = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     //SOCKET sockUDP = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0); // stream 일때 TCP dgram일때 udp
 
     // 넌블록형 소켓 할당
     u_long on = TRUE;
@@ -30,14 +23,13 @@ int main()
 
     SOCKADDR_IN sa;
     sa.sin_family = AF_INET;
-    //error C4996 : 'inet_addr' : Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-    sa.sin_addr.s_addr = htonl(INADDR_ANY);// inet_addr("192.168.0.12");
+    sa.sin_addr.s_addr = htonl(INADDR_ANY);
     sa.sin_port = htons(port);
 
-    iRet = bind(sock, (SOCKADDR*)&sa, sizeof(sa));
+    iRet = bind(sock, (SOCKADDR*)&sa, sizeof(sa)); // bind : 서버소켓을 특정 ip주소와 포트에 바인딩
     if (iRet == SOCKET_ERROR) return 1;
 
-    iRet = listen(sock, SOMAXCONN);
+    iRet = listen(sock, SOMAXCONN); // 서버 소켓에서 클라이언트 연결을 받아들일수 있도록 대기 상태
     if (iRet == SOCKET_ERROR) return 1;
 
     SOCKADDR_IN clientaddr;
@@ -109,25 +101,6 @@ int main()
 
             }
             iter++;
-            /* double time = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-             if (time > g_time + 5)
-             {
-                 g_time = (int)time;
-
-                 char sendbuf[256] = "kgca";
-                 int iLen = strlen(sendbuf);
-                 int iSendByte = send(clientsock, sendbuf, iLen, 0);
-                 if (iSendByte == SOCKET_ERROR)
-                 {
-                     int iError = WSAGetLastError();
-                     if (iError != WSAEWOULDBLOCK)
-                     {
-                         break;
-                     }
-                 }
-                 printf("%d바이트를 전송했습니다\n", iSendByte);
-             }*/
-
              /*closesocket(clientsock);
              printf("클라이언트 접속해제 ip=%s, Port:%d\n",
                  inet_ntoa(clientaddr.sin_addr),

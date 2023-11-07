@@ -2,7 +2,7 @@
 #include <iostream>
 #include <winsock2.h>
 #include <thread>
-const short port = 10000;
+const short port = 8080;
 
 SOCKET sock;
 
