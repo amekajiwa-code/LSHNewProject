@@ -34,7 +34,7 @@ int main()
 
     SOCKADDR_IN clientaddr;
     SOCKET clientsock;
-
+    
     std::clock_t start = std::clock();
     printf("서버 정상 작동 시작!!\n");
     while (1) {
