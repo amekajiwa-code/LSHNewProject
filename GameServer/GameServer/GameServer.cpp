@@ -4,64 +4,55 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <windows.h>
 
-class SpinLock
-{
-public:
-	void lock()
-	{
-		// CAS (Compare-And_Swap)
-		bool expected = false;
-		bool desired = true;
-
-		while (_locked.compare_exchange_strong(expected, desired) == false)
-		{
-			expected = false;
-
-			//this_thread::sleep_for(std::chrono::milliseconds(100));
-			this_thread::sleep_for(100ms); // 위에 chrono와 ms와 똑같다
-			//this_thread::yield(); // 타임 슬라이스 스킵
-		}
-	}
-
-	void unlock()
-	{
-		_locked.store(false);
-	}
-private:
-	atomic<bool> _locked = false; 
-	// volatile 변수가 여러 스레드, 외부에 의해 변경될수 있으므로 컴파일러 최적화 하지 않음
-};
-
-int32 sum = 0;
 mutex m;
-SpinLock spinLock;
+queue<int32> q;
+HANDLE handle;
 
-void Add()
+condition_variable cv; // 유저모드에서 작동
+
+void Producer()
 {
-	for (int32 i = 0; i < 10'0000; ++i)
+	while (true)
 	{
-		lock_guard<SpinLock> guard(spinLock);
-		sum++;
+		{
+			unique_lock<mutex> lock(m);
+			q.push(100);
+		}
+
+		cv.notify_one(); // wait중인 하나의 스레드를 깨움
+
+		//::SetEvent(handle);
+
+		this_thread::sleep_for(100ms);
 	}
 }
 
-void Sub()
+void Consumer()
 {
-	for (int32 i = 0; i < 10'0000; ++i)
+	while (true)
 	{
-		lock_guard<SpinLock> guard(spinLock);
-		sum--;
+		unique_lock<mutex> lock(m);
+		//::WaitForSingleObject(handle, INFINITE);
+		cv.wait(lock, []() { return q.empty() == false; }); 
+		// lock을 먼저 잡고있다가 조건을 만족하지 않으면 lock을 풀고 대기상태로 들어간다
+		// wait 깨어나는 조건 : queue가 비어있지 않을때
+		int32 data = q.front();
+		q.pop();
+		cout << q.size() << endl;
 	}
 }
 
 int main()
 {
-	thread t1(Add);
-	thread t2(Sub);
+	handle = ::CreateEvent(NULL, FALSE, FALSE, NULL); // 1. 보안속성 2. 메뉴얼리셋여부 3. 상태
+
+	thread t1(Producer);
+	thread t2(Consumer);
 
 	t1.join();
 	t2.join();
 
-	cout << sum << endl;
+	::CloseHandle(handle);
 }
