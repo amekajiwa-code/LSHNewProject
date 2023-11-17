@@ -6,53 +6,53 @@
 #include <mutex>
 #include <windows.h>
 
-mutex m;
-queue<int32> q;
-HANDLE handle;
+int32 x = 0;
+int32 y = 0;
+int32 r1 = 0;
+int32 r2 = 0;
 
-condition_variable cv; // 유저모드에서 작동
+volatile bool ready;
 
-void Producer()
+void Thread_1()
 {
-	while (true)
-	{
-		{
-			unique_lock<mutex> lock(m);
-			q.push(100);
-		}
+	while (!ready)
+		;
 
-		cv.notify_one(); // wait중인 하나의 스레드를 깨움
-
-		//::SetEvent(handle);
-
-		this_thread::sleep_for(100ms);
-	}
+	y = 1;
+	r1 = x;
 }
 
-void Consumer()
+void Thread_2()
 {
-	while (true)
-	{
-		unique_lock<mutex> lock(m);
-		//::WaitForSingleObject(handle, INFINITE);
-		cv.wait(lock, []() { return q.empty() == false; }); 
-		// lock을 먼저 잡고있다가 조건을 만족하지 않으면 lock을 풀고 대기상태로 들어간다
-		// wait 깨어나는 조건 : queue가 비어있지 않을때
-		int32 data = q.front();
-		q.pop();
-		cout << q.size() << endl;
-	}
+	while (!ready)
+		;
+
+	x = 1;
+	r2 = y;
 }
 
 int main()
 {
-	handle = ::CreateEvent(NULL, FALSE, FALSE, NULL); // 1. 보안속성 2. 메뉴얼리셋여부 3. 상태
+	int32 count = 0;
 
-	thread t1(Producer);
-	thread t2(Consumer);
+	while (true)
+	{
+		ready = false;
+		count++;
 
-	t1.join();
-	t2.join();
+		x = y = r1 = r2 = 0;
 
-	::CloseHandle(handle);
+		thread t1(Thread_1);
+		thread t2(Thread_2);
+
+		ready = true;
+
+		t1.join();
+		t2.join();
+
+		if (r1 == 0 && r2 == 0)
+			break;
+	}
+
+	cout << count << "번 돌고 break" << endl;
 }
