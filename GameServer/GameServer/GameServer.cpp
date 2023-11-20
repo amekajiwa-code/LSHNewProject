@@ -5,54 +5,43 @@
 #include <atomic>
 #include <mutex>
 #include <windows.h>
+#include <future>
 
-int32 x = 0;
-int32 y = 0;
-int32 r1 = 0;
-int32 r2 = 0;
+#include "ConcurrentQueue.h"
+#include "ConcurrentStack.h"
 
-volatile bool ready;
+LockQueue<int32> q;
+LockStack<int32> s;
 
-void Thread_1()
+void Push()
 {
-	while (!ready)
-		;
+	while (true)
+	{
+		int32 value = rand() % 100; //랜덤값 삽입
+		q.Push(value);
 
-	y = 1;
-	r1 = x;
+		this_thread::sleep_for(10ms);
+	}
 }
 
-void Thread_2()
+void Pop()
 {
-	while (!ready)
-		;
+	while (true)
+	{
+		int32 data = 0;
 
-	x = 1;
-	r2 = y;
+		if (q.TryPop(OUT data))
+		{
+			cout << data << endl;
+		}
+	}
 }
 
 int main()
 {
-	int32 count = 0;
+	thread t1(Push);
+	thread t2(Pop);
 
-	while (true)
-	{
-		ready = false;
-		count++;
-
-		x = y = r1 = r2 = 0;
-
-		thread t1(Thread_1);
-		thread t2(Thread_2);
-
-		ready = true;
-
-		t1.join();
-		t2.join();
-
-		if (r1 == 0 && r2 == 0)
-			break;
-	}
-
-	cout << count << "번 돌고 break" << endl;
+	t1.join();
+	t2.join();
 }
