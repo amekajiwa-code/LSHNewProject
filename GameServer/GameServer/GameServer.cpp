@@ -1,47 +1,36 @@
 ﻿#include "pch.h"
-#include <iostream>
 #include "CorePch.h"
+
+#include <iostream>
+
 #include <thread>
-#include <atomic>
-#include <mutex>
 #include <windows.h>
 #include <future>
 
-#include "ConcurrentQueue.h"
-#include "ConcurrentStack.h"
+#include "CoreMacro.h"
+#include "ThreadManager.h"
 
-LockQueue<int32> q;
-LockStack<int32> s;
+CoreGlobal Core;
 
-void Push()
+void ThreadMain()
 {
 	while (true)
 	{
-		int32 value = rand() % 100; //랜덤값 삽입
-		q.Push(value);
-
-		this_thread::sleep_for(10ms);
-	}
-}
-
-void Pop()
-{
-	while (true)
-	{
-		int32 data = 0;
-
-		if (q.TryPop(OUT data))
-		{
-			cout << data << endl;
-		}
+		cout << "Hello !! am thread..." << LThreadId << endl;
+		this_thread::sleep_for(1s);
 	}
 }
 
 int main()
 {
-	thread t1(Push);
-	thread t2(Pop);
+	/*for (int32 i = 0; i < 5; ++i)
+	{
+		GThreadManager->Launch(ThreadMain);
+	}
 
-	t1.join();
-	t2.join();
+	GThreadManager->Join();*/
+
+	auto add = [](int a, int b) { return a + b; };
+
+	cout << add(3, 4) << endl;
 }
