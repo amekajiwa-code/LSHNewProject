@@ -7,30 +7,80 @@
 #include <windows.h>
 #include <future>
 
-#include "CoreMacro.h"
 #include "ThreadManager.h"
 
-CoreGlobal Core;
+class TestLock
+{
+	USE_LOCK;
 
-void ThreadMain()
+public:
+	int32 TestRead()
+	{
+		READ_LOCK;
+
+		if (_queue.empty())
+		{
+			return -1;
+		}
+		else
+		{
+			return _queue.front();
+		}
+	}
+
+	void TestPush()
+	{
+		WRITE_LOCK;
+
+		_queue.push(rand() % 100);
+	}
+
+	void TestPop()
+	{
+		WRITE_LOCK;
+
+		if (_queue.empty() == false)
+		{
+			_queue.pop();
+		}
+	}
+private:
+	queue<int32> _queue;
+};
+
+TestLock testLock;
+
+void ThreadWrite()
 {
 	while (true)
 	{
-		cout << "Hello !! am thread..." << LThreadId << endl;
-		this_thread::sleep_for(1s);
+		testLock.TestPush();
+		this_thread::sleep_for(1ms);
+		testLock.TestPop();
+	}
+}
+
+void ThreadRead()
+{
+	while (true)
+	{
+		int32 value = testLock.TestRead();
+		cout << value << endl;
+		this_thread::sleep_for(1ms);
 	}
 }
 
 int main()
 {
-	/*for (int32 i = 0; i < 5; ++i)
+	for (int32 i = 0; i < 2; ++i)
 	{
-		GThreadManager->Launch(ThreadMain);
+		GThreadManager->Launch(ThreadWrite);
 	}
 
-	GThreadManager->Join();*/
+	for (int32 i = 0; i < 5; ++i)
+	{
+		GThreadManager->Launch(ThreadRead);
+	}
 
-	auto add = [](int a, int b) { return a + b; };
-
-	cout << add(3, 4) << endl;
+	GThreadManager->Join();
 }

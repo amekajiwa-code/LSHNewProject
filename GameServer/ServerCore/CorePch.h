@@ -2,8 +2,8 @@
 
 #include "Types.h"
 #include "CoreGlobal.h"
+#include "CoreMacro.h"
 #include "CoreTLS.h"
-
 
 #include <vector>
 #include <list>
@@ -14,7 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <windows.h>
+#include "Lock.h"
 #include <iostream>
 
 using namespace std;
-

@@ -4,12 +4,18 @@
 
 ThreadManager* GThreadManager = nullptr;
 
-CoreGlobal::CoreGlobal()
+class CoreGlobal
 {
-	GThreadManager = new ThreadManager();
-}
+public:
+	CoreGlobal()
+	{
+		GThreadManager = new ThreadManager();
+	}
+	~CoreGlobal()
+	{
+		delete GThreadManager;
+	}
+private:
+} GCoreGlobal;
 
-CoreGlobal::~CoreGlobal()
-{
-	delete GThreadManager;
-}
+// CoreGlobal GCoreGlobal 한것과 블록뒤에 붙이는것이 문법이 같다.;
