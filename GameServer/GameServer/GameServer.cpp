@@ -72,7 +72,11 @@ void ThreadRead()
 
 int main()
 {
-	for (int32 i = 0; i < 2; ++i)
+	for (int32 i = 0; i < 5; ++i)
+	{
+		cout << i << endl;
+	}
+	/*for (int32 i = 0; i < 2; ++i)
 	{
 		GThreadManager->Launch(ThreadWrite);
 	}
@@ -82,5 +86,5 @@ int main()
 		GThreadManager->Launch(ThreadRead);
 	}
 
-	GThreadManager->Join();
+	GThreadManager->Join();*/
 }
