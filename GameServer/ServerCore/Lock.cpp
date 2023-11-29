@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "Lock.h"
+#include "DeadLockProfiler.h"
 
-void Lock::WriteLock()
+void Lock::WriteLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PushLock(name);
+#endif
 	// 동일한 쓰레드가 소유하고 있다면 무조건 성공.
 	// 소유는 상위16비트에 Write를 사용하고 있는것, 공유는 하위16비트 Read 사용하는것
 	// 비트시프트로 하위 16비트 채우고 상위 16비트 비움
@@ -40,8 +44,11 @@ void Lock::WriteLock()
 	}
 }
 
-void Lock::WriteUnLock()
+void Lock::WriteUnLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PopLock(name);
+#endif
 	// ReadLock 다 풀기 전엔 WriteUnlock 불가능
 	if ((_lockFlag.load() & READ_COUNT_MASK) != 0)
 	{
@@ -55,8 +62,11 @@ void Lock::WriteUnLock()
 	}
 }
 
-void Lock::ReadLock()
+void Lock::ReadLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PushLock(name);
+#endif
 	// 동일한 쓰레드가 현재 락을 소유하고 있다면 무조건 성공
 	const uint32 lockThreadId = (_lockFlag.load() & WRITE_THREAD_MASK) >> 16;
 	if (LThreadId == lockThreadId)
@@ -90,8 +100,11 @@ void Lock::ReadLock()
 	}
 }
 
-void Lock::ReadUnLock()
+void Lock::ReadUnLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PopLock(name);
+#endif
 	if ((_lockFlag.fetch_sub(1) & READ_COUNT_MASK) == 0)
 	{
 		CRASH("MULTIPLE_UNLOCK");
