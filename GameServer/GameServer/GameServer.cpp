@@ -26,12 +26,52 @@ struct Session
 	char recvBuffer[BUFSIZE] = {};
 	int32 recvBytes = 0;
 	int32 sendBytes = 0;
-	WSAOVERLAPPED overlapped = {};
 };
 
-void CALLBACK RecvCallback(DWORD error, DWORD recvLen, LPWSAOVERLAPPED overlapped, DWORD flags)
+enum IO_TYPE
 {
-	cout << "Data Recv Len Callback = " << recvLen << endl;
+	READ,
+	WRITE,
+	ACCEPT,
+	CONNECT,
+};
+
+struct OverlappedEx
+{
+	WSAOVERLAPPED overlapped = {};
+	int32 type = 0; // read, write, accept, connect...
+};
+
+void WorkerThreadMain(HANDLE iocpHandle)
+{
+	while (true)
+	{
+		DWORD bytesTransferred = 0;
+		Session* session = nullptr;
+		OverlappedEx* overlappedEx = nullptr;
+
+		BOOL ret = ::GetQueuedCompletionStatus(iocpHandle, &bytesTransferred,
+			(ULONG_PTR*)&session, (LPOVERLAPPED*)&overlappedEx, INFINITE);
+
+		if (ret == FALSE || bytesTransferred == 0)
+		{
+			//TODO : 연결 끊김
+			continue;
+		}
+
+		ASSERT_CRASH(overlappedEx->type == IO_TYPE::READ);
+
+		cout << "Recv Data IOCP = " << bytesTransferred << " : " << session->recvBuffer << endl;
+		// 최초로 걸려온 하나로부터 스레드가 계속 하나씩 대기타면서 하나씩 깨어나서 Recv 발동
+		WSABUF wsaBuf;
+		wsaBuf.buf = session->recvBuffer;
+		wsaBuf.len = BUFSIZE;
+
+		DWORD recvLen = 0;
+		DWORD flags = 0;
+
+		::WSARecv(session->socket, &wsaBuf, 1, &recvLen, &flags, &overlappedEx->overlapped, NULL);
+	}
 }
 
 int main()
@@ -45,13 +85,6 @@ int main()
 	if (listenSocket == INVALID_SOCKET)
 	{
 		HandleError("Socket");
-		return 0;
-	}
-	//논블로킹 소켓 쓰는법
-	u_long on = 1;
-	if (ioctlsocket(listenSocket, FIONBIO, &on) == INVALID_SOCKET)
-	{
-		HandleError("ioctSocket");
 		return 0;
 	}
 	//주소 설정
@@ -73,69 +106,54 @@ int main()
 
 	cout << "Accept" << endl;
 
+	vector<Session*> sessionManager;
+
+	// Completion Port생성
+	HANDLE iocpHandle = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+
+	// WorkerThreads : CP를 감시하면서 완료된 함수가 있는지 확인
+	for (int32 i = 0; i < 5; ++i)
+	{
+		GThreadManager->Launch([=]() { WorkerThreadMain(iocpHandle); });
+	}
+
+	//Maibn Thread = Accept 담당
 	while (true)
 	{
 		SOCKADDR_IN clientAddr;
 		int32 addrLen = sizeof(clientAddr);
-		SOCKET clientSocket;
-		while (true)
+
+		SOCKET clientSocket = clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
+		if (clientSocket == INVALID_SOCKET)
 		{
-			clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
-			//잘못된 소켓이면 break
-			if (clientSocket != INVALID_SOCKET)
-			{
-				break;
-			}
-			//소켓 작업이 완료되지 않음
-			if (::WSAGetLastError() == WSAEWOULDBLOCK)
-			{
-				continue;
-			}
-			//에러 : 문제있는상황
 			return 0;
 		}
 
-		Session session = Session{ clientSocket };
-		WSAEVENT wsaEvent = ::WSACreateEvent();
-		session.overlapped.hEvent = wsaEvent;
+		Session* session = new Session();
+		session->socket = clientSocket;
+		sessionManager.push_back(session);
 
 		cout << "Client Connected !" << endl;
 
-		while (true)
-		{
-			WSABUF wsaBuf;
-			wsaBuf.buf = session.recvBuffer; // 버퍼 시작 주소
-			wsaBuf.len = BUFSIZE; // 버퍼 길이
+		// 소켓을 Completion Port에 등록
+		::CreateIoCompletionPort((HANDLE)clientSocket, iocpHandle, (ULONG_PTR)session, 0);
 
-			DWORD recvLen = 0;
-			DWORD flags = 0; // 플래그 사용안함
-			//비동기 Recv 호출, 마지막 인자에 함수 포인터 넘겨줌
-			if (::WSARecv(clientSocket, &wsaBuf, 1, &recvLen, &flags, &session.overlapped, RecvCallback) == SOCKET_ERROR)
-			{
-				//데이터가 안왔을때 펜딩상태
-				//완료 통지 될때까지 대기하다가 완료되면 이벤트 호출
-				//Result
-				if (::WSAGetLastError() == WSA_IO_PENDING)
-				{
-					//Alertable Wait
-					::SleepEx(INFINITE, TRUE); //APC를 수행할수 있는 상태로 일시정지
-					//::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
-				}
-				else
-				{
-					//문제 있는 상황
-					break;
-				}
-			}
-			else
-			{
-				cout << "Data Recv Len = " << recvLen << endl;
-			}
-		}
+		WSABUF wsaBuf;
+		wsaBuf.buf = session->recvBuffer;
+		wsaBuf.len = BUFSIZE;
 
-		::closesocket(session.socket);
-		::WSACloseEvent(wsaEvent);
+		DWORD recvLen = 0;
+		DWORD flags = 0;
+
+		OverlappedEx* overlappedEx = new OverlappedEx();
+		overlappedEx->type = IO_TYPE::READ;
+
+		::WSARecv(clientSocket, &wsaBuf, 1, &recvLen, &flags, &overlappedEx->overlapped, NULL);
+
+		//::closesocket(session.socket);
 	}
+
+	GThreadManager->Join();
 
 	// 윈속 종료
 	::WSACleanup();

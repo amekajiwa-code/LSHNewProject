@@ -61,7 +61,7 @@ int main()
 
 	cout << "Connected to Server!" << endl;
 
-	char sendBuffer[100] = "Hello World";
+	char sendBuffer[100];
 	//이벤트 생성
 	WSAEVENT wsaEvent = ::WSACreateEvent();
 	WSAOVERLAPPED overlapped = {};
@@ -70,6 +70,8 @@ int main()
 	//Send : WSA 비동기
 	while (true)
 	{
+		std::cin.getline(sendBuffer, sizeof(sendBuffer));
+
 		WSABUF wsaBuf;
 		wsaBuf.buf = sendBuffer; // 버퍼 시작 주소
 		wsaBuf.len = 100; // 버퍼 길이
@@ -90,9 +92,15 @@ int main()
 			}
 		}
 
-		cout << "Send Data Len = " << sizeof(sendBuffer) << endl;
+		cout << wsaBuf.buf << endl;
 
 		this_thread::sleep_for(1s);
+	}
+
+	//Recv
+	while (true)
+	{
+
 	}
 
 	//소켓 리소스 반환
