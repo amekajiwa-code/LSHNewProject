@@ -26,7 +26,13 @@ struct Session
 	char recvBuffer[BUFSIZE] = {};
 	int32 recvBytes = 0;
 	int32 sendBytes = 0;
+	WSAOVERLAPPED overlapped = {};
 };
+
+void CALLBACK RecvCallback(DWORD error, DWORD recvLen, LPWSAOVERLAPPED overlapped, DWORD flags)
+{
+	cout << "Data Recv Len Callback = " << recvLen << endl;
+}
 
 int main()
 {
@@ -67,87 +73,68 @@ int main()
 
 	cout << "Accept" << endl;
 
-	// Select 모델
-	vector<Session> sessions;
-	sessions.reserve(100);
-
-	fd_set reads;
-	fd_set writes;
-
 	while (true)
 	{
-		// 소켓 set 초기화
-		FD_ZERO(&reads);
-		FD_ZERO(&writes);
-
-		//ListenSocket 등록
-		FD_SET(listenSocket, &reads);
-
-		//소켓 등록
-		for (Session& s : sessions)
+		SOCKADDR_IN clientAddr;
+		int32 addrLen = sizeof(clientAddr);
+		SOCKET clientSocket;
+		while (true)
 		{
-			if (s.recvBytes <= s.sendBytes)
+			clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
+			//잘못된 소켓이면 break
+			if (clientSocket != INVALID_SOCKET)
 			{
-				FD_SET(s.socket, &reads);
+				break;
+			}
+			//소켓 작업이 완료되지 않음
+			if (::WSAGetLastError() == WSAEWOULDBLOCK)
+			{
+				continue;
+			}
+			//에러 : 문제있는상황
+			return 0;
+		}
+
+		Session session = Session{ clientSocket };
+		WSAEVENT wsaEvent = ::WSACreateEvent();
+		session.overlapped.hEvent = wsaEvent;
+
+		cout << "Client Connected !" << endl;
+
+		while (true)
+		{
+			WSABUF wsaBuf;
+			wsaBuf.buf = session.recvBuffer; // 버퍼 시작 주소
+			wsaBuf.len = BUFSIZE; // 버퍼 길이
+
+			DWORD recvLen = 0;
+			DWORD flags = 0; // 플래그 사용안함
+			//비동기 Recv 호출, 마지막 인자에 함수 포인터 넘겨줌
+			if (::WSARecv(clientSocket, &wsaBuf, 1, &recvLen, &flags, &session.overlapped, RecvCallback) == SOCKET_ERROR)
+			{
+				//데이터가 안왔을때 펜딩상태
+				//완료 통지 될때까지 대기하다가 완료되면 이벤트 호출
+				//Result
+				if (::WSAGetLastError() == WSA_IO_PENDING)
+				{
+					//Alertable Wait
+					::SleepEx(INFINITE, TRUE); //APC를 수행할수 있는 상태로 일시정지
+					//::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
+				}
+				else
+				{
+					//문제 있는 상황
+					break;
+				}
 			}
 			else
 			{
-				FD_SET(s.socket, &writes);
-			}
-		}
-		// 마지막 인자 timeout 설정가능 timeval 구조체 (대기시간)
-		int32 retVal = ::select(0, &reads, &writes, nullptr, nullptr);
-		if (retVal == SOCKET_ERROR)
-		{
-			break;
-		}
-
-		//Listener 소켓 체크
-		if (FD_ISSET(listenSocket, &reads))
-		{
-			SOCKADDR_IN clientAddr;
-			int32 addrLen = sizeof(clientAddr);
-			SOCKET clientSocket = ::accept(listenSocket, (SOCKADDR*)&clientAddr, &addrLen);
-			if (clientSocket != INVALID_SOCKET)
-			{
-				cout << "Client Connected" << endl;
-				sessions.push_back(Session{ clientSocket });
+				cout << "Data Recv Len = " << recvLen << endl;
 			}
 		}
 
-		//나머지 소켓 체크
-		for (Session& s : sessions)
-		{
-			//Read
-			if (FD_ISSET(s.socket, &reads))
-			{
-				int32 recvLen = ::recv(s.socket, s.recvBuffer, BUFSIZE, 0);
-				if (recvLen <= 0)
-				{
-					//sessions 제거
-					continue;
-				}
-
-				s.recvBytes = recvLen;
-			}
-			//Write
-			if (FD_ISSET(s.socket, &writes))
-			{
-				int32 sendLen = ::send(s.socket, &s.recvBuffer[s.sendBytes], s.recvBytes - s.sendBytes, 0);
-				if (sendLen == SOCKET_ERROR)
-				{
-					continue;
-				}
-				//데이터의 일부를 보냄
-				s.sendBytes += sendLen;
-				//데이터가 모두 보내짐
-				if (s.recvBytes == s.sendBytes)
-				{
-					s.recvBytes = 0;
-					s.sendBytes = 0;
-				}
-			}
-		}
+		::closesocket(session.socket);
+		::WSACloseEvent(wsaEvent);
 	}
 
 	// 윈속 종료

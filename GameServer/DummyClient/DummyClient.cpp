@@ -62,50 +62,42 @@ int main()
 	cout << "Connected to Server!" << endl;
 
 	char sendBuffer[100] = "Hello World";
-	//Send
+	//이벤트 생성
+	WSAEVENT wsaEvent = ::WSACreateEvent();
+	WSAOVERLAPPED overlapped = {};
+	overlapped.hEvent = wsaEvent;
+
+	//Send : WSA 비동기
 	while (true)
 	{
-		if (::send(clientSocket, sendBuffer, sizeof(sendBuffer), 0) == SOCKET_ERROR)
+		WSABUF wsaBuf;
+		wsaBuf.buf = sendBuffer; // 버퍼 시작 주소
+		wsaBuf.len = 100; // 버퍼 길이
+
+		DWORD sendLen = 0;
+		DWORD flags = 0; // 플래그 사용안함
+		if (::WSASend(clientSocket, &wsaBuf, 1, &sendLen, flags, &overlapped, nullptr) == SOCKET_ERROR)
 		{
-			if (::WSAGetLastError() == WSAEWOULDBLOCK)
+			if (::WSAGetLastError() == WSA_IO_PENDING)
 			{
-				continue;
+				::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
+				::WSAGetOverlappedResult(clientSocket, &overlapped, &sendLen, FALSE, &flags);
 			}
-			//에러
-			break;
+			else
+			{
+				//문제 있는 상황
+				break;
+			}
 		}
 
 		cout << "Send Data Len = " << sizeof(sendBuffer) << endl;
-
-		//Recv
-		while (true)
-		{
-			char recvBuffer[1000];
-			int32 recvLen = ::recv(clientSocket, recvBuffer, sizeof(recvBuffer), 0);
-			if (recvLen == SOCKET_ERROR)
-			{
-				if (::WSAGetLastError() == WSAEWOULDBLOCK)
-				{
-					continue;
-				}
-				//에러
-				break;
-			}
-			else if (recvLen == 0)
-			{
-				//연결끊김
-				break;
-			}
-
-			cout << "Recv Data Len = " << recvLen << endl;
-			break;
-		}
 
 		this_thread::sleep_for(1s);
 	}
 
 	//소켓 리소스 반환
 	::closesocket(clientSocket);
+	::WSACloseEvent(wsaEvent);
 	//윈속 종료
 	::WSACleanup();
 }
