@@ -12,6 +12,29 @@ void HandleError(const char* cause)
 	cout << cause << " ErrorCode : " << errCode << endl;
 }
 
+std::queue<char*> inputQueue;
+std::mutex inputMutex;
+std::condition_variable inputCondition;
+
+void InputThread()
+{
+	while (true)
+	{
+		char sendBuffer[100];
+		std::cin.getline(sendBuffer, sizeof(sendBuffer));
+
+		{
+			std::lock_guard<std::mutex> lock(inputMutex);
+			size_t bufferSize = sizeof(sendBuffer);
+			char* bufferCopy = new char[bufferSize];
+			std::memcpy(bufferCopy, sendBuffer, bufferSize);
+			inputQueue.push(bufferCopy);
+		}
+
+		inputCondition.notify_one();
+	}
+}
+
 int main()
 {
 	WSAData wsaData;
@@ -50,19 +73,29 @@ int main()
 
 	cout << "Connected to Server!" << endl;
 
-	char sendBuffer[100] = "Hello World";
+	char sendBuffer[1000] = "Hello World";
 	WSAEVENT wsaEvent = ::WSACreateEvent();
 	WSAOVERLAPPED overlapped = {};
 	WSAOVERLAPPED RecvOverlapped = {};
 	overlapped.hEvent = wsaEvent;
 	RecvOverlapped.hEvent = wsaEvent;
 
+	//::thread inputThread(InputThread);
 	
 	while (true)
 	{
+		//// Wait for user input
+		//std::unique_lock<std::mutex> lock(inputMutex);
+		//inputCondition.wait(lock, [] { return !inputQueue.empty(); });
+
+		//// Process user input
+		//char* inputBuffer = inputQueue.front();
+		//inputQueue.pop();
+
 		//Send
 		WSABUF wsaBuf;
 		wsaBuf.buf = sendBuffer;
+		//wsaBuf.buf = inputBuffer;
 		wsaBuf.len = size(sendBuffer);
 
 		DWORD sendLen = 0;
@@ -83,7 +116,7 @@ int main()
 			}
 		}
 
-		cout << "Send Data ! Len = " << sizeof(sendBuffer) << endl;
+		cout << "Send Data ! Len = " << sizeof(sendBuffer) << " / Send Data = " << wsaBuf.buf << endl;
 
 		// Recv
 		char recvBuffer[1000] = "dummy";
@@ -110,17 +143,16 @@ int main()
 		}
 		else if (recvLen == 0)
 		{
-			// 연결 끊김
-			cout << "recvLen = " << recvLen << endl;
-			continue;
+			break;
 		}
 
-		cout << "Recv Data Len = " << recvLen << endl;
+		cout << "Recv Data Len = " << recvLen << " / Recv Data = " << recvBuffer << endl;
 
 		this_thread::sleep_for(1s);
 	}
 
 	// 소켓 리소스 반환
+	//inputThread.join();
 	::closesocket(clientSocket);
 
 	// 윈속 종료

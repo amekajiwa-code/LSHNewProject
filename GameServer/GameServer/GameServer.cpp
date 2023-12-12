@@ -19,6 +19,7 @@ void HandleError(const char* cause)
 }
 
 const int32 BUFSIZE = 1000;
+int32 sessionCount = 0;
 
 struct Session
 {
@@ -78,32 +79,30 @@ int main()
 			return 0;
 		}
 
-		Session* session = new Session;
-		session->socket = clientSocket;
+		Session session = Session{ clientSocket };
 		WSAEVENT wsaEvent = ::WSACreateEvent();
-		session->recvOverlapped.hEvent = wsaEvent;
-		session->sendOverlapped.hEvent = wsaEvent;
-		sessionManager.push_back(session);
+		session.recvOverlapped.hEvent = wsaEvent;
+		session.sendOverlapped.hEvent = wsaEvent;
 
-		cout << "Client Connected !" << endl;
+		cout << "Client Connected ! Number = " << ++sessionCount <<endl;
 
 		while (true)
 		{
 			//Recv
 			WSABUF wsaBuf;
-			wsaBuf.buf = session->recvBuffer;
+			wsaBuf.buf = session.recvBuffer;
 			wsaBuf.len = BUFSIZE;
 
 			DWORD recvLen = 0;
 			DWORD flags = 0;
 			
-			if (::WSARecv(clientSocket, &wsaBuf, 1, &recvLen, &flags, &session->recvOverlapped, nullptr) == SOCKET_ERROR)
+			if (::WSARecv(clientSocket, &wsaBuf, 1, &recvLen, &flags, &session.recvOverlapped, nullptr) == SOCKET_ERROR)
 			{
 				if (::WSAGetLastError() == WSA_IO_PENDING)
 				{
 					// Pending
 					::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
-					::WSAGetOverlappedResult(session->socket, &session->recvOverlapped, &recvLen, FALSE, &flags);
+					::WSAGetOverlappedResult(session.socket, &session.recvOverlapped, &recvLen, FALSE, &flags);
 				}
 				else
 				{
@@ -111,23 +110,28 @@ int main()
 					break;
 				}
 			}
+			else if (recvLen == 0)
+			{
+				//받은 데이터 없으면 나가
+				break;
+			}
 
-			cout << "Data Recv Len = " << recvLen << endl;
+			cout << "Data Recv Len = " << recvLen << " / Recv Data = " << session.recvBuffer << endl;
 
 			//Send
 			WSABUF sendWsaBuf;
-			sendWsaBuf.buf = session->recvBuffer;
-			sendWsaBuf.len = size(session->recvBuffer);
+			sendWsaBuf.buf = session.recvBuffer;
+			sendWsaBuf.len = size(session.recvBuffer);
 
 			DWORD sendLen = 0;
 			DWORD sendFlags = 0;
-			if (::WSASend(clientSocket, &sendWsaBuf, 1, &sendLen, sendFlags, &session->sendOverlapped, nullptr) == SOCKET_ERROR)
+			if (::WSASend(clientSocket, &sendWsaBuf, 1, &sendLen, sendFlags, &session.sendOverlapped, nullptr) == SOCKET_ERROR)
 			{
 				if (::WSAGetLastError() == WSA_IO_PENDING)
 				{
 					// Pending
 					::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
-					::WSAGetOverlappedResult(clientSocket, &session->sendOverlapped, &sendLen, FALSE, &sendFlags);
+					::WSAGetOverlappedResult(clientSocket, &session.sendOverlapped, &sendLen, FALSE, &sendFlags);
 				}
 				else
 				{
@@ -137,10 +141,10 @@ int main()
 				}
 			}
 
-			cout << "Send Data Len! = " << sizeof(session->recvBuffer) << endl;
+			cout << "Send Data Len! = " << sizeof(session.recvBuffer) << " / Send Data = " << session.recvBuffer << endl;
 		}
 
-		::closesocket(session->socket);
+		::closesocket(session.socket);
 		::WSACloseEvent(wsaEvent);
 	}
 
