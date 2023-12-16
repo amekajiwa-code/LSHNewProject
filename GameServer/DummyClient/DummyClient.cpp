@@ -12,6 +12,7 @@ void HandleError(const char* cause)
 	cout << cause << " ErrorCode : " << errCode << endl;
 }
 
+const int32 BUFSIZE = 1000;
 std::queue<char*> inputQueue;
 std::mutex inputMutex;
 std::condition_variable inputCondition;
@@ -72,54 +73,67 @@ int main()
 	}
 
 	cout << "Connected to Server!" << endl;
-
-	char sendBuffer[1000] = "Hello World";
+	// std::cin>>"Connneced To Server!">>std::endl;
+	char sendBuffer[BUFSIZE] = "Hello World";
+	char recvBuffer[BUFSIZE] = "dummy";
 	WSAEVENT wsaEvent = ::WSACreateEvent();
 	WSAOVERLAPPED overlapped = {};
 	WSAOVERLAPPED RecvOverlapped = {};
 	overlapped.hEvent = wsaEvent;
 	RecvOverlapped.hEvent = wsaEvent;
 
-	//::thread inputThread(InputThread);
-	
+	::thread inputThread(InputThread);
+
+	// 초당 전송 제한 변수
+	const int messagesPerSecond = 20;
+	const std::chrono::milliseconds interval(1000 / messagesPerSecond);
+	auto lastSendTime = std::chrono::steady_clock::now();
+
 	while (true)
 	{
-		//// Wait for user input
-		//std::unique_lock<std::mutex> lock(inputMutex);
-		//inputCondition.wait(lock, [] { return !inputQueue.empty(); });
+		// Wait for user input
+		std::unique_lock<std::mutex> lock(inputMutex);
+		inputCondition.wait(lock, [] { return !inputQueue.empty(); });
 
-		//// Process user input
-		//char* inputBuffer = inputQueue.front();
-		//inputQueue.pop();
+		// Process user input
+		char* inputBuffer = inputQueue.front();
+		inputQueue.pop();
 
-		//Send
-		WSABUF wsaBuf;
-		wsaBuf.buf = sendBuffer;
-		//wsaBuf.buf = inputBuffer;
-		wsaBuf.len = size(sendBuffer);
+		// 현재 시간을 가져와서 마지막 전송 시간과 비교
+		auto currentTime = std::chrono::steady_clock::now();
+		auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastSendTime);
 
-		DWORD sendLen = 0;
-		DWORD flags = 0;
-		if (::WSASend(clientSocket, &wsaBuf, 1, &sendLen, flags, &overlapped, nullptr) == SOCKET_ERROR)
+		// Send
+		if (elapsed >= interval)
 		{
-			if (::WSAGetLastError() == WSA_IO_PENDING)
+			WSABUF wsaBuf;
+			wsaBuf.buf = inputBuffer;
+			wsaBuf.len = BUFSIZE;
+
+			DWORD sendLen = 0;
+			DWORD flags = 0;
+			if (::WSASend(clientSocket, &wsaBuf, 1, &sendLen, flags, &overlapped, nullptr) == SOCKET_ERROR)
 			{
-				// Pending
-				::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
-				::WSAGetOverlappedResult(clientSocket, &overlapped, &sendLen, FALSE, &flags);
+				if (::WSAGetLastError() == WSA_IO_PENDING)
+				{
+					// Pending
+					::WSAWaitForMultipleEvents(1, &wsaEvent, TRUE, WSA_INFINITE, FALSE);
+					::WSAGetOverlappedResult(clientSocket, &overlapped, &sendLen, FALSE, &flags);
+				}
+				else
+				{
+					// 진짜 문제 있는 상황
+					break;
+				}
 			}
-			else
-			{
-				// 진짜 문제 있는 상황
-				cout << "진짜 문제 있는 상황" << endl;
-				break;
-			}
+
+			cout << "Send Data ! Len = " << sizeof(sendBuffer) << " / Send Data = " << wsaBuf.buf << endl;
+
+			// 마지막 전송 시간 업데이트
+			lastSendTime = std::chrono::steady_clock::now();
 		}
 
-		cout << "Send Data ! Len = " << sizeof(sendBuffer) << " / Send Data = " << wsaBuf.buf << endl;
-
 		// Recv
-		char recvBuffer[1000] = "dummy";
 		WSABUF recvWsaBuf;
 		recvWsaBuf.buf = recvBuffer;
 		recvWsaBuf.len = sizeof(recvBuffer);
@@ -136,23 +150,17 @@ int main()
 			}
 			else
 			{
-				// 진짜 문제 있는 상황
-				cout << "진짜 문제 있는 상황" << endl;
 				break;
 			}
 		}
-		else if (recvLen == 0)
-		{
-			break;
-		}
 
-		cout << "Recv Data Len = " << recvLen << " / Recv Data = " << recvBuffer << endl;
+		cout << "Recv Data Len = " << recvLen << " / Recv Data = " << recvWsaBuf.buf << endl;
 
 		this_thread::sleep_for(1s);
 	}
 
 	// 소켓 리소스 반환
-	//inputThread.join();
+	inputThread.join();
 	::closesocket(clientSocket);
 
 	// 윈속 종료
