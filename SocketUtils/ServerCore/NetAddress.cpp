@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "NetAddress.h"
 
-// NetAddress
+/*--------------
+	NetAddress
+---------------*/
 
 NetAddress::NetAddress(SOCKADDR_IN sockAddr) : _sockAddr(sockAddr)
 {
@@ -17,9 +19,8 @@ NetAddress::NetAddress(wstring ip, uint16 port)
 
 wstring NetAddress::GetIpAddress()
 {
-	WCHAR buffer[100]; 
+	WCHAR buffer[100];
 	::InetNtopW(AF_INET, &_sockAddr.sin_addr, buffer, len32(buffer));
-	// WCHAR 2바이트 이므로 나눠줌 (배열길이 x 2바이트)
 	return wstring(buffer);
 }
 

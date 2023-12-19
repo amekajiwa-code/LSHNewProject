@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include <iostream>
 #include "CorePch.h"
 #include <atomic>
@@ -7,11 +7,11 @@
 #include <future>
 #include "ThreadManager.h"
 
+
 #include "SocketUtils.h"
 
 int main()
 {
-	//¼ÒÄÏ »ý¼º
 	SOCKET socket = SocketUtils::CreateSocket();
 
 	SocketUtils::BindAnyAddress(socket, 7777);
@@ -20,12 +20,12 @@ int main()
 
 	SOCKET clientSocket = ::accept(socket, nullptr, nullptr);
 
-	cout << "Client Connected!" << endl;
+	cout << "Client Connected!" << endl; 
 
-	/*while (true)
+	while (true)
 	{
 
-	}*/
+	}
 
 	GThreadManager->Join();
 }
