@@ -74,6 +74,7 @@ int main()
 			}
 			else
 			{
+				cout << "진문상" << endl;
 				// 진짜 문제 있는 상황
 				break;
 			}
