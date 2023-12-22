@@ -74,7 +74,7 @@ int main()
 			}
 			else
 			{
-				cout << "진문상" << endl;
+				cout << "진문상" << endl;//지금은 리시브가 없으니까 당연히 안되지
 				// 진짜 문제 있는 상황
 				break;
 			}

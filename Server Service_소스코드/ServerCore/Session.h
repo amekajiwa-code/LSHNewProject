@@ -25,6 +25,7 @@ public:
 	/*Disconnect: 연결 해제된 사유 인자로 받음*/
 	void Disconnect(const WCHAR* cause); 
 	shared_ptr<Service> GetService() { return _service.lock(); }
+	void SetService(shared_ptr<Service> service) { _service = service; }
 public:
 	/* 정보 관련 */
 	void		SetNetAddress(NetAddress address) { _netAddress = address; }
@@ -50,7 +51,7 @@ private:
 	void ProcessRecv(int32 numOfBytes);
 	void ProcessSend(int32 numOfBytes);
 	/*Error코드를 처리하는 함수*/
-	void HandleError(int32 errorcode);
+	void HandleError(int32 errorCode);
 
 protected:
 	/* 컨텐츠 코드에서 오버로딩 사용할 함수*/
@@ -68,5 +69,14 @@ private:
 	SOCKET				_socket = INVALID_SOCKET;
 	NetAddress			_netAddress = {};
 	Atomic<bool>		_connected = false;
+private:
+	USE_LOCK;
+
+	/*수신 관련*/
+
+	/* 송신 관련*/
+
+	/* IocpEvent 재사용을 하기 위한 멤버*/
+	RecvEvent _recvEvent;
 };
 
