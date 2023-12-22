@@ -25,6 +25,7 @@ public:
 public:
 	/* 외부에서 사용 */
 	void Send(BYTE* buffer, int32 len);
+	bool Connect();
 
 	/*Disconnect: 연결 해제된 사유 인자로 받음*/
 	void				Disconnect(const WCHAR* cause);
@@ -50,18 +51,20 @@ private:
 private:
 						/* 전송 관련 */
 	/*Register가 완료되면 Process에게 알려줌*/
-	void				RegisterConnect();
+	bool				RegisterConnect();
+	bool				RegisterDisconnect();
 	void				RegisterRecv();
 	void				RegisterSend(SendEvent* sendEvent);
 
 	void				ProcessConnect();
+	void				ProcessDisconnect();
 	void				ProcessRecv(int32 numOfBytes);
 	void				ProcessSend(SendEvent* sendEvent, int32 numOfBytes);
 	/*Error코드를 처리하는 함수*/
 	void				HandleError(int32 errorCode);
 
 protected:
-						/* 컨텐츠 코드에서 오버로딩 */
+						/* 컨텐츠 코드에서 재정의 */
 	virtual void		OnConnected() { }
 	virtual int32		OnRecv(BYTE* buffer, int32 len) { return len; }
 	virtual void		OnSend(int32 len) { }
@@ -89,7 +92,9 @@ private:
 	/* 송신 관련 */
 
 private:
-						/*IocpEvent 재사용을 하기 위한 멤버 */
+	/*IocpEvent 재사용을 하기 위한 멤버 */
+	ConnectEvent		_connectEvent;
+	DisconnectEvent		_disconnectEvent;
 	RecvEvent			_recvEvent;
 };
 
