@@ -19,6 +19,16 @@ Session::~Session()
 
 void Session::Disconnect(const WCHAR* cause)
 {
+	if (_connected.exchange(false) == false)
+	{
+		return;
+	}
+
+	wcout << "Disconnect : " << cause << endl;
+
+	OnDisconnected();
+	SocketUtils::Close(_socket);
+	GetService()->ReleaseSession(GetSessionRef());
 }
 
 HANDLE Session::GetHandle()
@@ -57,6 +67,7 @@ void Session::RegisterRecv()
 		return;
 	}
 
+	_recvEvent.Init();
 	_recvEvent.owner = shared_from_this(); //레퍼런스 카운트 1 늘림
 
 	WSABUF wsaBuf;
@@ -106,6 +117,12 @@ void Session::ProcessRecv(int32 numOfBytes)
 		Disconnect(L"Recv 0");
 		return;
 	}
+
+	// TODO
+	cout << "Recv Data Len" << numOfBytes << endl;
+
+	// 수신 등록
+	RegisterRecv();
 }
 
 void Session::ProcessSend(int32 numOfBytes)
