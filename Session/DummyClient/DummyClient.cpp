@@ -32,7 +32,7 @@ public:
 	virtual int32 OnRecv(BYTE* buffer, int32 len) override
 	{
 		//Echo
-		cout << "OnRecv Len = " << len << endl;
+		cout << "OnRecv Len = " << len <<endl;
 
 		this_thread::sleep_for(1s);
 

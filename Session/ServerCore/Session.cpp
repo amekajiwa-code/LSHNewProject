@@ -7,7 +7,7 @@
 	Session
 ---------------*/
 
-Session::Session()
+Session::Session() : _recvBuffer(BUFFER_SIZE)
 {
 	_socket = SocketUtils::CreateSocket();
 }
@@ -17,15 +17,23 @@ Session::~Session()
 	SocketUtils::Close(_socket);
 }
 
-void Session::Send(BYTE* buffer, int32 len)
+void Session::Send(SendBufferRef sendBuffer)
 {
-	//임시
-	SendEvent* sendEvent = xnew<SendEvent>();
-	sendEvent->owner = shared_from_this(); //레퍼런스 카운트 증가
-	sendEvent->buffer.resize(len);
-	::memcpy(sendEvent->buffer.data(), buffer, len);
+	// 현재 RegisterSend가 걸리지 않은 상태라면 걸어주기
+	WRITE_LOCK;
 
-	RegisterSend(sendEvent); // 임시로 SendEvent 인자로 둠
+	_sendQueue.push(sendBuffer);
+
+	//if (_sendRegistered == false)
+	//{
+	//	_sendRegistered = true;
+	//	RegisterSend(&_sendEvent);
+	//} exchange와 이코드와 하는짓이 같음 Atomic이라 밑에꺼 씀
+
+	if (_sendRegistered.exchange(true) == false)
+	{
+		RegisterSend();
+	}
 }
 
 bool Session::Connect()
@@ -68,7 +76,7 @@ void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 		ProcessRecv(numOfBytes);
 		break;
 	case EventType::Send:
-		ProcessSend(static_cast<SendEvent*>(iocpEvent), numOfBytes);
+		ProcessSend(numOfBytes);
 		break;
 	default:
 		break;
@@ -132,8 +140,8 @@ void Session::RegisterRecv()
 	_recvEvent.owner = shared_from_this(); // ADD_REF //레퍼런스 카운트 1 늘림
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = reinterpret_cast<char*>(_recvBuffer);
-	wsaBuf.len = len32(_recvBuffer);
+	wsaBuf.buf = reinterpret_cast<char*>(_recvBuffer.WrtiePos());
+	wsaBuf.len = _recvBuffer.FreeSize();
 
 	DWORD numOfBytes = 0;
 	DWORD flags = 0;
@@ -149,7 +157,7 @@ void Session::RegisterRecv()
 	}
 }
 
-void Session::RegisterSend(SendEvent* sendEvent)
+void Session::RegisterSend()
 {
 	if (IsConnected() == false)
 	{
@@ -157,20 +165,19 @@ void Session::RegisterSend(SendEvent* sendEvent)
 	}
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = (char*)sendEvent->buffer.data();
-	wsaBuf.len = (ULONG)sendEvent->buffer.size();
+	wsaBuf.buf = (char*)_sendEvent.buffer.data();
+	wsaBuf.len = (ULONG)_sendEvent.buffer.size();
 
 	DWORD numOfBytes = 0;
 	int32 flags = 0;
-	if (SOCKET_ERROR == ::WSASend(_socket, &wsaBuf, 1, OUT & numOfBytes, 0, sendEvent, nullptr))
+	if (SOCKET_ERROR == ::WSASend(_socket, &wsaBuf, 1, OUT & numOfBytes, 0, &_sendEvent, nullptr))
 	{
 		int32 errorCode = ::WSAGetLastError();
 		if (errorCode != WSA_IO_PENDING)
 		{
 			//진문상
 			HandleError(errorCode);
-			sendEvent->owner = nullptr; // 레퍼런스 해제
-			xdelete(sendEvent);
+			_sendEvent.owner = nullptr; // 레퍼런스 해제
 		}
 	}
 }
@@ -206,17 +213,29 @@ void Session::ProcessRecv(int32 numOfBytes)
 		return;
 	}
 
-	// 컨텐츠 코드에서 재정의
-	OnRecv(_recvBuffer, numOfBytes);
+	if (_recvBuffer.OnWrite(numOfBytes) == false)
+	{
+		Disconnect(L"OnWrite Overflow");
+	}
+	
+	int32 dataSize = _recvBuffer.DataSize();
+
+	int32 processLen = OnRecv(_recvBuffer.ReadPos(), dataSize); // 컨텐츠 코드에서 재정의
+	if (processLen < 0 || dataSize < processLen || _recvBuffer.OnRead(processLen) == false)
+	{
+		Disconnect(L"OnRead Overflow");
+	}
+
+	// 버퍼 커서 정리
+	_recvBuffer.Clean();
 
 	// 수신 등록
 	RegisterRecv();
 }
 
-void Session::ProcessSend(SendEvent* sendEvent, int32 numOfBytes)
+void Session::ProcessSend(int32 numOfBytes)
 {
-	sendEvent->owner = nullptr; // 레퍼런스 해제
-	xdelete(sendEvent);
+	_sendEvent.owner = nullptr; // 레퍼런스 해제
 
 	if (numOfBytes == 0)
 	{
