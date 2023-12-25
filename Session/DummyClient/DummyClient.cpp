@@ -4,7 +4,7 @@
 #include "Service.h"
 #include "Session.h"
 
-char sendBuffer[] = "Hello World";
+char sendData[] = "Hello World";
 
 class ServerSession : public Session
 {
@@ -21,7 +21,9 @@ public:
 	{
 		cout << "Connected To Server!" << endl;
 
-		Send((BYTE*)sendBuffer, sizeof(sendBuffer));
+		SendBufferRef sendBuffer = MakeShared<SendBuffer>(4096); //4kb
+		sendBuffer->CopyData(sendData, sizeof(sendData));
+		Send(sendBuffer);
 	}
 
 	virtual void OnDisconnected() override
@@ -36,7 +38,10 @@ public:
 
 		this_thread::sleep_for(1s);
 
-		Send((BYTE*)sendBuffer, sizeof(sendBuffer));
+		SendBufferRef sendBuffer = MakeShared<SendBuffer>(4096); //4kb
+		sendBuffer->CopyData(sendData, sizeof(sendData));
+		Send(sendBuffer);
+
 		return len;
 	}
 
