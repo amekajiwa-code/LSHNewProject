@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="GameServer2.cpp" />
     <ClCompile Include="GameSession.cpp" />
     <ClCompile Include="GameSessionManager.cpp" />
     <ClCompile Include="pch.cpp">

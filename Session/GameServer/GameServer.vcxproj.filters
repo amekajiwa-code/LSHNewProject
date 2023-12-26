@@ -21,6 +21,9 @@
     <ClCompile Include="GameSessionManager.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="GameServer2.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
