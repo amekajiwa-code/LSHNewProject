@@ -18,8 +18,10 @@ int32 GameSession::OnRecv(BYTE* buffer, int32 len)
 	cout << "OnRecv Len = " << len << endl;
 	cout << buffer << endl;
 
-	SendBufferRef sendBuffer = MakeShared<SendBuffer>(4096); //4kb
-	sendBuffer->CopyData(buffer, len);
+	SendBufferRef sendBuffer = GSendBufferManager->Open(4096); //4kb
+	::memcpy(sendBuffer->Buffer(), buffer, len);
+	//»ç¿ëÇÑ ±æÀÌ¸¸Å­ ´Ý¾ÆÁÜ
+	sendBuffer->Close(len);
 
 	GSessionManager.Broadcast(sendBuffer);
 
