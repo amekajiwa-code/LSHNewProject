@@ -19,18 +19,23 @@ Session::~Session()
 
 void Session::Send(SendBufferRef sendBuffer)
 {
+	if (IsConnected() == false) return;
+
+	bool registerSend = false;
+
 	// 현재 RegisterSend가 걸리지 않은 상태라면 걸어주기
-	WRITE_LOCK;
+	{
+		WRITE_LOCK;
 
-	_sendQueue.push(sendBuffer);
+		_sendQueue.push(sendBuffer);
 
-	//if (_sendRegistered == false)
-	//{
-	//	_sendRegistered = true;
-	//	RegisterSend(&_sendEvent);
-	//} exchange와 이코드와 하는짓이 같음 Atomic이라 밑에꺼 씀
+		if (_sendRegistered.exchange(true) == false)
+		{
+			registerSend = true;
+		}
+	}
 
-	if (_sendRegistered.exchange(true) == false)
+	if (registerSend)
 	{
 		RegisterSend();
 	}
@@ -299,4 +304,48 @@ void Session::HandleError(int32 errorCode)
 		cout << "Handle Error : " << errorCode << endl;
 		break;
 	}
+}
+
+/* PacketSession */
+
+PacketSession::PacketSession()
+{
+}
+
+PacketSession::~PacketSession()
+{
+}
+
+int32 PacketSession::OnRecv(BYTE* buffer, int32 len)
+{
+	int32 processLen = 0;
+
+	while (true)
+	{
+		int dataSize = len - processLen;
+
+		// 최소한 헤더는 파싱할 수 있어야 한다 : 4바이트 이상은 되야함
+		if (dataSize < sizeof(PacketHeader))
+		{
+			break;
+		}
+
+		/* PacketHeader 포인터 변수에
+		buffer[0]주소를 담고
+		그 주소가 향하는 값을 꺼내옴 */
+		PacketHeader header = *(reinterpret_cast<PacketHeader*>(&buffer[processLen]));
+
+		//헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
+		if (dataSize < header.size)
+		{
+			break;
+		}
+
+		// 패킷 조립 성공
+		OnRecvPacket(&buffer[0], header.size);
+		// 패킷 조립이 진행된 만큼의 길이를 늘려주고 그 다음부터 진행
+		processLen += header.size;
+	}
+
+	return processLen;
 }
