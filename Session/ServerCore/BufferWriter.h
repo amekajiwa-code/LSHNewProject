@@ -22,9 +22,6 @@ public:
 	T* Reserve();
 
 	template<typename T>
-	BufferWriter& operator<<(const T& src);
-
-	template<typename T>
 	BufferWriter& operator<<(T&& src);
 private:
 	BYTE* _buffer = nullptr;
@@ -45,19 +42,15 @@ T* BufferWriter::Reserve()
 	return ret;
 }
 
-//데이터를 이동시키거나 복사한후 그 데이터형 크기만큼 버퍼의 pos을 옮김
-template<typename T>
-BufferWriter& BufferWriter::operator<<(const T& src)
-{
-	*reinterpret_cast<T*>(&_buffer[_pos]) = src;
-	_pos += sizeof(T);
-	return *this;
-}
 
+
+//데이터를 이동시키거나 복사한후 그 데이터형 크기만큼 버퍼의 pos을 옮김
+//보편 참조
 template<typename T>
 BufferWriter& BufferWriter::operator<<(T&& src)
 {
-	*reinterpret_cast<T*>(&_buffer[_pos]) = std::move(src);
+	using DataType = std::remove_reference_t<T>;
+	*reinterpret_cast<DataType*>(&_buffer[_pos]) = std::forward<DataType>(src);
 	_pos += sizeof(T);
 	return *this;
 }

@@ -120,7 +120,7 @@ public:
 protected:
 	// sealed를 붙여주면 OnRecv를 사용 할 수 없다.
 	virtual int32 OnRecv(BYTE* buffer, int32 len) sealed;
-	virtual int32 OnRecvPacket(BYTE* buffer, int32 len) abstract;
+	virtual void OnRecvPacket(BYTE* buffer, int32 len) abstract;
 
 private:
 };
