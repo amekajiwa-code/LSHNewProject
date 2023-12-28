@@ -3,12 +3,11 @@
 #include "ThreadManager.h"
 #include "Service.h"
 #include "Session.h"
-
-#include <string>
+#include "BufferReader.h"
 
 char sendData[] = "Hello World";
 
-class ServerSession : public Session
+class ServerSession : public PacketSession
 {
 public:
 	~ServerSession()
@@ -21,50 +20,40 @@ public:
 	서버에서 OnRecv를 한뒤 에코로*/
 	virtual void OnConnected() override
 	{
-		cout << "Connected To Server!" << endl;
-
-		SendBufferRef sendBuffer = GSendBufferManager->Open(4096); //4kb
-		::memcpy(sendBuffer->Buffer(), sendData, sizeof(sendData));
-		//사용한 길이만큼 닫아줌
-		sendBuffer->Close(sizeof(sendData));
-
-		Send(sendBuffer);
+		// cout << "Connected To Server!" << endl;
 	}
 
-	virtual void OnDisconnected() override
+	virtual int32 OnRecvPacket(BYTE* buffer, int32 len) override
 	{
-		cout << "Disconnected..." << endl;
-	}
+		BufferReader br(buffer, len);
 
-	virtual int32 OnRecv(BYTE* buffer, int32 len) override
-	{
-		//Echo
-		cout << "OnRecv Len = " << len << endl;
-		cout << buffer << endl;
+		PacketHeader header;
+		br >> header;
 
-		this_thread::sleep_for(1s);
+		uint64 id;
+		uint32 hp;
+		uint16 attack;
+		br >> id >> hp >> attack;
+		cout << "ID: " << id << "HP: " << hp << "ATK : " << attack << endl;
 
-		SendBufferRef sendBuffer = GSendBufferManager->Open(4096); //4kb
-		::memcpy(sendBuffer->Buffer(), sendData, sizeof(sendData));
-		//사용한 길이만큼 닫아줌
-		sendBuffer->Close(sizeof(sendData));
-
-		Send(sendBuffer);
+		char recvBuffer[4096];
+		//받은 데이터 크기만큼 빼줌
+		br.Read(recvBuffer, header.size - sizeof(PacketHeader) - 8 - 4 - 2);
+		cout << recvBuffer << endl;
 
 		return len;
 	}
 
 	virtual void OnSend(int32 len) override
 	{
-		cout << "OnSend Len = " << len << endl;
+		//cout << "OnSend Len = " << len << endl;
+	}
+
+	virtual void OnDisconnected() override
+	{
+		//cout << "Disconnected..." << endl;
 	}
 };
-
-void InputData()
-{
-	cout << "입력 : ";
-	cin >> sendData;
-}
 
 int main()
 {
@@ -74,7 +63,7 @@ int main()
 		NetAddress(L"127.0.0.1", 7777),
 		MakeShared<IocpCore>(),
 		MakeShared<ServerSession>,
-		1);
+		5);
 
 	ASSERT_CRASH(service->Start());
 

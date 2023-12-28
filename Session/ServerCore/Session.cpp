@@ -55,9 +55,6 @@ void Session::Disconnect(const WCHAR* cause)
 	// TEMP
 	wcout << "Disconnect : " << cause << endl;
 
-	OnDisconnected(); // ÄÁÅÙÃ÷ ÄÚµå¿¡¼­ ÀçÁ¤ÀÇ
-	GetService()->ReleaseSession(GetSessionRef());
-
 	RegisterDisconnect();
 }
 
@@ -234,6 +231,9 @@ void Session::ProcessConnect()
 void Session::ProcessDisconnect()
 {
 	_disconnectEvent.owner = nullptr; //RELEASE_REF
+
+	OnDisconnected(); // ÄÁÅÙÃ÷ ÄÚµå¿¡¼­ ÀçÁ¤ÀÇ
+	GetService()->ReleaseSession(GetSessionRef());
 }
 
 void Session::ProcessRecv(int32 numOfBytes)
