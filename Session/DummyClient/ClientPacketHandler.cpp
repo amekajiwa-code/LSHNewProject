@@ -39,6 +39,22 @@ struct S_TEST
 	vector<int64> buffs; //버프나 디버프들
 };
 
+struct USER_INFO
+{
+	uint64 id;
+	//wstring name;
+	//uint32 hp;
+	//uint16 atk;
+	//uint16 move_speed;
+	//uint16 attack_speed;
+	//uint16 attack_range;
+	
+	//_41 _42 _43이 포지션
+	float positionX; 
+	float positionY;
+	float positionZ;
+};
+
 void ClientPacketHandler::Handle_S_TEST(BYTE* buffer, int32 len)
 {
 	BufferReader br(buffer, len);
