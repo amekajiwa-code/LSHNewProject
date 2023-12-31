@@ -14,6 +14,9 @@ void ClientPacketHandler::HandlePacket(BYTE* buffer, int32 len)
 	case S_TEST:
 		Handle_S_TEST(buffer, len);
 		break;
+	case USER_INFO:
+		Handle_USER_INFO(buffer, len);
+		break;
 	default:
 		break;
 	}
@@ -37,22 +40,6 @@ struct S_TEST
 	// 2) 바이트 배열 (ex : 길드 이미지)
 	// 3) 일반 리스트
 	vector<int64> buffs; //버프나 디버프들
-};
-
-struct USER_INFO
-{
-	uint64 id;
-	//wstring name;
-	//uint32 hp;
-	//uint16 atk;
-	//uint16 move_speed;
-	//uint16 attack_speed;
-	//uint16 attack_range;
-	
-	//_41 _42 _43이 포지션
-	float positionX; 
-	float positionY;
-	float positionZ;
 };
 
 void ClientPacketHandler::Handle_S_TEST(BYTE* buffer, int32 len)
@@ -83,4 +70,20 @@ void ClientPacketHandler::Handle_S_TEST(BYTE* buffer, int32 len)
 	{
 		cout << "BuffInfo : " << buffs[i].buffId << buffs[i].remainTime << endl;
 	}
+}
+
+void ClientPacketHandler::Handle_USER_INFO(BYTE* buffer, int32 len)
+{
+	BufferReader br(buffer, len);
+
+	PacketHeader header;
+	br >> header;
+
+	uint64 id;
+	float posX;
+	float posY;
+	float posZ;
+	
+	br >> id >> posX >> posY >> posZ;
+	cout << "id : " << id << " / position : ( " << posX << ", " << posY << ", " << posZ << " )" << endl;
 }

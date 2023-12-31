@@ -7,6 +7,7 @@ GameSessionManager GSessionManager;
 void GameSessionManager::Add(GameSessionRef session)
 {
 	WRITE_LOCK;
+	session->SetSessionId(sessionIdCount++);
 	_sessions.insert(session);
 }
 

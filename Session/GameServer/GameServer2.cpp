@@ -30,15 +30,20 @@ int main()
 			});
 	}
 
+	// TODO : 클라가 pos 이동할때 변화값 서버한테 패킷보내고 id별로 구분해서 서버가 세션 목록 출력하기
 	char sendData[] = "Hello World";
 
 	while (true)
 	{
-		vector<BuffData> buffs{ BuffData {100, 1.5f}, BuffData {200, 2.3f}, BuffData {300, 0.7f} };
-		SendBufferRef sendBuffer = ServerPacketHandler::Make_S_TEST(1001, 100, 10, buffs);
-		GSessionManager.Broadcast(sendBuffer);
+		cout << "SessionCount : " << service->GetCurrentSessionCount() << endl;
 
-		this_thread::sleep_for(250ms);
+		for (GameSessionRef player : GSessionManager.GetSessionsRef())
+		{
+			SendBufferRef sendBuffer = ServerPacketHandler::Make_USER_INFO(player->GetSessionId(), 1.0f, 1.5f, -1.0f);
+			GSessionManager.Broadcast(sendBuffer);
+		}		
+
+		this_thread::sleep_for(1000ms);
 	}     
 
 	GThreadManager->Join();

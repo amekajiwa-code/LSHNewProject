@@ -42,13 +42,13 @@ public:
 
 int main()
 {
-	this_thread::sleep_for(1s);
+	this_thread::sleep_for(250ms);
 
 	ClientServiceRef service = MakeShared<ClientService>(
 		NetAddress(L"127.0.0.1", 7777),
 		MakeShared<IocpCore>(),
 		MakeShared<ServerSession>,
-		1);
+		3);
 
 	ASSERT_CRASH(service->Start());
 
