@@ -47,6 +47,15 @@ void Service::ReleaseSession(SessionRef session)
 	_sessionCount--;
 }
 
+void Service::Broadcast(SendBufferRef sendBuffer)
+{
+	WRITE_LOCK;
+	for (const auto& session : _sessions)
+	{
+		session->Send(sendBuffer);
+	}
+}
+
 /*-----------------
 	ClientService
 ------------------*/

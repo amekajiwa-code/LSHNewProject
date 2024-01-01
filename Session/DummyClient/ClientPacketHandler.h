@@ -29,5 +29,7 @@ public:
 	static void HandlePacket(BYTE* buffer, int32 len);
 	static void Handle_S_TEST(BYTE* buffer, int32 len); //임시함수
 	static void Handle_USER_INFO(BYTE* buffer, int32 len);
+
+	static SendBufferRef Make_USER_INFO(float posX, float posY, float posZ);
 };
 

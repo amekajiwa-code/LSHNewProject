@@ -34,11 +34,11 @@ public:
 	int32				GetCurrentSessionCount() { return _sessionCount; }
 	int32				GetMaxSessionCount() { return _maxSessionCount; }
 
+	void Broadcast(SendBufferRef sendBuffer);
 public:
 	ServiceType			GetServiceType() { return _type; }
 	NetAddress			GetNetAddress() { return _netAddress; }
 	IocpCoreRef&		GetIocpCore() { return _iocpCore; }
-
 protected:
 	USE_LOCK;
 	ServiceType			_type;

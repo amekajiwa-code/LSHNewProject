@@ -29,5 +29,6 @@ public:
 private:
 	uint64 _sessionId = 0;
 	float3 _playerPos { 0, 0, 0 };
+
 };
 

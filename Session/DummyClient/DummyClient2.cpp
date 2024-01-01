@@ -63,5 +63,13 @@ int main()
 			});
 	}
 
+	SendBufferRef sendBuffer = ClientPacketHandler::Make_USER_INFO(3.0f, 2.5f, -1.0f);
+	
+	while (true)
+	{
+		service->Broadcast(sendBuffer);
+		this_thread::sleep_for(250ms);
+	}
+
 	GThreadManager->Join();
 }

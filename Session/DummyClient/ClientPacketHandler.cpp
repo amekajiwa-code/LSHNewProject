@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ClientPacketHandler.h"
 #include "BufferReader.h"
+#include "BufferWriter.h"
 
 void ClientPacketHandler::HandlePacket(BYTE* buffer, int32 len)
 {
@@ -79,11 +80,27 @@ void ClientPacketHandler::Handle_USER_INFO(BYTE* buffer, int32 len)
 	PacketHeader header;
 	br >> header;
 
-	uint64 id;
 	float posX;
 	float posY;
 	float posZ;
 	
-	br >> id >> posX >> posY >> posZ;
-	cout << "id : " << id << " / position : ( " << posX << ", " << posY << ", " << posZ << " )" << endl;
+	br >> posX >> posY >> posZ;
+	cout << " / position : ( " << posX << ", " << posY << ", " << posZ << " )" << endl;
+}
+
+SendBufferRef ClientPacketHandler::Make_USER_INFO(float posX, float posY, float posZ)
+{
+	SendBufferRef sendBuffer = GSendBufferManager->Open(4096); //4kb
+	BufferWriter bw(sendBuffer->Buffer(), sendBuffer->AllocSize());
+	PacketHeader* header = bw.Reserve<PacketHeader>();
+
+	// uint64 id uint32 체력 uint16 공격력
+	bw << posX << posY << posZ;
+
+	header->size = bw.WriteSize();
+	header->id = 2; // 2: User Info
+
+	sendBuffer->Close(bw.WriteSize()); //사용한 길이만큼 닫아줌
+
+	return sendBuffer;
 }
